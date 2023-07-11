@@ -1,0 +1,22 @@
+.leo-container{
+  margin: 0 auto;
+  width: 1200px;
+}
+.leo-form{
+  margin: 5px;
+  .el-input{
+    width: 220px;
+  }
+}
+.leo-background-success {
+  background-color: #67C23A !important;
+}
+.leo-background-fail {
+  background-color:#F56C6C !important;
+}
+.leo-background-warning {
+  background-color:#E6A23C !important;
+}
+.leo-background-normal {
+  background-color: #409EFF !important;
+}
