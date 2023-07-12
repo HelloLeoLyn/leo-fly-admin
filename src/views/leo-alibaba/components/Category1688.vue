@@ -1,10 +1,10 @@
 <template>
-  <div class="block">
-    <el-cascader ref="cascader" :props="{ checkStrictly: true }" :value="value" placeholder="试试搜索：指南"
-      :options="options" filterable @change="change" style="width:300px">
+  <div>
+    <el-cascader ref="cascader" :props="{ checkStrictly: true }" :value="value" placeholder="试试搜索：指南" :options="options"
+      filterable @change="change" style="width:300px">
     </el-cascader>
     <el-button @click="getCategory" v-if="categoryContent">{{ categoryContent }}</el-button>
-    <el-tooltip  :content="listToString(value, '-')" placement="bottom" effect="light">
+    <el-tooltip :content="listToString(value, '-')" placement="bottom" effect="light">
       <el-button class="el-icon-warning-outline" />
     </el-tooltip>
   </div>
@@ -13,9 +13,9 @@
 import { listToString } from '@/utils//index'
 import { category1688 } from '@/utils/category'
 export default {
-  model:{
-    prop:'value',
-    event:'change'
+  model: {
+    prop: 'value',
+    event: 'change'
   },
   props: {
     value: {
@@ -41,9 +41,9 @@ export default {
       this.$emit('getCategory', nodes[0].data, nodes[0].pathNodes)
     },
     change(e) {
-      if(typeof e == 'object' && Array.isArray(e)) {
-        this.$emit('change', e[e.length-1])
-      }else{
+      if (typeof e == 'object' && Array.isArray(e)) {
+        this.$emit('change', e[e.length - 1])
+      } else {
         this.$emit('change', e)
       }
     },

@@ -45,19 +45,19 @@
       <el-form-item label="carBrand" prop="carBrand" class="input-middle">
         <el-input v-model="form.carBrand"></el-input>
       </el-form-item>
+      <el-form-item label="alibaba.albumID" prop="alibaba.albumID" class="input-middle">
+        <album v-model="form.alibaba.albumID" @change="e => form.alibaba.albumID = e"></album>
+      </el-form-item>
       <el-form-item label="images" prop="images">
-        <album v-model="form.alibaba.albumID" @change="e=>form.alibaba.albumID=e"></album>
         <el-button type="primary" size="default" @click="sendToAlibaba">sendToAlibaba</el-button>
-        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
-          @getImages="
-            e => {
-              form.images = e
-            }
+        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true" @getImages="e => {
+          form.images = e
+        }
           " :customzedBtn="[
-            { label: '设置封面图', opt: 'alibaba' },
-            { label: '设置包装图', opt: 'package' },
-            { label: '1688详情封面', opt: '1688detail' }
-          ]" />
+    { label: '设置封面图', opt: 'alibaba' },
+    { label: '设置包装图', opt: 'package' },
+    { label: '1688详情封面', opt: '1688detail' }
+  ]" />
         <el-dialog title="" :visible.sync="dialog.show" width="80%">
           <div class="container" v-if="dialog.opt == 'alibaba'">
             <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
@@ -68,21 +68,17 @@
             <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
           </div>
           <div v-if="dialog.opt == 'package'">
-            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
-              WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
-              WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
-              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
-              :toolBgc="options.toolBgc" :isModal="options.isModal"
-              :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
-              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight"
-              :cutWidth="options.cutWidth" :cutHeight="options.cutHeight"
-              :sizeChange="options.sizeChange" :moveAble="options.moveAble"
-              :imgMove="options.imgMove" :originalGraph="options.originalGraph"
-              :WatermarkTextX="options.WatermarkTextX" :WatermarkTextY="options.WatermarkTextY"
-              :smallToUpload="options.smallToUpload" :saveCutPosition="options.saveCutPosition"
-              :scaleAble="options.scaleAble" :previewMode="options.previewMode"
-              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index"
-              @cutDown="cutDown" @onPrintImg="onPrintImg">
+            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg" WatermarkText="vue-img-cutter"
+              WatermarkTextFont="12px Sans-serif" WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
+              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate" :toolBgc="options.toolBgc"
+              :isModal="options.isModal" :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
+              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight" :cutWidth="options.cutWidth"
+              :cutHeight="options.cutHeight" :sizeChange="options.sizeChange" :moveAble="options.moveAble"
+              :imgMove="options.imgMove" :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
+              :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
+              :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble" :previewMode="options.previewMode"
+              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
+              @onPrintImg="onPrintImg">
               <template #open>
                 <button>Choose image</button>
               </template>
@@ -117,12 +113,10 @@
             <el-input v-model="form.alibaba.brand"></el-input>
           </el-form-item>
           <el-form-item label="alibaba.categoryID" prop="alibaba.categoryID">
-            <Category1688 v-model="form.alibaba.categoryID" @change="category1688Chnage"
-              categoryContent="设置为产品名" />
+            <Category1688 v-model="form.alibaba.categoryID" @change="category1688Chnage" categoryContent="设置为产品名" />
           </el-form-item>
           <el-form-item label="alibaba.prices">
-            <SaleInfo1688 v-if="product.id" :id="product.id" :values="form.alibaba.saleInfo"
-              ref="saleInfo" />
+            <SaleInfo1688 v-if="product.id" :id="product.id" :values="form.alibaba.saleInfo" ref="saleInfo" />
           </el-form-item>
           <el-form-item label="alibaba.stock" prop="alibaba.stock" class="input-middle">
             <el-input v-model="form.alibaba.stock"></el-input>
@@ -133,10 +127,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="alibaba.description" prop="alibaba.description">
+            <el-button type="primary" size="default" @click="generateHtml('alibaba')">generateHtml</el-button>
             <el-button type="primary" size="default"
-              @click="generateHtml('alibaba')">generateHtml</el-button>
-            <el-button type="primary" size="default"
-              @click="handleCopy(form.alibaba.description, $event)">copy</el-button>
+              @click="handleCopy(form.alibaba.descalbumIDription, $event)">copy</el-button>
           </el-form-item>
         </el-tab-pane>
         <el-tab-pane label="aliexpress" name="aliexpress">
@@ -149,8 +142,7 @@
           <el-form-item label="aliexpress.oem" prop="aliexpress.oem" class="input-middle">
             <el-input v-model="form.aliexpress.oem"></el-input>
           </el-form-item>
-          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId"
-            class="input-middle">
+          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId" class="input-middle">
             <el-input v-model="form.aliexpress.manufacturerPartId"></el-input>
           </el-form-item>
           <el-form-item label="aliexpress.unit" prop="aliexpress.unit" class="input-middle">
@@ -166,17 +158,14 @@
           </el-form-item>
           <el-form-item label="aliexpress.packingSizeUrl" class="input-middle">
             <el-select v-model="form.aliexpress.packingSizeUrl" placeholder="" clearable>
-              <el-option label="大包装"
-                value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
+              <el-option label="大包装" value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
               </el-option>
-              <el-option label="小包装"
-                value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
+              <el-option label="小包装" value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="aliexpress.description" prop="aliexpress.description">
-            <el-button type="primary" size="default"
-              @click="generateHtml('aliexpress')">generateHtml</el-button>
+            <el-button type="primary" size="default" @click="generateHtml('aliexpress')">generateHtml</el-button>
             <el-button type="primary" size="default"
               @click="handleCopy(form.aliexpress.description, $event)">copy</el-button>
           </el-form-item>
@@ -200,7 +189,8 @@
             <el-input v-model="form.amazon.price"></el-input>
           </el-form-item>
           <el-form-item label="amazon.listing" prop="amazon.listing">
-            <el-input v-model="form.amazon.listing" type="textarea"></el-input>
+            <el-button type="primary" size="default" @click="generateHtml('amazon')">generateListing</el-button>
+            <el-button type="primary" size="default" @click="handleCopy(form.amazon.listing, $event)">copy</el-button>
           </el-form-item>
         </el-tab-pane>
       </el-tabs>
@@ -470,7 +460,8 @@ export default {
           unit: [{ required: true, message: '请输入', trigger: 'blur' }],
           stock: [{ required: true, message: '请输入', trigger: 'blur' }],
           price: [{ required: true, message: '请输入', trigger: 'blur' }],
-          description: [{ required: true, message: '请输入', trigger: 'blur' }]
+          description: [{ required: true, message: '请输入', trigger: 'blur' }],
+          albumID: [{ required: true, message: '请输入', trigger: 'blur' }],
         },
         amazon: {
           subject: [
@@ -655,11 +646,11 @@ export default {
         }
         api_goods_templates(params).then((res) => {
           if (res.code == '200') {
-            this.form.alibaba.description = res.data
+            this.form.aliexpress.description = res.data
             this.$message.success(res.msg)
           }
         })
-      } else {
+      } else if (website == 'alibaba') {
         let params = {
           detailCoverUrl: this.form.images[0].url,
           images: this.form.images.map((img) => img.url),
@@ -669,6 +660,16 @@ export default {
         api_goods_templates(params).then((res) => {
           if (res.code == '200') {
             this.form.alibaba.description = res.data
+            this.$message.success(res.msg)
+          }
+        })
+      } else if (website == 'amazon') {
+        let params = {
+          website
+        }
+        api_goods_templates(params).then((res) => {
+          if (res.code == '200') {
+            this.form.amazon.listing = res.data
             this.$message.success(res.msg)
           }
         })
@@ -689,6 +690,9 @@ export default {
           api_product_alibaba_save(obj).then((res) => {
             this.$message.success(res.msg)
           })
+          // api_goods_batch_post(list).then(res=>{
+          //   this.$message.success(res.msg)
+          // })
         })
       })
     },

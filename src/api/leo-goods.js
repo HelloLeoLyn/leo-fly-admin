@@ -7,7 +7,13 @@ export function api_goods_post(data) {
     data
   })
 }
-
+export function api_goods_batch_post(data) {
+  return request({
+    url: service + '/goods/batch',
+    method: 'post',
+    data
+  })
+}
 export function api_goods_put(data) {
   return request({
     url: service + '/goods',

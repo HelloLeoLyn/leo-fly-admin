@@ -1,9 +1,8 @@
 <template>
-  <div style="padding:20px;">
+  <div>
     <el-button type="primary" size="default" @click="onGetAblum">获取相册</el-button>
-    <el-select v-model="newVal" clearable filterable @change="e=>$emit('change',e)">
-      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name"
-        :value="item.albumID">
+    <el-select v-model="newVal" clearable filterable @change="e => $emit('change', e)">
+      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name" :value="item.albumID">
       </el-option>
     </el-select>
   </div>
