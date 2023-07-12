@@ -8,8 +8,8 @@
       </el-button>
     </div>
 
-    <el-table ref="multipleTable" :key="tableKey" v-loading="listLoading" :data="list" border fit
-      highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable" :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row
+      style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55px"> </el-table-column>
       <el-table-column label="角色名称" align="center">
         <template slot-scope="scope">
@@ -32,8 +32,8 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.current"
-      :limit.sync="listQuery.size" @pagination="search" />
+    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size"
+      @pagination="search" />
 
     <el-dialog :visible="dialogvisible" @close="dialogvisible = false">
       <el-form v-model="sysRole">
@@ -51,29 +51,25 @@
     <el-dialog :visible="roleDeptDialog" @close="roleDeptDialog = false">
       <div style="text-align: center">
         <el-transfer style="text-align: left; display: inline-block" v-model="value" filterable
-          :render-content="renderFunc" :titles="['可选机构网点', '已选机构网点']" :button-texts="['移除', '选择']"
-          :format="{
+          :render-content="renderFunc" :titles="['可选机构网点', '已选机构网点']" :button-texts="['移除', '选择']" :format="{
             noChecked: '${total}',
             hasChecked: '${checked}/${total}',
           }" @change="handleChange" :data="data">
         </el-transfer>
       </div>
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-add"
-        @click="roleDeptSaveBatch">提交</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-add" @click="roleDeptSaveBatch">提交</el-button>
     </el-dialog>
 
-    <el-dialog :visible="roleMenuDialog" @close="roleMenuDialog = false">
-      <el-tree :data="roleMenus" show-checkbox node-key="id" ref="tree" default-expand-all
-        :expand-on-click-node="false" :default-checked-keys="checkedRoleMenus"
-        @check-change="getCheckedRoleMenusKeys">
+    <el-dialog :visible="roleMenuDialog" title="修改角色菜单" @close="roleMenuDialog = false">
+      <el-tree :data="roleMenus" show-checkbox node-key="id" ref="tree" default-expand-all :expand-on-click-node="false"
+        :default-checked-keys="checkedRoleMenus" @check-change="getCheckedRoleMenusKeys">
         <span class="custom-tree-node" slot-scope="{ node }">
           <span>{{ node.data.title }}</span>
         </span>
       </el-tree>
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-add"
-        @click="saveRoleMenus">提交</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-add" @click="saveRoleMenus">提交</el-button>
     </el-dialog>
   </div>
 </template>
@@ -167,7 +163,11 @@ export default {
       await keys.forEach((menuId) => {
         roleMenus.push({ roleId: this.roleId, menuId: menuId })
       })
-      api_role_menu_put(this.roleId, roleMenus)
+      api_role_menu_put(this.roleId, roleMenus).then((res => {
+        if (res.code == 200) {
+          this.$notify.success(res.msg)
+        }
+      }))
       this.roleMenuDialog = false
     },
     handleChange(value, direction, movedKeys) {
@@ -189,19 +189,28 @@ export default {
       this.roleMenuDialog = true
       this.sysRoleDept.roleId = id
       this.roleId = id
-      this.getRoleMenusByRoleId(id).then((res) => {
+      this.getRoleMenusByRoleId(id).then((checkedList) => {
         this.$refs.tree.setCheckedKeys([])
-        this.checkedRoleMenus = res
+        this.checkedRoleMenus = checkedList.filter(item => {
+          if (item.parentId == 0) {
+            let index = this.roleMenus.findIndex(ele => item.id == ele.id)
+            if (this.roleMenus[index].children && this.roleMenus[index].children.length > 0) {
+              return false
+            } else {
+              return true
+            }
+          } else {
+            return true
+          }
+        }).map(t => t.id)
       })
     },
 
     async getRoleMenusByRoleId(id) {
       return new Promise(function (resolve) {
         let checkedRoleMenus = []
-        api_role_menu_get_by_role(id).then((menus) => {
-          menus.data.forEach((e) => {
-            checkedRoleMenus.push(e.menuId)
-          })
+        api_role_menu_get_by_role(id).then(({ data }) => {
+          checkedRoleMenus = data;
           resolve(checkedRoleMenus)
         })
       })
