@@ -4,28 +4,26 @@
       <el-input v-model="listQuery.code" placeholder="oe" style="width: 200px;" class="filter-item"
         @keyup.enter.native="doSearch" @keyup="listQuery.code = listQuery.code.trim()" />
       <el-select v-model="listQuery.status" class="filter-item">
-        <el-option v-for="item in product_status" :key='item.status' :label="item.label"
-          :value="item.status" />
+        <el-option v-for="item in product_status" :key='item.status' :label="item.label" :value="item.status" />
       </el-select>
       <el-select v-model="listQuery.referStatus" class="filter-item">
         <el-option label="" value="" />
         <el-option label="未上传1688" value="0" />
       </el-select>
-      <el-input v-model="listQuery.name" style="width: 200px;" class="filter-item"
-        placeholder="name" @keyup.enter.native="doSearch" />
-      <el-input v-model="listQuery.subject" style="width: 200px;" class="filter-item"
-        placeholder="subject" @keyup.enter.native="doSearch" />
+      <el-input v-model="listQuery.name" style="width: 200px;" class="filter-item" placeholder="name"
+        @keyup.enter.native="doSearch" />
+      <el-input v-model="listQuery.subject" style="width: 200px;" class="filter-item" placeholder="subject"
+        @keyup.enter.native="doSearch" />
+      <Category1688 v-model="listQuery.categoryId"> </Category1688>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="doSearch">
         {{ $t('common.search') }}
       </el-button>
-      <leo-export v-waves class="filter-item" type="primary" :list="[]" :columns="[]"
-        :label="$t('common.export')" />
+      <leo-export v-waves class="filter-item" type="primary" :list="[]" :columns="[]" :label="$t('common.export')" />
       <el-row style="text-align:right;">
         <el-checkbox v-model="more" class="filter-item" style="margin-left:15px;">
           {{ $t('common.more') }}
         </el-checkbox>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-          @click="addProduct">
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addProduct">
           {{ $t('common.add') }}
         </el-button>
         <el-button-group class="filter-item" style="margin-left: 10px;">
@@ -42,8 +40,7 @@
       <el-table :data="taskProductDialog.tableData" border stripe>
         <el-table-column label="image" width="80">
           <template slot-scope="{row}">
-            <el-image v-if="row.mainImage"
-              :src="service + '/product/image/' + row.mainImage + '/50X50'" />
+            <el-image v-if="row.mainImage" :src="service + '/product/image/' + row.mainImage + '/50X50'" />
           </template>
         </el-table-column>
         <el-table-column prop="code">
@@ -76,8 +73,7 @@
       <el-table-column prop="error" label="error" width="180" v-if="listQuery.status == 400" />
       <el-table-column label="image" width="80">
         <template slot-scope="{row}">
-          <el-image v-if="row.mainImage"
-            :src="service + '/product/image/' + row.mainImage + '/50X50'" />
+          <el-image v-if="row.mainImage" :src="service + '/product/image/' + row.mainImage + '/50X50'" />
         </template>
       </el-table-column>
       <el-table-column label="actions" fixed="right" width="380">
@@ -91,8 +87,7 @@
               </el-button>
             </el-col>
             <el-col :span="6">
-              <el-button @click="$router.push('/leo-goods/add?productId=' + scope.row.id)"
-                size="small" type="text" plai>
+              <el-button @click="$router.push('/leo-goods/add?productId=' + scope.row.id)" size="small" type="text" plai>
                 商品预处理
               </el-button>
             </el-col>
@@ -107,26 +102,25 @@
               </el-button>
             </el-col>
             <el-col :span="6">
-              <el-button @click="$router.push('/leo-goods/aliexpress-prepare/' + scope.row.id)"
-                size="small" type="text" plai>
+              <el-button @click="$router.push('/leo-goods/aliexpress-prepare/' + scope.row.id)" size="small" type="text"
+                plai>
                 上传速卖通
               </el-button>
             </el-col>
             <el-col :span="6" v-if="scope.row.status != 666">
-              <el-button size="small" type="text" plain
-                @click="$router('/leo-goods/aliexpress/prepare')">删除
+              <el-button size="small" type="text" plain @click="$router('/leo-goods/aliexpress/prepare')">删除
               </el-button>
             </el-col>
           </el-row>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.current"
-      :limit.sync="listQuery.size" @pagination="doSearch" />
+    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size"
+      @pagination="doSearch" />
 
     <el-dialog title="update" :visible.sync="update_dialog" @close="handleUpdateDialogClose" center>
-      <el-transfer style="text-align: left; display: inline-block" class="leo-transfer"
-        v-model="transfer.value" filterable :titles="['oe', 'refNo']" :format="{
+      <el-transfer style="text-align: left; display: inline-block" class="leo-transfer" v-model="transfer.value"
+        filterable :titles="['oe', 'refNo']" :format="{
           noChecked: '${total}',
           hasChecked: '${checked}/${total}'
         }" @change="handleChange" :data="transfer.data">
@@ -180,6 +174,7 @@
 import LeoEditPane from '@/components/LeoEditPane'
 import LeoWebCollector from '@/components/LeoWebCollector'
 import LeoExport from '@/components/LeoExport'
+import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
 import waves from '@/directive/waves' // waves directive
 import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import LeoNewTask from '@/views/leo-work/components/LeoNewTask.vue'
@@ -205,7 +200,8 @@ export default {
     LeoHistory,
     LeoEditPane,
     LeoExport,
-    LeoWebCollector
+    LeoWebCollector,
+    Category1688
   },
   directives: { waves },
   filters: {
@@ -244,6 +240,7 @@ export default {
         name: null,
         size: 10,
         current: 1,
+        categoryId: null,
         code: ''
       },
       list: [],
@@ -330,10 +327,10 @@ export default {
       if (this.taskProductDialog.tableData.length + selection.length > 20) {
         this.$message.error(
           '已经添加了' +
-            this.taskProductDialog.tableData.length +
-            '最多还能添加' +
-            (20 - this.taskProductDialog.tableData.length) +
-            '条数据'
+          this.taskProductDialog.tableData.length +
+          '最多还能添加' +
+          (20 - this.taskProductDialog.tableData.length) +
+          '条数据'
         )
         return
       }
