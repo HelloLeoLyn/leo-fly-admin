@@ -8,7 +8,7 @@
       </el-button>
     </div>
 
-    <el-table ref="multipleTable" :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row
+    <el-table ref="multipleTable"  v-loading="listLoading" :data="list" border fit highlight-current-row
       style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55px"> </el-table-column>
       <el-table-column label="角色名称" align="center">
@@ -112,7 +112,6 @@ export default {
       roleMenuDialog: false,
       option: '',
       list: null,
-      tableKey: 0,
       total: 0,
       listLoading: false,
       sysRole: { id: null, name: null, remark: null, delFlag: null },
