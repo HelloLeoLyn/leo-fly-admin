@@ -46,6 +46,7 @@
         <el-input v-model="form.carBrand"></el-input>
       </el-form-item>
       <el-form-item label="images" prop="images">
+        <album v-model="form.alibaba.albumID" @change="e=>form.alibaba.albumID=e"></album>
         <el-button type="primary" size="default" @click="sendToAlibaba">sendToAlibaba</el-button>
         <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
           @getImages="
@@ -162,6 +163,16 @@
           </el-form-item>
           <el-form-item label="aliexpress.stock" prop="aliexpress.stock" class="input-middle">
             <el-input v-model="form.aliexpress.stock"></el-input>
+          </el-form-item>
+          <el-form-item label="aliexpress.packingSizeUrl" class="input-middle">
+            <el-select v-model="form.aliexpress.packingSizeUrl" placeholder="" clearable>
+              <el-option label="大包装"
+                value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
+              </el-option>
+              <el-option label="小包装"
+                value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="aliexpress.description" prop="aliexpress.description">
             <el-button type="primary" size="default"
@@ -317,6 +328,7 @@ import { listToString } from '@/utils'
 import { getBase64Image, dataURLtoFile } from '@/utils/image'
 import axios from 'axios'
 import { api_image_put } from '@/api/leo-image'
+import Album from '@/components/LeoAlibaba/Album.vue'
 export default {
   components: {
     Images,
@@ -324,7 +336,8 @@ export default {
     SaleInfo1688,
     Category1688,
     CssImage,
-    ImgCutter
+    ImgCutter,
+    Album
   },
   data() {
     return {
@@ -386,6 +399,7 @@ export default {
         carBrand: '',
         models: [],
         alibaba: {
+          albumID: null,
           categoryID: null,
           saleInfo: {},
           material: '半金属',
@@ -420,7 +434,10 @@ export default {
           unit: 'Sets',
           price: null,
           stock: '99',
-          description: ''
+          description: '',
+          packingBoxUrl: '',
+          packingSizeUrl:
+            'https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png'
         }
       },
       rules: {
@@ -550,46 +567,7 @@ export default {
       this.dialog.cutImgHref = e.dataURL
     },
     sendToAlibaba() {
-      console.log(this.form.images)
-
-      let _this = this
-      this.form.images.forEach((element) => {
-        if (element.state == 2) {
-          return
-        }
-        let image = new Image()
-        image.src = element.url
-        image.setAttribute('crossOrigin', 'anonymous')
-        image.onload = function () {
-          let base64 = getBase64Image(image)
-          let newFile = dataURLtoFile(base64, element.uid)
-          let formData = new FormData()
-          formData.append('file', newFile)
-          formData.append('albumID', _this.albumId)
-          axios
-            .post('http://localhost:8080/photo/alibaba/uploadOne', formData, {
-              'Content-Type': 'multipart/form-data;charset=utf-8'
-            })
-            .then((res) => {
-              if (res.code == '200') {
-                element.state = 2
-                let iData = {
-                  id: element.id,
-                  url: res.data.url,
-                  state: element.state
-                }
-                api_image_put(iData).then(({ msg }) => {
-                  this.$notify({
-                    title: '成功',
-                    message: msg,
-                    type: 'success',
-                    duration: 1000
-                  })
-                })
-              }
-            })
-        }
-      })
+      console.log(this.form.alibaba.albumID, this.form.images)
     },
     onAlibabaCoverClk(img, opt) {
       this.dialog.show = !this.dialog.show
