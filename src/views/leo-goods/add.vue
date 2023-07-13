@@ -50,8 +50,7 @@
       </el-form-item>
       <el-form-item label="images" prop="images">
         <el-button type="primary" size="default" @click="sendToAlibaba">sendToAlibaba</el-button>
-        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
-          @getImages="e => {
+        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true" @getImages="e => {
           form.images = e
         }
           " :customzedBtn="[
@@ -69,21 +68,17 @@
             <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
           </div>
           <div v-if="dialog.opt == 'package'">
-            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
-              WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
-              WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
-              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
-              :toolBgc="options.toolBgc" :isModal="options.isModal"
-              :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
-              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight"
-              :cutWidth="options.cutWidth" :cutHeight="options.cutHeight"
-              :sizeChange="options.sizeChange" :moveAble="options.moveAble"
-              :imgMove="options.imgMove" :originalGraph="options.originalGraph"
-              :WatermarkTextX="options.WatermarkTextX" :WatermarkTextY="options.WatermarkTextY"
-              :smallToUpload="options.smallToUpload" :saveCutPosition="options.saveCutPosition"
-              :scaleAble="options.scaleAble" :previewMode="options.previewMode"
-              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index"
-              @cutDown="cutDown" @onPrintImg="onPrintImg">
+            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg" WatermarkText="vue-img-cutter"
+              WatermarkTextFont="12px Sans-serif" WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
+              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate" :toolBgc="options.toolBgc"
+              :isModal="options.isModal" :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
+              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight" :cutWidth="options.cutWidth"
+              :cutHeight="options.cutHeight" :sizeChange="options.sizeChange" :moveAble="options.moveAble"
+              :imgMove="options.imgMove" :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
+              :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
+              :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble" :previewMode="options.previewMode"
+              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
+              @onPrintImg="onPrintImg">
               <template #open>
                 <button>Choose image</button>
               </template>
@@ -121,8 +116,7 @@
             <Category1688 v-model="form.alibaba.categoryID" @change="category1688Chnage" />
           </el-form-item>
           <el-form-item label="alibaba.prices">
-            <SaleInfo1688 v-if="product.id" :id="product.id" :values="form.alibaba.saleInfo"
-              ref="saleInfo" />
+            <SaleInfo1688 v-if="product.id" :id="product.id" :values="form.alibaba.saleInfo" ref="saleInfo" />
           </el-form-item>
           <el-form-item label="alibaba.stock" prop="alibaba.stock" class="input-middle">
             <el-input v-model="form.alibaba.stock"></el-input>
@@ -133,8 +127,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="alibaba.description" prop="alibaba.description">
-            <el-button type="primary" size="default"
-              @click="generateHtml('alibaba')">generateHtml</el-button>
+            <el-button type="primary" size="default" @click="generateHtml('alibaba')">generateHtml</el-button>
             <el-button type="primary" size="default"
               @click="handleCopy(form.alibaba.descalbumIDription, $event)">copy</el-button>
           </el-form-item>
@@ -149,8 +142,7 @@
           <el-form-item label="aliexpress.oem" prop="aliexpress.oem" class="input-middle">
             <el-input v-model="form.aliexpress.oem"></el-input>
           </el-form-item>
-          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId"
-            class="input-middle">
+          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId" class="input-middle">
             <el-input v-model="form.aliexpress.manufacturerPartId"></el-input>
           </el-form-item>
           <el-form-item label="aliexpress.unit" prop="aliexpress.unit" class="input-middle">
@@ -166,17 +158,14 @@
           </el-form-item>
           <el-form-item label="aliexpress.packingSizeUrl" class="input-middle">
             <el-select v-model="form.aliexpress.packingSizeUrl" placeholder="" clearable>
-              <el-option label="大包装"
-                value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
+              <el-option label="大包装" value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
               </el-option>
-              <el-option label="小包装"
-                value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
+              <el-option label="小包装" value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="aliexpress.description" prop="aliexpress.description">
-            <el-button type="primary" size="default"
-              @click="generateHtml('aliexpress')">generateHtml</el-button>
+            <el-button type="primary" size="default" @click="generateHtml('aliexpress')">generateHtml</el-button>
             <el-button type="primary" size="default"
               @click="handleCopy(form.aliexpress.description, $event)">copy</el-button>
           </el-form-item>
@@ -200,10 +189,8 @@
             <el-input v-model="form.amazon.price"></el-input>
           </el-form-item>
           <el-form-item label="amazon.listing" prop="amazon.listing">
-            <el-button type="primary" size="default"
-              @click="generateHtml('amazon')">generateListing</el-button>
-            <el-button type="primary" size="default"
-              @click="handleCopy(form.amazon.listing, $event)">copy</el-button>
+            <el-button type="primary" size="default" @click="generateHtml('amazon')">generateListing</el-button>
+            <el-button type="primary" size="default" @click="handleCopy(form.amazon.listing, $event)">copy</el-button>
           </el-form-item>
         </el-tab-pane>
       </el-tabs>
@@ -322,6 +309,7 @@ import {
   imageValidator,
   getShippingInfo,
   generateAlibabaObj,
+  generateAliexpressObj,
   generateGoods
 } from './index.js'
 import { api_goods_templates, api_goods_batch_post } from '@/api/leo-goods'
@@ -704,9 +692,20 @@ export default {
             unitWeight: this.form.weight,
             packageSize: this.form.packageSize
           })
-          const json = generateAlibabaObj(this.form.alibaba)
-          const goods = generateGoods('1688', json)
-          api_goods_batch_post(goods).then((res) => {
+          let json = generateAlibabaObj(this.form.alibaba)
+          let goods = generateGoods('1688', json)
+          const list = []
+          list.push(goods)
+
+          json = generateAliexpressObj(this.form.alibaba)
+          goods = generateGoods('aliexpress', json)
+          list.push(goods)
+
+          json = generateAmazonObj(this.form.alibaba)
+          goods = generateGoods('amazon', json)
+          list.push(goods)
+
+          api_goods_batch_post(list).then((res) => {
             this.$message.success(res.msg)
           })
         })
