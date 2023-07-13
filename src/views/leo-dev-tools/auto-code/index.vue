@@ -155,6 +155,7 @@
     </el-table>
 
     <el-button type="primary" @click="generateCode">生成代码</el-button>
+    <el-button type="primary" @click="onGenerateJson()">generateJson</el-button>
     <el-dialog :visible.sync="generateDialogVisible" title="代码生成" width="80%"
       v-if="generateDialogVisible">
       <el-table v-if="params.files.length>0" :data="params.files" border>
@@ -169,6 +170,7 @@
       </el-table>
       <div slot="footer">
         <el-button @click="onConfirmGenerate()">Confirm</el-button>
+
       </div>
     </el-dialog>
   </div>
@@ -202,14 +204,14 @@
 import { htmlTag } from '@/utils/html'
 import { api_table_list, api_table_info } from '@/api/leo-table'
 import { exists } from '@/api/leo-file'
-import {javaProjectPath,vueProjectPath} from '@/api/index'
+import { javaProjectPath, vueProjectPath } from '@/api/index'
 const constant = {
   javaProjectName: 'leo-fly',
   javaProjectPath,
   javaSource: '/src/main/java',
   vueProjectPath,
   vueProjectName: 'vue-element-admin',
-  javaBasePackage:'com.leo.fly.db'
+  javaBasePackage: 'com.leo.fly.db'
 }
 
 import { api_system_setting_get } from '@/api/leo-system-setting'
@@ -482,6 +484,14 @@ export default {
           this.$message({ type: 'success', message: res.msg })
         })
       })
+    },
+    onGenerateJson() {
+      console.log(this.fields)
+      let json = {}
+      this.fields.forEach((e) => {
+        json[e.dbKey] = null
+      })
+      console.log(json)
     },
 
     onChangeFileShow(item, index) {

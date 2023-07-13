@@ -2,16 +2,18 @@
   <div class="app-container">
     <el-form ref="elForm" :model="formData" :rules="rules" label-width="180px">
       <el-form-item label="code" prop="code">
-        <el-input v-model="formData.code" placeholder="" size="normal" clearable @change=""></el-input>
+        <el-input v-model="formData.code" placeholder="" size="normal" clearable></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="product.categoryId" @change="setCategoryID" categoryContent="设置为产品名" />
+        <Category1688 v-model="product.categoryId" @change="setCategoryID"
+          categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 @change="setGroupID" :value="product.groupId" :categoryID="formData.categoryID"
@@ -19,15 +21,16 @@
       </el-form-item>
       <el-form-item label="attributes" prop="attributes">
         <Attribute1688 ref="attributes" :code="product.code" :carFitment="JSON.parse(product.model)"
-          v-if="flag && attributeKey > 19999" :key="attributeKey" @getAttributes="getAttributes" :params="{
+          v-if="flag && attributeKey > 19999" :key="attributeKey" @getAttributes="getAttributes"
+          :params="{
             categoryID: formData.categoryID,
             webSite: '1688',
             groupID: formData.groupID
           }" />
       </el-form-item>
       <el-form-item label="subject" prop="subject">
-        <Subject1688 @change="e => handleSubjectChange(e)" :carFitment="JSON.parse(product.model)" v-if="flag"
-          :product="product" :key="subjectKey" />
+        <Subject1688 @change="e => handleSubjectChange(e)" :carFitment="JSON.parse(product.model)"
+          v-if="flag" :product="product" :key="subjectKey" />
       </el-form-item>
 
       <el-form-item label="language" prop="language">
@@ -39,9 +42,10 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -57,38 +61,42 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="albumID" prop="albumID">
-        <el-select v-model="formData.albumID" clearable @change="">
-          <el-option v-for="item in albumOptions" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="formData.albumID" clearable>
+          <el-option v-for="item in albumOptions" :key="item.value" :label="item.label"
+            :value="item.value">
           </el-option>
         </el-select>
 
       </el-form-item>
       <el-form-item label="image" prop="image">
-        <Image1688 v-if="$route.params.id" :ref="$route.params.id" :product-id="$route.params.id" :sources="[]"
-          @getImages="getImages" />
+        <Image1688 v-if="$route.params.id" :ref="$route.params.id" :product-id="$route.params.id"
+          :sources="[]" @getImages="getImages" />
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="flag" :id="product.id" @showHistory="showHistory" :values="formData.saleInfo"
-          ref="saleInfo" />
+        <SaleInfo1688 v-if="flag" :id="product.id" @showHistory="showHistory"
+          :values="formData.saleInfo" ref="saleInfo" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 ref="shippingInfo"
-          :values="{ 'unitWeight': product.weight, 'packageSize': product.packageSize }" v-if="flag" />
+          :values="{ 'unitWeight': product.weight, 'packageSize': product.packageSize }"
+          v-if="flag" />
       </el-form-item>
       <el-form-item label="webSite" prop="webSite">
         <el-radio-group v-model="formData.webSite" size="medium">
-          <el-radio v-for="(item, index) in webSiteOptions" :key="index" :label="item.value" :disabled="item.disabled">{{
+          <el-radio v-for="(item, index) in webSiteOptions" :key="index" :label="item.value"
+            :disabled="item.disabled">{{
             item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="sevenDaysRefunds" prop="sevenDaysRefunds">
         <el-radio-group v-model="formData.sevenDaysRefunds" size="medium">
-          <el-radio v-for="(item, index) in sevenDaysRefundsOptions" :key="index" :label="item.value"
-            :disabled="item.disabled">{{ item.label }}</el-radio>
+          <el-radio v-for="(item, index) in sevenDaysRefundsOptions" :key="index"
+            :label="item.value" :disabled="item.disabled">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <Description1688 :productImages="formData.image.images" :key="'description' + key.description"></Description1688>
+        <Description1688 :productImages="formData.image.images"
+          :key="'description' + key.description"></Description1688>
       </el-form-item>
       <el-form-item size="large">
         <el-button type="primary" @click="submitForm">提交</el-button>
@@ -128,7 +136,7 @@ const validatorAttributes = (rule, value, callback) => {
 }
 const albumOptions = [
   { label: '宝马刹车片', value: '335902400' },
-  { label: '奔驰刹车片', value: '335746283' },
+  { label: '奔驰刹车片', value: '335746283' }
 ]
 export default {
   name: 'LeoAlibabaPost',
@@ -142,7 +150,7 @@ export default {
     SaleInfo1688,
     ShippingInfo1688,
     Description1688,
-    LeoHistory,
+    LeoHistory
   },
   props: [],
   data() {
@@ -339,8 +347,8 @@ export default {
   },
   methods: {
     getImages(e) {
-      this.formData.image.images = e.map(i => i.large)
-      this.formData.image.idList = e.map(i => i.id)
+      this.formData.image.images = e.map((i) => i.large)
+      this.formData.image.idList = e.map((i) => i.id)
       this.$refs['elForm'].validate((valid) => {
         if (!valid) return
       })
@@ -386,9 +394,9 @@ export default {
       })
     },
     submitForm() {
-      this.$refs['saleInfo'].valid().then(bool => {
+      this.$refs['saleInfo'].valid().then((bool) => {
         if (!bool) return
-        this.$refs['attributes'].valid().then(bool2 => {
+        this.$refs['attributes'].valid().then((bool2) => {
           if (!bool2) return
           this.$refs['elForm'].validate((valid) => {
             if (!valid) return
@@ -400,7 +408,7 @@ export default {
             this.formData.webSite = '1688'
             this.formData.productLineId = null
             this.formData.sevenDaysRefunds = false
-            console.log(this.formData);
+            console.log(this.formData)
             api_product_alibaba_save(this.formData).then((res) => {
               this.$message.success(res.msg)
             })
@@ -412,9 +420,9 @@ export default {
       this.$refs['elForm'].resetFields()
     },
     to1688Attributes(list) {
-      this.formData.attributes = list.map(element => {
+      this.formData.attributes = list.map((element) => {
         if (element.value) {
-          if (typeof (element.value) == 'object') {
+          if (typeof element.value == 'object') {
             if (Array.isArray(element.value)) {
               element.value = listToString(element.value, ',')
             } else {
@@ -425,7 +433,7 @@ export default {
           }
         }
         return element
-      });
+      })
     },
     handleSubjectChange(e) {
       this.formData.subject = e

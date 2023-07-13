@@ -38,7 +38,7 @@ export function api_goods_get(id) {
 
 export function api_goods_page(data) {
   return request({
-    url: service+'/goods/page',
+    url: service + '/goods/page',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function api_goods_page(data) {
 
 export function api_goods_templates(data) {
   return request({
-    url: service+'/goods/templates',
+    url: service + '/goods/templates',
     method: 'post',
     data
   })
