@@ -310,6 +310,7 @@ import {
   getShippingInfo,
   generateAlibabaObj,
   generateAliexpressObj,
+  generateAmazonObj,
   generateGoods
 } from './index.js'
 import { api_goods_templates, api_goods_batch_post } from '@/api/leo-goods'
@@ -692,17 +693,17 @@ export default {
             unitWeight: this.form.weight,
             packageSize: this.form.packageSize
           })
-          let json = generateAlibabaObj(this.form.alibaba)
+          let json = generateAlibabaObj(this.form)
           let goods = generateGoods('1688', json)
           const list = []
           list.push(goods)
 
-          json = generateAliexpressObj(this.form.alibaba)
+          json = generateAliexpressObj(this.form)
           goods = generateGoods('aliexpress', json)
           list.push(goods)
 
-          json = generateAmazonObj(this.form.alibaba)
-          goods = generateGoods('amazon', json)
+          json = generateAmazonObj(this.form)
+          goods = generateGoods('amazon', json, this.form.image)
           list.push(goods)
 
           api_goods_batch_post(list).then((res) => {

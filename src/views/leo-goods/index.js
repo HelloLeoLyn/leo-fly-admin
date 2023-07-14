@@ -32,7 +32,7 @@ export function generateAlibabaObj (base) {
     saleInfo,
     shippingInfo,
     description
-  } = base
+  } = base.alibaba
   let obj = {
     albumID: '335902400',
     webSite: '1688',
@@ -60,13 +60,13 @@ export function generateAlibabaObj (base) {
   })
   return obj
 }
-export function generateGoods (webSite, json) {
+export function generateGoods (webSite, json, images) {
   const goods = {
     id: null,
     product_id: json.productId,
     platform: webSite,
     subject: json.subject,
-    images: json.image.images,
+    images: images,
     main_image: null,
     tag: null,
     third_part_id: null,
@@ -84,7 +84,7 @@ export function generateAliexpressObj (form) {
     packingWidth,
     packingHeight,
     price
-  } = form
+  } = form.aliexpress
   const obj = {
     subject,
     images,
@@ -107,7 +107,7 @@ export function generateAliexpressObj (form) {
   return obj
 }
 
-export function generateAmazonObj (form) {
+export function generateAmazonObj () {
   const obj = {
     feed_product_type: 'vehiclebrakepad',
     item_sku: null,
