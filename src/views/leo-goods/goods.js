@@ -1,4 +1,4 @@
-export function isIndexKey (source, target) {
+export function isIndexKey(source, target) {
   return source.indexOf(target) >= 0
 }
 export const imageValidator = (rule, value, callback, images) => {
@@ -7,7 +7,7 @@ export const imageValidator = (rule, value, callback, images) => {
   }
   callback()
 }
-export function getShippingInfo (data) {
+export function getShippingInfo(data) {
   let params = {
     freightTemplateID: 14729534,
     unitWeight: data.unitWeight, // product.weight
@@ -22,7 +22,7 @@ export function getShippingInfo (data) {
   return params
 }
 
-export function generateAlibabaObj (base) {
+function generateAlibabaObj(form) {
   const {
     categoryID,
     groupID,
@@ -32,7 +32,7 @@ export function generateAlibabaObj (base) {
     saleInfo,
     shippingInfo,
     description
-  } = base.alibaba
+  } = form.alibaba
   let obj = {
     albumID: '335902400',
     webSite: '1688',
@@ -41,8 +41,8 @@ export function generateAlibabaObj (base) {
     periodOfValidity: 365,
     bizType: 1,
     pictureAuth: false,
-    localProductId: base.productId,
-    productID: base.productId,
+    localProductId: form.productId,
+    productID: form.productId,
     categoryID,
     groupID,
     subject,
@@ -52,29 +52,31 @@ export function generateAlibabaObj (base) {
     shippingInfo,
     description
   }
-  const keys = Object.keys(obj)
-  keys.forEach(key => {
-    if (!base[key]) {
-      console.log(key)
-    }
-  })
   return obj
 }
-export function generateGoods (webSite, json, images) {
+export function generateGoods(webSite, form) {
+  let json
+  if (webSite == '1688') {
+    json = generateAlibabaObj(form)
+  } else if (webSite == 'aliexpress') {
+    json = generateAliexpressObj(form)
+  } else {
+    json = generateAmazonObj(form)
+  }
   const goods = {
     id: null,
-    product_id: json.productId,
+    productId: form.productId,
     platform: webSite,
     subject: json.subject,
-    images: images,
-    main_image: null,
+    images: form.images.map(img => img.url),
+    mainImage: null,
     tag: null,
-    third_part_id: null,
+    thirdPartId: null,
     json
   }
   return goods
 }
-export function generateAliexpressObj (form) {
+function generateAliexpressObj(form) {
   const {
     subject,
     images,
@@ -107,7 +109,7 @@ export function generateAliexpressObj (form) {
   return obj
 }
 
-export function generateAmazonObj () {
+function generateAmazonObj() {
   const obj = {
     feed_product_type: 'vehiclebrakepad',
     item_sku: null,
