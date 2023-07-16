@@ -3,7 +3,8 @@
     <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
         flex-wrap: wrap;">
       <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index" style=" width: 200px;height: 200px;">
+        <el-col v-for="image, index in checkedList" :key="index"
+          style=" width: 200px;height: 200px;">
           <vue-hover-mask>
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <template v-slot:action>
@@ -20,13 +21,15 @@
     </el-row>
     <el-dialog :visible.sync="visible" width="1100" @close="handleClose">
       <el-row :gutter="5" v-if="images" :key="changeKey">
-        <el-col v-for="image, index in images" :key="image.id" style="width:180px;">
+        <el-col v-for="image in images" :key="image.id" style="width:180px;">
           <vue-hover-mask @click="handleClick(image)">
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <label style="position: absolute" :ref="'checked' + image.id"
-              :class="{ 'leo-sm-label-checked': image.checked }"><i class="el-icon-check leo-icon-check"></i></label>
+              :class="{ 'leo-sm-label-checked': image.checked }"><i
+                class="el-icon-check leo-icon-check"></i></label>
             <template v-slot:action>
-              <el-button type="text" size="mini" v-if="customzedBtn" @click="handleCustomzedClick(image)">{{
+              <el-button type="text" size="mini" v-if="customzedBtn"
+                @click="handleCustomzedClick(image)">{{
                 customzedBtn.label }}
               </el-button>
             </template>
@@ -121,7 +124,7 @@ export default {
     },
     customzedBtn: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
   },
   mounted() {
@@ -151,18 +154,27 @@ export default {
         if (res.data && res.data.length > 0) {
           api_get_product(this.productId).then((newProduct) => {
             this.productImages = newProduct.data.images
-            const images = res.data.filter((image) => image.status != -1).map((image) => {
-              let checkIndex = -1
-              if (this.productImages && this.productImages.length > 0) {
-                checkIndex = this.productImages.findIndex((pi) => {
-                  return pi == image.id
-                })
-              }
-              image.productId = image.code
-              image.url = service + '/img/' + image.code + '/' + image.name + '?' + new Date().getTime()
-              image.checked = checkIndex >= 0
-              return image
-            })
+            const images = res.data
+              .filter((image) => image.status != -1)
+              .map((image) => {
+                let checkIndex = -1
+                if (this.productImages && this.productImages.length > 0) {
+                  checkIndex = this.productImages.findIndex((pi) => {
+                    return pi == image.id
+                  })
+                }
+                image.productId = image.code
+                image.url =
+                  service +
+                  '/img/' +
+                  image.code +
+                  '/' +
+                  image.name +
+                  '?' +
+                  new Date().getTime()
+                image.checked = checkIndex >= 0
+                return image
+              })
             this.images = images
             this.checkedList = this.images.filter((img) => img.checked)
             this.getImages()

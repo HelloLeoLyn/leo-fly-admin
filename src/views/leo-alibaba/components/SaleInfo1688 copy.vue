@@ -3,18 +3,17 @@
     <el-form :model="params" :rules="rules" ref="params" label-width="0px">
       <el-switch v-model="setting"></el-switch>
       <div v-if="setting">
-        <!-- <el-row>
+        <el-row>
           <el-checkbox v-model="params.supportOnlineTrade">supportOnlineTrade</el-checkbox>
           <el-checkbox v-model="params.mixWholeSale">mixWholeSale</el-checkbox>
           <el-checkbox v-model="params.priceAuth">priceAuth</el-checkbox>
-        </el-row> -->
+        </el-row>
         <el-table :data="params.priceRanges" border class="tableBox">
           <el-table-column label="startQuantity">
             <template slot-scope="{row,$index}">
               <el-form-item label-width="0" :prop="'priceRanges.' + $index + '.startQuantity'"
                 :rules="rules.startQuantity">
-                <el-input v-model="row.startQuantity" type="number" class="edit-input"
-                  @change="changeObj">
+                <el-input v-model="row.startQuantity" type="number" class="edit-input">
                 </el-input>
               </el-form-item>
             </template>
@@ -23,7 +22,7 @@
             <template slot-scope="{row,$index}">
               <el-form-item label-width="0" :prop="'priceRanges.' + $index + '.price'"
                 :rules="rules.price">
-                <el-input v-model="row.price" class="edit-input" @change="changeObj" />
+                <el-input v-model="row.price" class="edit-input" />
               </el-form-item>
             </template>
           </el-table-column>
@@ -39,14 +38,14 @@
         </el-table>
         <el-form-item label="amountOnSale" prop="amountOnSale" :rules="rules.amountOnSale"
           label-width="100">
-          <el-input v-model="params.amountOnSale" style="width:200px" @change="changeObj" />
+          <el-input v-model="params.amountOnSale" style="width:200px" />
         </el-form-item>
         <el-form-item label="minOrderQuantity" prop="minOrderQuantity"
           :rules="rules.minOrderQuantity" label-width="100">
-          <el-input v-model="params.minOrderQuantity" style="width:200px" @change="changeObj" />
+          <el-input v-model="params.minOrderQuantity" style="width:200px" />
         </el-form-item>
         <el-form-item label="unit" prop="unit" :rules="rules.unit" label-width="100">
-          <el-select v-model="params.unit" clearable @change="changeObj">
+          <el-select v-model="params.unit" clearable>
             <el-option label="套" value="套"></el-option>
             <el-option label="件" value="件"></el-option>
             <el-option label="个" value="个"></el-option>
@@ -54,9 +53,9 @@
             <el-option label="吨" value="吨"></el-option>
           </el-select>
         </el-form-item>
+
       </div>
     </el-form>
-    <LeoHistory :productId="productId" v-model="history"></LeoHistory>
   </div>
 </template>
 <style lang="scss">
@@ -82,7 +81,6 @@
 </style>
 <script>
 import { moneyValidator, countValidator } from '@/utils/validate'
-import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 const moneyCompare = (rule, value, callback, params) => {
   const index = rule.field.split('.')[1]
   if (index == '0') {
@@ -97,13 +95,12 @@ const moneyCompare = (rule, value, callback, params) => {
   }
 }
 export default {
-  components: { LeoHistory },
   props: {
-    productId: {
+    id: {
       type: [String, Number],
       required: true
     },
-    value: {
+    values: {
       type: Object,
       default: () => {
         return
@@ -112,10 +109,7 @@ export default {
   },
   data() {
     return {
-      history: {
-        show: false,
-        productId: this.productId
-      },
+      subject: '',
       setting: true,
       rules: {
         amountOnSale: [
@@ -173,14 +167,11 @@ export default {
     }
   },
   created() {
-    this.params = Object.assign(this.params, this.value)
+    this.params = Object.assign(this.params, this.values)
   },
   methods: {
-    changeObj() {
-      this.$emit('input', this.params)
-    },
-    showHistory() {
-      this.history.show = !this.history.show
+    showHistory(e) {
+      this.$emit('showHistory', e)
     },
     addPriceRow() {
       if (this.params.priceRanges.length > 2) {
@@ -190,6 +181,9 @@ export default {
     },
     removePriceRow(index) {
       this.params.priceRanges.splice(index, 1)
+    },
+    change(e) {
+      this.$emit('change', e)
     },
     getVal() {
       return this.params

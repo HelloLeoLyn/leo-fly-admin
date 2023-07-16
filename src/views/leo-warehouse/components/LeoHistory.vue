@@ -1,9 +1,8 @@
 <template>
   <div class="leo-quote-history">
-    <el-drawer title="我嵌套了表格!" :visible.sync="show" :direction="direction" size="600px"
+    <el-drawer title="我嵌套了表格!" :visible.sync="value.show" :direction="direction" size="600px"
       :with-header="false">
       <el-tabs style="padding-left:20px;" v-model="activeName" type="card" tabPosition="top">
-        <!-- <el-button @click="doSearch()" class="el-icon-search" type="primary">Search</el-button> -->
         <el-tab-pane name="in" label="入库记录" class="leo-quote-history-tabs-item">
           <el-table border :data="inbound" style="width: 100%" height="400">
             <el-table-column type="index" />
@@ -58,6 +57,10 @@ import Pagination from '@/components/Pagination'
 export default {
   components: { Pagination },
   props: {
+    value: {
+      type: Object,
+      required: true
+    },
     productId: {
       type: Number,
       required: true
@@ -100,10 +103,11 @@ export default {
     }
   },
   mounted() {
+    // console.log(this.productId)
     if (!this.productId || this.productId < 0) {
       return
     }
-    this.show = true
+    // this.show = true
     this.doSearchIn()
     this.doSearchOut()
   },

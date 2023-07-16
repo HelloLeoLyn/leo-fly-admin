@@ -5,15 +5,19 @@
         <vue-hover-mask @click="handleClick(image)">
           <el-image :src="image.url" width="100%" class="leo-product-images-item" />
           <label style="position: absolute" :ref="'checked' + image.id"
-            :class="{ 'leo-sm-label-checked': image.checked }"><i class="el-icon-check leo-icon-check"></i></label>
+            :class="{ 'leo-sm-label-checked': image.checked }"><i
+              class="el-icon-check leo-icon-check"></i></label>
           <template v-slot:action>
             <el-row v-for="btn, key in customzedBtn" :key="key">
-              <el-button type="text" size="mini" @click="handleCustomzedClick(image, btn.opt)">{{ btn.label }}
+              <el-button type="text" size="mini"
+                @click="handleCustomzedClick(image, btn.opt)">{{ btn.label }}
               </el-button>
             </el-row>
             <el-row>
-              <el-button type="text" size="mini" @click="handleRemoveBtnClick(image.id)"> 删除 </el-button>
-              <el-button type="text" size="mini" v-if="bigBtn" @click="handleBigBtnClick(image.url)">大图</el-button>
+              <el-button type="text" size="mini" @click="handleRemoveBtnClick(image.id)"> 删除
+              </el-button>
+              <el-button type="text" size="mini" v-if="bigBtn"
+                @click="handleBigBtnClick(image.url)">大图</el-button>
             </el-row>
           </template>
         </vue-hover-mask>
@@ -63,7 +67,7 @@ import { api_get_product } from '@/api/leo-product'
 import { service } from '@/api/index'
 export default {
   components: {
-    VueHoverMask,
+    VueHoverMask
   },
   data() {
     return {
@@ -95,7 +99,7 @@ export default {
     },
     customzedBtn: {
       type: Array,
-      default: () => { }
+      default: () => {}
     }
   },
   mounted() {
@@ -108,25 +112,36 @@ export default {
     },
 
     load() {
-      getImagesByProductId(this.productId).then(res => {
+      getImagesByProductId(this.productId).then((res) => {
         if (res.data && res.data.length > 0) {
-          api_get_product(this.productId).then(newProduct => {
+          api_get_product(this.productId).then((newProduct) => {
             this.productImages = newProduct.data.images
             const images = res.data
-              .filter(image => image.status != -1)
-              .map(image => {
+              .filter((image) => image.status != -1)
+              .map((image) => {
                 let checkIndex = -1
                 if (this.productImages && this.productImages.length > 0) {
-                  checkIndex = this.productImages.findIndex(pi => {
+                  checkIndex = this.productImages.findIndex((pi) => {
                     return pi == image.id
                   })
                 }
-                if (image.name.indexOf('cover') >= 0 || image.name.indexOf('package') >= 0 || image.name.indexOf('detail') >= 0) {
+                if (
+                  image.name.indexOf('cover') >= 0 ||
+                  image.name.indexOf('package') >= 0 ||
+                  image.name.indexOf('detail') >= 0
+                ) {
                   image.imageName = image.name
                   image.imageId = image.id
                 }
                 image.productId = image.code
-                image.url = service + '/img/' + image.code + '/' + image.name + '?' + new Date().getTime()
+                image.url =
+                  service +
+                  '/img/' +
+                  image.code +
+                  '/' +
+                  image.name +
+                  '?' +
+                  new Date().getTime()
                 image.checked = checkIndex >= 0
                 return image
               })
@@ -155,7 +170,7 @@ export default {
       this.$emit('onCustomzedClick', image, opt)
     },
     getIdIndex(id) {
-      return this.images.findIndex(img => {
+      return this.images.findIndex((img) => {
         return img.id == id
       })
     },
@@ -170,7 +185,7 @@ export default {
       const key = this.getIdIndex(id)
       this.images[key].status = -1
       api_image_delete(id).then(() => {
-        this.images = this.images.filter(img => img.status != -1)
+        this.images = this.images.filter((img) => img.status != -1)
         this.changeKey++
         this.$notify.success('successfully')
       })

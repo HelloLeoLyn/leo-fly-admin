@@ -1,10 +1,11 @@
 <template>
   <div>
-    <el-button type="primary" size="default" @click="onGetAblum">获取相册</el-button>
     <el-select v-model="newVal" clearable filterable @change="e => $emit('change', e)">
-      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name" :value="item.albumID">
+      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name"
+        :value="item.albumID">
       </el-option>
     </el-select>
+    <el-button type="primary" size="default" @click="onGetAblum">获取相册</el-button>
   </div>
 </template>
 <script>
@@ -39,19 +40,17 @@ export default {
   },
   mounted() {
     this.newVal = this.value
-    this.onGetAblum()
+    const albumStr = localStorage.getItem('album')
+    if (albumStr) {
+      this.albumInfos = JSON.parse(albumStr)
+    }
   },
   methods: {
     onGetAblum() {
-      const albumStr = localStorage.getItem('album')
-      if (albumStr) {
-        this.albumInfos = JSON.parse(albumStr)
-      } else {
-        api_photo_alibaba_album(this.album).then((res) => {
-          this.albumInfos = res.data.albumInfos
-          localStorage.setItem('album', JSON.stringify(this.albumInfos))
-        })
-      }
+      api_photo_alibaba_album(this.album).then((res) => {
+        this.albumInfos = res.data.albumInfos
+        localStorage.setItem('album', JSON.stringify(this.albumInfos))
+      })
     }
   }
 }

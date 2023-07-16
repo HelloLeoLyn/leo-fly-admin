@@ -1,33 +1,25 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="8">
-        <el-select multiple v-model="groupID"  style="width:100%" @change="change">
-          <el-option  :label="opt.groupName" :value="opt.id" v-for="opt, key in options"
-            :key="key"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="12">
-        <Category1688Edit class="filter-item" :data="options" />
-      </el-col>
-    </el-row>
-
+    <el-select multiple :value="selectedOption" @change="updateSelectedOption($event)">
+      <el-option :label="opt.groupName" :value="opt.id" v-for="opt, key in options"
+        :key="key"></el-option>
+    </el-select>
   </div>
 </template>
+
 <script>
 import { category1688Group, categoryToGroup } from '@/utils/category'
-import Category1688Edit from '@/views/leo-alibaba/category/components/Edit.vue'
 export default {
-  components: { Category1688Edit },
+  // props: ['value'],
   props: {
     value: {
-      type: [String, Number, Array],
+      type: Array,
       default: (e) => {
         return e
       }
     },
     categoryID: {
-      type: [String, Number, Array],
+      type: [String, Number],
       default: (e) => {
         return e
       }
@@ -35,23 +27,34 @@ export default {
   },
   data() {
     return {
-      category1688AddVisible: false,
-      options: category1688Group,
-      groupID: []
+      selectedOption: this.value,
+      options: category1688Group
+    }
+  },
+  watch: {
+    value(newVal) {
+      // 当父组件的值变化时，更新子组件的选中项
+      this.selectedOption = newVal
     }
   },
   created() {
-    if (this.value) {
-      this.groupID = this.value
-    } else if (categoryToGroup[this.categoryID]) {
-      this.groupID = [categoryToGroup[this.categoryID]]
-      this.$emit('change', this.groupID)
-    }
+    this.fetchData()
   },
   methods: {
-    change(e) {
-      console.log(this.groupID);
-      this.$emit('change', e)
+    fetchData() {
+      // 进行数据获取的逻辑
+      // 可以使用 axios 或其他方法发送请求获取数据
+      // 示例中使用 setTimeout 模拟异步获取数据的过程
+      setTimeout(() => {
+        // this.$set(this, 'selectedOption', [categoryToGroup[this.categoryID]])
+        this.selectedOption = [categoryToGroup[this.categoryID]]
+        this.$emit('input', [categoryToGroup[this.categoryID]])
+      }, 1000)
+    },
+    updateSelectedOption(e) {
+      // 更新选中项，并通过自定义事件将新值发送给父组件
+      this.selectedOption = e
+      this.$emit('input', e)
     }
   }
 }
