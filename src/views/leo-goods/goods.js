@@ -1,4 +1,4 @@
-export function isIndexKey(source, target) {
+export function isIndexKey (source, target) {
   return source.indexOf(target) >= 0
 }
 export const imageValidator = (rule, value, callback, images) => {
@@ -7,7 +7,7 @@ export const imageValidator = (rule, value, callback, images) => {
   }
   callback()
 }
-export function getShippingInfo(data) {
+export function getShippingInfo (data) {
   let params = {
     freightTemplateID: 14729534,
     unitWeight: data.unitWeight, // product.weight
@@ -22,7 +22,7 @@ export function getShippingInfo(data) {
   return params
 }
 
-function generateAlibabaObj(form) {
+function generateAlibabaObj (form) {
   const {
     categoryID,
     groupID,
@@ -54,7 +54,7 @@ function generateAlibabaObj(form) {
   }
   return obj
 }
-export function generateGoods(webSite, form) {
+export function generateGoods (webSite, form) {
   let json
   if (webSite == '1688') {
     json = generateAlibabaObj(form)
@@ -68,7 +68,7 @@ export function generateGoods(webSite, form) {
     productId: form.productId,
     platform: webSite,
     subject: json.subject,
-    images: form.images.map(img => img.url),
+    images: form.images.filter(img => img.checked).map(img => img.url),
     mainImage: null,
     tag: null,
     thirdPartId: null,
@@ -76,7 +76,7 @@ export function generateGoods(webSite, form) {
   }
   return goods
 }
-function generateAliexpressObj(form) {
+function generateAliexpressObj (form) {
   const {
     subject,
     images,
@@ -109,7 +109,7 @@ function generateAliexpressObj(form) {
   return obj
 }
 
-function generateAmazonObj() {
+function generateAmazonObj () {
   const obj = {
     feed_product_type: 'vehiclebrakepad',
     item_sku: null,

@@ -16,7 +16,7 @@
     <el-button type="primary" size="default" @click="onGetAblum">获取相册</el-button>
     <el-row :gutter="20">
       <el-col :span="6" :offset="0" v-for="(item, index) in albumInfos" :key="index">
-        <el-card shadow="always" :body-style="{ padding: '20px',height:'200px' }">
+        <el-card shadow="always" :body-style="{ padding: '20px', height: '200px' }">
           <div slot="header">
             <span>{{ item.name }}</span>
           </div>
@@ -27,8 +27,7 @@
     </el-row>
     <h2>删除相册</h2>
     <el-select v-model="album.albumID" clearable filterable>
-      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name"
-        :value="item.albumID">
+      <el-option v-for="item in albumInfos" :key="item.albumID" :label="item.name" :value="item.albumID">
       </el-option>
     </el-select>
     <el-button type="primary" size="default" @click="onDeleteAlbum">删除相册</el-button>
@@ -76,7 +75,8 @@ export default {
     }
   },
   mounted() {
-    this.onGetAblum()
+    const albumStr = localStorage.getItem('album')
+    this.albumInfos = JSON.parse(albumStr)
   },
   methods: {
     handleCreateAlibabaAlbum() {
@@ -87,16 +87,11 @@ export default {
       })
     },
     onGetAblum() {
-      const albumStr = localStorage.getItem('album')
-      if (albumStr) {
-        this.albumInfos = JSON.parse(albumStr)
-      } else {
-        this.album.oceanApiId = this.albumApi.getList
-        api_photo_alibaba_album(this.album).then((res) => {
-          this.albumInfos = res.data.albumInfos
-          localStorage.setItem('album', JSON.stringify(this.albumInfos))
-        })
-      }
+      this.album.oceanApiId = this.albumApi.getList
+      api_photo_alibaba_album(this.album).then((res) => {
+        this.albumInfos = res.data.albumInfos
+        localStorage.setItem('album', JSON.stringify(this.albumInfos))
+      })
     },
     onDeleteAlbum() {
       this.album.oceanApiId = this.albumApi.delete
