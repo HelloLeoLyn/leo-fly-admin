@@ -49,7 +49,7 @@
       </el-table-column>
     </el-table>
     <LeoProductMergeMain v-if="list && list.length > 1" :list="list" ref="main" key="mainKey"></LeoProductMergeMain>
-    <leo-history :productId="history.productId" :show="history.show" :key="history.count" />
+    <LeoHistory :productId="history.productId" v-model="history" :key="history.count"></LeoHistory>
   </div>
 </template>
 <style lang="scss">

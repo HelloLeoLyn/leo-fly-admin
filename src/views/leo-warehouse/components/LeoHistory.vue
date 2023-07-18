@@ -1,7 +1,6 @@
 <template>
   <div class="leo-quote-history">
-    <el-drawer title="我嵌套了表格!" :visible.sync="value.show" :direction="direction" size="600px"
-      :with-header="false">
+    <el-drawer title="我嵌套了表格!" :visible.sync="value.show" :direction="direction" size="600px" :with-header="false">
       <el-tabs style="padding-left:20px;" v-model="activeName" type="card" tabPosition="top">
         <el-tab-pane name="in" label="入库记录" class="leo-quote-history-tabs-item">
           <el-table border :data="inbound" style="width: 100%" height="400">
@@ -19,15 +18,13 @@
             <el-table-column label="送货方式" prop="shipping" align="center" />
             <el-table-column label="nno" prop="nno" align="center" />
           </el-table>
-          <pagination v-show="inTable.total>0" :total="inTable.total" :page.sync="inTable.current"
+          <pagination v-show="inTable.total > 0" :total="inTable.total" :page.sync="inTable.current"
             :limit.sync="inTable.size" @pagination="doSearch" />
         </el-tab-pane>
         <el-tab-pane label="出库记录" name="out">
-          <el-table border :data="outbound" style="width: 100%;" height="400"
-            @row-dblclick="handleOutDbclick">
+          <el-table border :data="outbound" style="width: 100%;" height="400" @row-dblclick="handleOutDbclick">
             <!-- <el-table-column label="id" prop="id" align="center" /> -->
-            <el-table-column label="类型" prop="type" align="center" :formatter="typeFormatter"
-              fixed="left" />
+            <el-table-column label="类型" prop="type" align="center" :formatter="typeFormatter" fixed="left" />
             <el-table-column label="售价" prop="sellingPrice" align="center" fixed="left" />
             <el-table-column label="数量" prop="amount" align="center" fixed="left" />
             <el-table-column label="单位" prop="unit" align="center" />
@@ -43,13 +40,12 @@
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="outTable.total>0" :total="outTable.total"
-            :page.sync="outTable.current" :limit.sync="outTable.size" @pagination="doSearch" />
+          <pagination v-show="outTable.total > 0" :total="outTable.total" :page.sync="outTable.current"
+            :limit.sync="outTable.size" @pagination="doSearch" />
         </el-tab-pane>
       </el-tabs>
     </el-drawer>
   </div>
-
 </template>
 <script>
 import { api_warehouse_page } from '@/api/leo-warehouse'
@@ -62,7 +58,7 @@ export default {
       required: true
     },
     productId: {
-      type: Number,
+      type: [Number, String],
       required: true
     },
     rowAction: {
@@ -172,6 +168,7 @@ export default {
   .el-drawer__body {
     overflow: unset;
   }
+
   .pagination-container {
     padding: 0;
   }

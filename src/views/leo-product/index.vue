@@ -149,7 +149,7 @@
         </el-button>
       </el-transfer>
     </el-dialog>
-    <leo-history :productId="history.productId" :show="history.show" :key="history.count" />
+    <LeoHistory :productId="history.productId" v-model="history" :key="history.count"></LeoHistory>
   </div>
 </template>
 <style lang="scss">

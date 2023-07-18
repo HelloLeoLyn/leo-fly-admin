@@ -121,7 +121,7 @@
             <Category1688 v-model="form.alibaba.categoryID" @change="category1688Chnage" />
           </el-form-item>
           <el-form-item label="alibaba.prices">
-            <SaleInfo1688 v-if="product.id" :id="product.id" :values="form.alibaba.saleInfo"
+            <SaleInfo1688 :productId="$route.query.productId" :value="form.alibaba.saleInfo"
               ref="saleInfo" />
           </el-form-item>
           <el-form-item label="alibaba.stock" prop="alibaba.stock" class="input-middle">

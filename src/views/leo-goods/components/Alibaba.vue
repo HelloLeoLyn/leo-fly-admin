@@ -5,15 +5,13 @@
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="formData.categoryID" @change="setCategoryID"
-          categoryContent="设置为产品名" />
+        <Category1688 v-model="formData.categoryID" @change="setCategoryID" categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 v-model="formData.groupID" :categoryID="formData.categoryID" />
@@ -30,10 +28,9 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -52,18 +49,17 @@
         <Album v-model="formData.albumID"></Album>
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo"
-          :productId="goods.productId" />
+        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo" :productId="goods.productId" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <Description1688 :productImages="formData.image.images"
-          :key="'description' + key.description"></Description1688>
+        <!-- <Description1688 :productImages="formData.image.images" :key="'description' + key.description"></Description1688> -->
       </el-form-item>
       <el-form-item label="image" prop="image">
-        <Images v-model="formData.image.images" />
+        <!-- <p>{{goods}}</p> -->
+        <GoodsImages v-model="formData.image" :images="goodsImages()"></GoodsImages>
       </el-form-item>
       <el-form-item size="large">
         <el-button type="primary" @click="submitForm">提交</el-button>
@@ -78,7 +74,7 @@ import Subject1688 from '@/views/leo-alibaba/components/Subject1688.vue'
 import Album from '@/components/LeoAlibaba/Album.vue'
 import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
-import Images from '@/components/LeoImage/List.vue'
+import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import { api_goods_get } from '@/api/leo-goods'
 
@@ -91,18 +87,20 @@ export default {
     Album,
     SaleInfo1688,
     ShippingInfo1688,
-    Images,
+    GoodsImages,
     Description1688
   },
   props: [],
   data() {
     return {
+      imageId: 0,
       goodsId: '',
       key: {
         description: 0
       },
       goods: {
-        productId: null
+        productId: null,
+        images: []
       },
       formData: {
         albumID: null,
@@ -117,7 +115,7 @@ export default {
         periodOfValidity: 365,
         bizType: 1,
         pictureAuth: false,
-        image: { iamges: null, idList: [] },
+        image: {},
         skuInfos: undefined,
         saleInfo: null,
         shippingInfo: undefined,
@@ -246,6 +244,10 @@ export default {
     this.doGet()
   },
   methods: {
+    goodsImages() {
+      let id = 0
+      return this.goods.images.map(img => { return { url: img, status: 1, checked: 1, id: id++ } })
+    },
     submitForm() {
       this.$refs['elForm'].validate((valid) => {
         if (!valid) return
@@ -261,10 +263,12 @@ export default {
       if (!goods) {
         api_goods_get(this.$route.query.goodsId).then((res) => {
           this.formData = res.data.json
+          this.formData.image = {}
           this.goods = res.data
         })
       } else {
         this.formData = goods.json
+        this.formData.image = {}
         this.goods = goods
       }
     }
