@@ -24,7 +24,6 @@
       </el-col>
       <el-col :span="4" style="padding-top: 130px">
         <el-button v-if="reloadable" @click="load">刷新</el-button>
-        <!-- <el-button @click="onConfirm" type="primary">确定</el-button> -->
       </el-col>
     </el-row>
     <el-dialog :visible.sync="visible" width="1100">

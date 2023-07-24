@@ -3,7 +3,8 @@
     <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
         flex-wrap: wrap;">
       <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index" style=" width: 200px;height: 200px;">
+        <el-col v-for="image, index in checkedList" :key="index"
+          style=" width: 200px;height: 200px;">
           <vue-hover-mask>
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <template v-slot:action>
@@ -15,6 +16,7 @@
         </el-col>
         <el-col>
           <el-button @click="check" type="text">选择</el-button>
+          <el-button @click="upload" type="text">上传</el-button>
         </el-col>
       </draggable>
     </el-row>
@@ -24,7 +26,8 @@
           <vue-hover-mask @click="handleClick(image)">
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <label style="position: absolute" :ref="'checked' + image.id"
-              :class="{ 'leo-sm-label-checked': image.checked }"><i class="el-icon-check leo-icon-check"></i></label>
+              :class="{ 'leo-sm-label-checked': image.checked }"><i
+                class="el-icon-check leo-icon-check"></i></label>
             <template v-slot:action>
             </template>
           </vue-hover-mask>
@@ -66,6 +69,7 @@
 <script>
 import draggable from 'vuedraggable'
 import VueHoverMask from 'vue-hover-mask'
+
 export default {
   components: {
     VueHoverMask,
@@ -75,7 +79,7 @@ export default {
     return {
       visible: false,
       image: {},
-      checkedList: [],
+      checkedList: []
     }
   },
   props: {
@@ -133,6 +137,9 @@ export default {
     },
     check() {
       this.visible = !this.visible
+    },
+    upload() {
+      this.$emit('upload', this.images)
     }
   }
 }
