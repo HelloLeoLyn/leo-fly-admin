@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="elForm" :model="formData" :rules="rules" label-width="180px">
-      <el-form-item label="productType" prop="productType">
+      <el-form-item label="productID" prop="productID">
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
@@ -84,6 +84,8 @@ import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import { api_goods_get } from '@/api/leo-goods'
 import axios from 'axios'
 import { getBase64Image, dataURLtoFile } from '@/utils/image'
+import { api_alibaba_auth } from '@/api/leo-alibaba'
+import { MessageBox, Message } from 'element-ui'
 export default {
   name: 'LeoAlibabaPost',
   components: {
@@ -251,9 +253,8 @@ export default {
   },
   methods: {
     goodsImages() {
-      let id = 0
       return this.goods.images.map((img) => {
-        return { url: img, status: 1, checked: 1, id: id++ }
+        return { url: img.url, status: 1, checked: 1, id: img.imageId }
       })
     },
     submitForm() {
@@ -280,33 +281,65 @@ export default {
         this.goods = goods
       }
     },
-    onsubmit() {
+    onsubmit(images) {
       let _this = this
-      this.images.forEach((element) => {
+      console.log(images)
+      if (1 == 1) {
+        return
+      }
+      images.forEach((element) => {
         if (element.checked == 1) {
           let image = new Image()
           image.src = element.url
-          // console.log(element)
           image.setAttribute('crossOrigin', 'anonymous')
           image.onload = function () {
             let base64 = getBase64Image(image)
             let newFile = dataURLtoFile(base64, element.uid)
             let formData = new FormData()
             formData.append('file', newFile)
-            formData.append('albumID', _this.albumId)
+            formData.append('albumID', _this.formData.albumID)
             axios
               .post('http://localhost:8080/photo/alibaba/uploadOne', formData, {
                 'Content-Type': 'multipart/form-data;charset=utf-8'
               })
-              .then((res) => {
-                if (res.data === 'SUCCESS') {
-                  this.$notify({
+              .then(({ data }) => {
+                if (data.code == '200') {
+                  _this.$notify({
                     title: '成功',
                     message: '提交成功',
                     type: 'success',
                     duration: 1000
                   })
+                } else if (data.code == '001994') {
+                  api_alibaba_auth().then((res) => {
+                    MessageBox.confirm(
+                      '还未登录阿里巴巴平台，是否打开登录页面',
+                      '提示',
+                      {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                      }
+                    ).then(() => {
+                      window.open(res.data)
+                    })
+                  })
+                } else {
+                  _this.$notify({
+                    title: '失败',
+                    message: data.msg,
+                    type: 'error',
+                    duration: 1000
+                  })
                 }
+              })
+              .catch((reason) => {
+                _this.$notify({
+                  title: '失败',
+                  message: reason,
+                  type: 'error',
+                  duration: 1000
+                })
               })
           }
         }

@@ -131,7 +131,10 @@ export default {
     },
 
     handleRemoveBtnClick(image) {
-      image.checked = false
+      const index = this.images.findIndex((img) => {
+        return img.id == image.id
+      })
+      this.images[index].checked = !this.images[index].checked
       this.checkedList = this.images.filter((img) => img.checked)
       this.$emit('input', this.alibaba(this.checkedList))
     },
