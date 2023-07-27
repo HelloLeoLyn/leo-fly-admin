@@ -4,7 +4,9 @@
         flex-wrap: wrap;">
       <draggable :list="checkedList">
         <el-col v-for="image, index in checkedList" :key="index"
-          style=" width: 200px;height: 200px;">
+          style=" width: 200px;height: 200px;padding: 5px;"
+          :class="{'goods-image-is-upload':image.status==2}">
+          <LeoIntervalLoad v-if="image.status!=2" @onLoad="getImage(image)" />
           <vue-hover-mask>
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <template v-slot:action>
@@ -69,11 +71,13 @@
 <script>
 import draggable from 'vuedraggable'
 import VueHoverMask from 'vue-hover-mask'
-
+import { api_image_get } from '@/api/leo-image.js'
+import LeoIntervalLoad from '@/components/LeoIntervalLoad'
 export default {
   components: {
     VueHoverMask,
-    draggable
+    draggable,
+    LeoIntervalLoad
   },
   data() {
     return {
@@ -138,6 +142,11 @@ export default {
       this.checkedList = this.images.filter((img) => img.checked)
       this.$emit('input', this.alibaba(this.checkedList))
     },
+    getImage(image) {
+      api_image_get(image.id).then((res) => {
+        image.status = res.data.status
+      })
+    },
     check() {
       this.visible = !this.visible
     },
@@ -153,7 +162,9 @@ export default {
 .iconfont {
   font-size: 25px;
 }
-
+.goods-image-is-upload {
+  background-color: #13ce66;
+}
 .leo-icon-check {
   font-size: 12px;
   margin-top: 11px;

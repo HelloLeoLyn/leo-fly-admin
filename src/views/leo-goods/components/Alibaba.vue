@@ -5,13 +5,15 @@
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="formData.categoryID" @change="setCategoryID" categoryContent="设置为产品名" />
+        <Category1688 v-model="formData.categoryID" @change="setCategoryID"
+          categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 v-model="formData.groupID" :categoryID="formData.categoryID" />
@@ -28,9 +30,10 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -49,7 +52,8 @@
         <Album v-model="formData.albumID"></Album>
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo" :productId="goods.productId" />
+        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo"
+          :productId="goods.productId" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
@@ -81,6 +85,7 @@ import { api_goods_get } from '@/api/leo-goods'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
 import { api_alibaba_auth } from '@/api/leo-alibaba'
+import { api_product_alibaba_add } from '@/api/leo-product-alibaba'
 export default {
   name: 'LeoAlibabaPost',
   components: {
@@ -255,6 +260,9 @@ export default {
     submitForm() {
       this.$refs['elForm'].validate((valid) => {
         if (!valid) return
+        api_product_alibaba_add(this.formData).then((res) => {
+          console.log(res)
+        })
       })
     },
     setCategoryID(e) {

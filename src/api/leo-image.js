@@ -26,7 +26,12 @@ export function getImageByProductId(productId, pixel) {
   return service + '/product/image/main/' + productId + '/' + pixel
 }
 
-
+export function api_image_get(id) {
+  return request({
+    url: service + '/image/' + id,
+    method: 'get'
+  })
+}
 export function api_image_local() {
   return request({
     url: service + '/image/local',
