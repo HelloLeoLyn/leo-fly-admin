@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
+import { api_alibaba_auth } from '@/api/leo-alibaba'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { api_alibaba_auth } from '@/api/leo-alibaba'
+
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url

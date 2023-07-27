@@ -5,15 +5,13 @@
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="formData.categoryID" @change="setCategoryID"
-          categoryContent="设置为产品名" />
+        <Category1688 v-model="formData.categoryID" @change="setCategoryID" categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 v-model="formData.groupID" :categoryID="formData.categoryID" />
@@ -30,10 +28,9 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -52,8 +49,7 @@
         <Album v-model="formData.albumID"></Album>
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo"
-          :productId="goods.productId" />
+        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo" :productId="goods.productId" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
@@ -63,7 +59,7 @@
       </el-form-item>
       <el-form-item label="image" prop="image">
         <!-- <p>{{goods}}</p> -->
-        <GoodsImages v-model="formData.image" :images="goodsImages()" @upload="onsubmit">
+        <GoodsImages v-model="formData.image" :images="goodsImages()" @upload="sendImagesToAlibaba">
         </GoodsImages>
       </el-form-item>
       <el-form-item size="large">
@@ -82,10 +78,9 @@ import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vu
 import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import { api_goods_get } from '@/api/leo-goods'
-import axios from 'axios'
-import { getBase64Image, dataURLtoFile } from '@/utils/image'
+import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
+import { MessageBox } from 'element-ui'
 import { api_alibaba_auth } from '@/api/leo-alibaba'
-import { MessageBox, Message } from 'element-ui'
 export default {
   name: 'LeoAlibabaPost',
   components: {
@@ -254,7 +249,7 @@ export default {
   methods: {
     goodsImages() {
       return this.goods.images.map((img) => {
-        return { url: img.url, status: 1, checked: 1, id: img.imageId }
+        return { url: img.url, status: 1, checked: 1, id: img.id }
       })
     },
     submitForm() {
@@ -281,67 +276,26 @@ export default {
         this.goods = goods
       }
     },
-    onsubmit(images) {
-      let _this = this
-      console.log(images)
-      if (1 == 1) {
-        return
+    sendImagesToAlibaba(images) {
+      const params = {
+        images,
+        albumID: this.formData.albumID
       }
-      images.forEach((element) => {
-        if (element.checked == 1) {
-          let image = new Image()
-          image.src = element.url
-          image.setAttribute('crossOrigin', 'anonymous')
-          image.onload = function () {
-            let base64 = getBase64Image(image)
-            let newFile = dataURLtoFile(base64, element.uid)
-            let formData = new FormData()
-            formData.append('file', newFile)
-            formData.append('albumID', _this.formData.albumID)
-            axios
-              .post('http://localhost:8080/photo/alibaba/uploadOne', formData, {
-                'Content-Type': 'multipart/form-data;charset=utf-8'
-              })
-              .then(({ data }) => {
-                if (data.code == '200') {
-                  _this.$notify({
-                    title: '成功',
-                    message: '提交成功',
-                    type: 'success',
-                    duration: 1000
-                  })
-                } else if (data.code == '001994') {
-                  api_alibaba_auth().then((res) => {
-                    MessageBox.confirm(
-                      '还未登录阿里巴巴平台，是否打开登录页面',
-                      '提示',
-                      {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                      }
-                    ).then(() => {
-                      window.open(res.data)
-                    })
-                  })
-                } else {
-                  _this.$notify({
-                    title: '失败',
-                    message: data.msg,
-                    type: 'error',
-                    duration: 1000
-                  })
-                }
-              })
-              .catch((reason) => {
-                _this.$notify({
-                  title: '失败',
-                  message: reason,
-                  type: 'error',
-                  duration: 1000
-                })
-              })
-          }
+      api_photo_alibaba_uload_batch(params).then(({ data }) => {
+        if (data.code == '001994') {
+          api_alibaba_auth().then((res) => {
+            MessageBox.confirm(
+              '还未登录阿里巴巴平台，是否打开登录页面',
+              '提示',
+              {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            ).then(() => {
+              window.open(res.data)
+            })
+          })
         }
       })
     }
