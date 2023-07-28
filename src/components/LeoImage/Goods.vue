@@ -3,10 +3,9 @@
     <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
         flex-wrap: wrap;">
       <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index"
-          style=" width: 200px;height: 200px;padding: 5px;"
-          :class="{'goods-image-is-upload':image.status==2}">
-          <LeoIntervalLoad v-if="image.status!=2" @onLoad="getImage(image)" />
+        <el-col v-for="image, index in checkedList" :key="index" style=" width: 200px;height: 200px;padding: 5px;"
+          :class="{ 'goods-image-is-upload': image.status == 2 }">
+          <LeoIntervalLoad v-if="image.status != 2" @onLoad="getImage(image)" />
           <vue-hover-mask>
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <template v-slot:action>
@@ -28,8 +27,7 @@
           <vue-hover-mask @click="handleClick(image)">
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <label style="position: absolute" :ref="'checked' + image.id"
-              :class="{ 'leo-sm-label-checked': image.checked }"><i
-                class="el-icon-check leo-icon-check"></i></label>
+              :class="{ 'leo-sm-label-checked': image.checked }"><i class="el-icon-check leo-icon-check"></i></label>
             <template v-slot:action>
             </template>
           </vue-hover-mask>
@@ -121,7 +119,7 @@ export default {
         this.$refs['checked' + image.id][0].className = ''
       }
       this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList))
+      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
     },
 
     handleCustomzedClick(e) {
@@ -140,11 +138,12 @@ export default {
       })
       this.images[index].checked = !this.images[index].checked
       this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList))
+      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
     },
     getImage(image) {
       api_image_get(image.id).then((res) => {
         image.status = res.data.status
+        image.url = res.data.url
       })
     },
     check() {
@@ -162,9 +161,11 @@ export default {
 .iconfont {
   font-size: 25px;
 }
+
 .goods-image-is-upload {
   background-color: #13ce66;
 }
+
 .leo-icon-check {
   font-size: 12px;
   margin-top: 11px;

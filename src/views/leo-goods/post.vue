@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import Alibaba from './components/Alibaba.vue'
+import Alibaba from './alibaba/Alibaba.vue'
 export default {
   components: { Alibaba }
 }

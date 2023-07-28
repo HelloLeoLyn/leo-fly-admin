@@ -50,7 +50,8 @@ function generateAlibabaObj (form) {
     image,
     saleInfo,
     shippingInfo,
-    description
+    description,
+    code:form.code
   }
   return obj
 }

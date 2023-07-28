@@ -18,7 +18,6 @@ const lang = {
 // 默认语言
 const loadLanguage = 'zh'
 
-console.log(langFiles);
 langFiles.keys().forEach(key => {
   const k = regExp.exec(key)[1]
   // 合并Element国际化配置

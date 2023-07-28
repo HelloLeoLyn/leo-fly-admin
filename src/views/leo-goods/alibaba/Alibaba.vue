@@ -5,15 +5,13 @@
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="formData.categoryID" @change="setCategoryID"
-          categoryContent="设置为产品名" />
+        <Category1688 v-model="formData.categoryID" @change="setCategoryID" categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 v-model="formData.groupID" :categoryID="formData.categoryID" />
@@ -30,10 +28,9 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
-          :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
-            :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
+            :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -52,22 +49,29 @@
         <Album v-model="formData.albumID"></Album>
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo"
-          :productId="goods.productId" />
+        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo" :productId="goods.productId" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <!-- <Description1688 :productImages="formData.image.images" :key="'description' + key.description"></Description1688> -->
+        <Description1688 :productImages="formData.image.images" :key="'description' + key.description"></Description1688>
       </el-form-item>
       <el-form-item label="image" prop="image">
-        <!-- <p>{{goods}}</p> -->
         <GoodsImages v-model="formData.image" :images="goodsImages()" @upload="sendImagesToAlibaba">
         </GoodsImages>
       </el-form-item>
-      <el-form-item size="large">
-        <el-button type="primary" @click="submitForm">提交</el-button>
+      <el-form-item label="attributes" prop="attributes">
+        <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes"></Attribute1688>
+      </el-form-item>
+      <el-form-item style="
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background-color: rgb(244, 250, 250);
+        ">
+        <el-button type="primary" @click="submitForm" size="mini">提交</el-button>
+        <el-button type="primary" @click="save" size="mini" style="margin-left: 20px">保存</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -81,6 +85,7 @@ import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
 import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
+import Attribute1688 from '@/views/leo-goods/alibaba/Attribute.vue'
 import { api_goods_get } from '@/api/leo-goods'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
@@ -96,7 +101,8 @@ export default {
     SaleInfo1688,
     ShippingInfo1688,
     GoodsImages,
-    Description1688
+    Description1688,
+    Attribute1688
   },
   props: [],
   data() {
@@ -104,13 +110,15 @@ export default {
       imageId: 0,
       goodsId: '',
       key: {
-        description: 0
+        description: 0,
+        attributes: 1000
       },
       goods: {
         productId: null,
         images: []
       },
       formData: {
+        code: null,
         albumID: null,
         id: undefined,
         productType: 'wholesale',
@@ -277,11 +285,13 @@ export default {
           this.formData = res.data.json
           this.formData.image = {}
           this.goods = res.data
+          this.key.attributes++
         })
       } else {
         this.formData = goods.json
         this.formData.image = {}
         this.goods = goods
+        this.key.attributes++
       }
     },
     sendImagesToAlibaba(images) {
@@ -306,6 +316,14 @@ export default {
           })
         }
       })
+    },
+    save() {
+      this.goods.json = this.formData
+      localStorage.setItem(
+        'leo-goods/post' + this.goods.id,
+        JSON.stringify(this.goods)
+      )
+      this.$notify.success('保存成功！')
     }
   }
 }

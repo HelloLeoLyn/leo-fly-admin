@@ -45,6 +45,7 @@ def packageCover(box_img_path, part_path, save_path):
 
     #获取图片某一点颜色
     color = part.getpixel((2,2))
+    color = (255,255,255)
     # 创建新图像并合并图层
     new_image = Image.new('RGBA', (1000, 1000), color)
     top = 520
@@ -82,12 +83,8 @@ if __name__ == '__main__':
     productId = sys.argv[6]
     isRmbg = sys.argv[7]
     rembgPath = sys.argv[8]
-    # params = ["E:\\workspace\\vue\\vue-element-admin\\src\\python\\generateGoodsImages.py",
-    #           "E:/image/0/package-box.png",
-    #           "C:/Users/admin/Downloads/leo-image-package.jpg",
-    #           "822-1025-0",
-    #           "E:/image/367/367_package.png",
-    #           "package","367","1"]
+    # params =  ["E:/workspace/vue/leo-fly-admin/src/python/generateGoodsImages.py","E:/image/0/package-box.png","C:/Users/Leo/Downloads/leo-image-package.jpg","LR010664","E:/image/373/373-package.png","package","373","1","E:/image/373/temp.png"]
+
     # coverPath = params[1]
     # coverPart = params[2]
     # coverCode = params[3]
@@ -96,15 +93,19 @@ if __name__ == '__main__':
     # productId = params[6]
     # isRmbg = params[7]
     # rembgPath = params[8]
-    if opt == 'alibaba':
-        imagesCover(coverPath, coverPart,
-                    coverCode, coverSavePath)
-    elif opt=='1688detail':
-        detailCover(coverPath, coverPart, coverSavePath)
-    elif opt == 'package':
-        if isRmbg=='1':
-            rembg('null', coverPart, rembgPath)
-            packageCover(coverPath, rembgPath, coverSavePath)
-        else:
-            packageCover(coverPath, coverPart, coverSavePath)
-    print({'code': 'ok', 'msg': coverSavePath})
+    try:
+        if opt == 'alibaba':
+            imagesCover(coverPath, coverPart,
+                        coverCode, coverSavePath)
+        elif opt=='1688detail':
+            detailCover(coverPath, coverPart, coverSavePath)
+        elif opt == 'package':
+            if isRmbg=='1':
+                rembg('null', coverPart, rembgPath)
+                packageCover(coverPath, rembgPath, coverSavePath)
+            else:
+                packageCover(coverPath, coverPart, coverSavePath)
+    except Exception as e:
+        print({'code': 'fail', 'msg': e})
+    else:
+        print({'code': 'ok', 'msg': coverSavePath})
