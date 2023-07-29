@@ -12,7 +12,7 @@
             <div v-if="image.pixel">
               <span style="font-size:12px">{{ image.pixel }}{{ image.moduleType }}</span>
               <br>
-              <el-button @click="openImgCutter(images.filter(img => img.status == 0), index)" type="text">编辑图片</el-button>
+              <el-button @click="openImgCutter(imageShowList, index)" type="text">编辑图片</el-button>
               <br>
             </div>
             <el-button type="text" size="mini" @click="handleRemoveBtnClick(image.id)">
@@ -147,6 +147,7 @@ export default {
       })
     },
     openImgCutter(images, index) {
+      // console.log(images);
       this.$router.push({
         name: 'LeoImageCutter',
         params: {

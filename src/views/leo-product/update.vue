@@ -233,12 +233,7 @@
       </el-row>
     </el-dialog>
     <side-catalog class="catalog" v-bind="catalogProps"></side-catalog>
-    <LeoHistory
-      :productId="history.productId"
-      :show="history.show"
-      :key="history.count"
-      direction="btt"
-    />
+    <LeoHistory :productId="history.productId" v-model="history" :key="history.count" direction="btt"></LeoHistory>
   </div>
 </template>
 <script>
