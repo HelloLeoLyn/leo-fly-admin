@@ -51,7 +51,7 @@ def chongzu(index_path, save_path, image_id, size300, size50, fillWhiteBG, file_
     point = [int((1000-w)/2), int((1000-h)/2)]
     canvas_img = Image.new('RGB', (1000, 1000), '#ffffff')
     canvas_img.paste(target_img, point)
-    canvas_img.save(save_path+'\\'+image_id+file_type)
+    canvas_img.save(save_path+'/'+image_id+file_type)
 
     # 创建新图层
     layer = Image.new("RGBA", (1000, 1000), (0, 0, 0, 0))
@@ -81,7 +81,7 @@ def chongzu(index_path, save_path, image_id, size300, size50, fillWhiteBG, file_
         im50.save(save_path+'\\'+image_id+'_50X50'+file_type)
 
     os.remove(index_path)
-    print({'msg': 'ok'})
+    print({'code': 'ok'})
 
 
 if __name__ == '__main__':
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     bg_water = sys.argv[9]
     opt_type = sys.argv[10]
 
-    # args = ["python","E:\\workspace\\python\\AutoPS\\leo_image_chongzu.py","C:\\Users\\admin\\Downloads\\leo-image-chongzu.jpg","E:/image/1352","40831","1","1","0",".jpg","0","0","resize"]
+    # args = ["E:\\workspace\\python\\AutoPS\\leo_image_chongzu.py","C:\\Users\\admin\\Downloads\\leo-image-chongzu.jpg","E:/image/1352","40831","1","1","0",".jpg","0","0","resize"]
     # index = args[1]
     # save_path = args[2]
     # image_id = args[3]
