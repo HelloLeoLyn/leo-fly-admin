@@ -144,6 +144,7 @@ export default {
         reserveInfo: undefined
       },
       rules: {
+        image: [{ validator: this.validateImage, trigger: 'blur' }],
         unit: [{ required: true, message: '请输入数量单位', trigger: 'blur' }],
         productType: [
           {
@@ -260,6 +261,16 @@ export default {
     this.doGet()
   },
   methods: {
+    validateImage(rule, value, callback) {
+      // 这里设置邮件地址的最小数量为2
+      if (this.formData.image.images && this.formData.image.images.length > 5) {
+        callback(new Error('数量不能超过5个'));
+      } else if (!this.formData.image.images || this.formData.image.images.length == 0) {
+        callback(new Error('请选择图片'));
+      } {
+        callback(); // 校验通过
+      }
+    },
     goodsImages() {
       return this.goods.images.map((img) => {
         return { url: img.url, status: 1, checked: 1, id: img.id }

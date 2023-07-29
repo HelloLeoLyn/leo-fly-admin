@@ -32,7 +32,6 @@
             </template>
           </vue-hover-mask>
         </el-col>
-
       </el-row>
     </el-dialog>
   </div>
@@ -144,6 +143,7 @@ export default {
       api_image_get(image.id).then((res) => {
         image.status = res.data.status
         image.url = res.data.url
+        this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
       })
     },
     check() {

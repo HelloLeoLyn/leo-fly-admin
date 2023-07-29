@@ -706,11 +706,11 @@ export default {
           const list = []
           list.push(goods)
 
-          goods = generateGoods('aliexpress', this.form)
-          list.push(goods)
+          // goods = generateGoods('aliexpress', this.form)
+          // list.push(goods)
 
-          goods = generateGoods('amazon', this.form)
-          list.push(goods)
+          // goods = generateGoods('amazon', this.form)
+          // list.push(goods)
 
           api_goods_batch_post(list).then((res) => {
             this.$message.success(res.msg)
