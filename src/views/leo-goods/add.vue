@@ -210,6 +210,7 @@
         <el-button type="primary" @click="save" style="margin-left: 20px" size="mini">保存</el-button>
       </el-form-item>
     </el-form>
+    <Attributes :productId="product.id" :product="product"></Attributes>
   </div>
 </template>
 <style lang="scss">
@@ -306,6 +307,7 @@ import { api_get_product_more } from '@/api/leo-product'
 import Images from './components/Images.vue'
 import CssImage from '@/components/LeoImage/Css.vue'
 import Models from './components/Models'
+import Attributes from '../leo-product/components/Attributes.vue'
 import SaleInfo1688 from '../leo-alibaba/components/SaleInfo1688.vue'
 import Category1688 from '../leo-alibaba/components/Category1688.vue'
 import Group1688 from '../leo-alibaba/components/Group1688.vue'
@@ -327,6 +329,7 @@ export default {
   components: {
     Images,
     Models,
+    Attributes,
     SaleInfo1688,
     Category1688,
     Group1688,

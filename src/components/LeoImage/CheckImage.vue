@@ -1,26 +1,6 @@
 <template>
   <div>
-    <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
-        flex-wrap: wrap;">
-      <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index" style=" width: 200px;height: 200px;padding: 5px;"
-          :class="{ 'goods-image-is-upload': image.status == 2 }">
-          <LeoIntervalLoad v-if="image.status != 2" @onLoad="getImage(image)" />
-          <vue-hover-mask>
-            <el-image :src="image.url" width="100%" class="leo-product-images-item" />
-            <template v-slot:action>
-              <el-button type="text" size="mini" @click="handleRemoveBtnClick(image)">
-                删除
-              </el-button>
-            </template>
-          </vue-hover-mask>
-        </el-col>
-        <el-col>
-          <el-button @click="check" type="text">选择</el-button>
-          <el-button @click="upload" type="text">上传</el-button>
-        </el-col>
-      </draggable>
-    </el-row>
+    <el-button @click="check" type="text">选择</el-button>
     <el-dialog :visible.sync="visible" width="1100">
       <el-row :gutter="5" v-if="images">
         <el-col v-for="image in images" :key="image.id" style="width:180px;">
@@ -68,49 +48,24 @@
 <script>
 import draggable from 'vuedraggable'
 import VueHoverMask from 'vue-hover-mask'
-import { api_image_get } from '@/api/leo-image.js'
-import LeoIntervalLoad from '@/components/LeoIntervalLoad'
 export default {
   components: {
     VueHoverMask,
     draggable,
-    LeoIntervalLoad
   },
   data() {
     return {
       visible: false,
-      image: {},
-      checkedList: []
     }
   },
   props: {
-    value: {
-      type: Object,
-      required: true
-    },
     images: {
       type: Array,
       required: true
     }
   },
-  watch: {
-    value(newValue) {
-      this.checkedList = this.images.filter((img) => img.checked)
-      this.image = newValue
-    }
-  },
-  mounted() {
-    this.checkedList = this.images.filter((img) => img.checked)
-  },
+
   methods: {
-    alibaba(images) {
-      return {
-        isWatermark: false,
-        isWatermarkFrame: false,
-        watermarkPosition: false,
-        images
-      }
-    },
     handleClick(image) {
       const key = this.getIdIndex(this.images, image.id)
       if (image.checked) {
@@ -120,8 +75,7 @@ export default {
         this.images[key].checked = true
         this.$refs['checked' + image.id][0].className = ''
       }
-      this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
+      this.$emit('input', this.images)
     },
 
     handleCustomzedClick(e) {
@@ -139,24 +93,11 @@ export default {
         return img.id == image.id
       })
       this.images[index].checked = !this.images[index].checked
-      this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
-    },
-    getImage(image) {
-      api_image_get(image.id).then((res) => {
-        image.status = res.data.status
-        if (res.data.status === 2) {
-          image.url = res.data.url
-        }
-        this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
-      })
+      this.$emit('input', this.images)
     },
     check() {
       this.visible = !this.visible
     },
-    upload() {
-      this.$emit('upload', this.images)
-    }
   }
 }
 </script>
@@ -165,10 +106,6 @@ export default {
 
 .iconfont {
   font-size: 25px;
-}
-
-.goods-image-is-upload {
-  background-color: #13ce66;
 }
 
 .leo-icon-check {

@@ -54,15 +54,16 @@
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
-      <el-form-item label="description" prop="description">
-        <Description1688 :productImages="formData.image.images" :key="'description' + key.description"></Description1688>
-      </el-form-item>
+
       <el-form-item label="image" prop="image">
-        <GoodsImages v-model="formData.image" :images="goodsImages()" @upload="sendImagesToAlibaba">
-        </GoodsImages>
+        <GoodsImages v-model="formData.image" :images="goods.images" @upload="sendImagesToAlibaba"
+          v-if="key.goodsImages == 2001"></GoodsImages>
       </el-form-item>
       <el-form-item label="attributes" prop="attributes">
         <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes"></Attribute1688>
+      </el-form-item>
+      <el-form-item label="description" prop="description">
+        <Description :images="goods.images" :models="formData.models" style="height: 500px;overflow: scroll;"></Description>
       </el-form-item>
       <el-form-item style="
           position: fixed;
@@ -85,12 +86,15 @@ import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
 import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
+import Description from './Description.vue'
 import Attribute1688 from '@/views/leo-goods/alibaba/Attribute.vue'
 import { api_goods_get } from '@/api/leo-goods'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
 import { api_alibaba_auth } from '@/api/leo-alibaba'
 import { api_product_alibaba_add } from '@/api/leo-product-alibaba'
+import { api_page_image } from '@/api/leo-image'
+import { service } from '@/api'
 export default {
   name: 'LeoAlibabaPost',
   components: {
@@ -102,7 +106,8 @@ export default {
     ShippingInfo1688,
     GoodsImages,
     Description1688,
-    Attribute1688
+    Attribute1688,
+    Description
   },
   props: [],
   data() {
@@ -111,13 +116,15 @@ export default {
       goodsId: '',
       key: {
         description: 0,
-        attributes: 1000
+        attributes: 1000,
+        goodsImages: 2000
       },
       goods: {
         productId: null,
         images: []
       },
       formData: {
+        models:[],
         code: null,
         albumID: null,
         id: undefined,
@@ -271,9 +278,17 @@ export default {
         callback(); // 校验通过
       }
     },
-    goodsImages() {
-      return this.goods.images.map((img) => {
-        return { url: img.url, status: 1, checked: 1, id: img.id }
+    getGoodsImages() {
+      const idList = this.goods.images.map(img => img.id)
+      api_page_image({ idList }).then(res => {
+        const images = res.data.records.map(img => {
+          img.checked = 1
+          img.alibaba = img.url
+          img.url = service + '/img/' + img.code + '/' + img.name
+          return img
+        });
+        this.goods.images = images
+        this.key.goodsImages++
       })
     },
     submitForm() {
@@ -295,14 +310,18 @@ export default {
         api_goods_get(this.$route.query.goodsId).then((res) => {
           this.formData = res.data.json
           this.formData.image = {}
+          this.formData.id = this.$route.query.goodsId
           this.goods = res.data
           this.key.attributes++
+          this.getGoodsImages()
         })
       } else {
         this.formData = goods.json
         this.formData.image = {}
+        this.formData.id = this.$route.query.goodsId
         this.goods = goods
         this.key.attributes++
+        this.getGoodsImages()
       }
     },
     sendImagesToAlibaba(images) {
