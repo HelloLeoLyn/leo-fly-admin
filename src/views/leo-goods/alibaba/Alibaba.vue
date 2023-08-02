@@ -5,13 +5,15 @@
         <el-input v-model="formData.productID" placeholder="" size="normal"></el-input>
       </el-form-item>
       <el-form-item label="productType" prop="productType">
-        <el-select v-model="formData.productType" placeholder="请选择productType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.productType" placeholder="请选择productType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in productTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="categoryID" prop="categoryID">
-        <Category1688 v-model="formData.categoryID" @change="setCategoryID" categoryContent="设置为产品名" />
+        <Category1688 v-model="formData.categoryID" @change="setCategoryID"
+          categoryContent="设置为产品名" />
       </el-form-item>
       <el-form-item label="groupID" prop="groupID">
         <Group1688 v-model="formData.groupID" :categoryID="formData.categoryID" />
@@ -28,9 +30,10 @@
           :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="bizType" prop="bizType">
-        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable :style="{ width: '100%' }">
-          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label" :value="item.value"
-            :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.bizType" placeholder="请选择bizType" clearable
+          :style="{ width: '100%' }">
+          <el-option v-for="(item, index) in bizTypeOptions" :key="index" :label="item.label"
+            :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="pictureAuth" prop="pictureAuth">
@@ -49,21 +52,23 @@
         <Album v-model="formData.albumID"></Album>
       </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
-        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo" :productId="goods.productId" />
+        <SaleInfo1688 v-if="goods.productId" v-model="formData.saleInfo"
+          :productId="goods.productId" />
       </el-form-item>
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
-
       <el-form-item label="image" prop="image">
         <GoodsImages v-model="formData.image" :images="goods.images" @upload="sendImagesToAlibaba"
           v-if="key.goodsImages == 2001"></GoodsImages>
       </el-form-item>
       <el-form-item label="attributes" prop="attributes">
-        <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes"></Attribute1688>
+        <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes">
+        </Attribute1688>
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <Description :images="goods.images" :models="formData.models" style="height: 500px;overflow: scroll;"></Description>
+        <Description :images="goods.images" :models="formData.models" v-model="formData.description"
+          style="height: 500px;overflow: scroll;"></Description>
       </el-form-item>
       <el-form-item style="
           position: fixed;
@@ -88,7 +93,7 @@ import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import Description from './Description.vue'
 import Attribute1688 from '@/views/leo-goods/alibaba/Attribute.vue'
-import { api_goods_get } from '@/api/leo-goods'
+import { api_goods_get, api_goods_put } from '@/api/leo-goods'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
 import { api_alibaba_auth } from '@/api/leo-alibaba'
@@ -124,7 +129,7 @@ export default {
         images: []
       },
       formData: {
-        models:[],
+        models: [],
         code: null,
         albumID: null,
         id: undefined,
@@ -271,34 +276,31 @@ export default {
     validateImage(rule, value, callback) {
       // 这里设置邮件地址的最小数量为2
       if (this.formData.image.images && this.formData.image.images.length > 5) {
-        callback(new Error('数量不能超过5个'));
-      } else if (!this.formData.image.images || this.formData.image.images.length == 0) {
-        callback(new Error('请选择图片'));
-      } {
-        callback(); // 校验通过
+        callback(new Error('数量不能超过5个'))
+      } else if (
+        !this.formData.image.images ||
+        this.formData.image.images.length == 0
+      ) {
+        callback(new Error('请选择图片'))
+      }
+      {
+        callback() // 校验通过
       }
     },
     getGoodsImages() {
-      const idList = this.goods.images.map(img => img.id)
-      api_page_image({ idList }).then(res => {
-        const images = res.data.records.map(img => {
+      const idList = this.goods.images.map((img) => img.id)
+      api_page_image({ idList }).then((res) => {
+        const images = res.data.records.map((img) => {
           img.checked = 1
           img.alibaba = img.url
           img.url = service + '/img/' + img.code + '/' + img.name
           return img
-        });
+        })
         this.goods.images = images
         this.key.goodsImages++
       })
     },
-    submitForm() {
-      this.$refs['elForm'].validate((valid) => {
-        if (!valid) return
-        api_product_alibaba_add(this.formData).then((res) => {
-          console.log(res)
-        })
-      })
-    },
+
     setCategoryID(e) {
       this.formData.categoryID = e
       this.getAttributesTemplate()
@@ -347,13 +349,43 @@ export default {
         }
       })
     },
+    submitForm() {
+      this.$refs['elForm'].validate((valid) => {
+        if (!valid) return
+        api_goods_put(this.goods).then((res) => {
+          if (res.code == '200') {
+            api_product_alibaba_add(this.formData).then((res) => {
+              if (res.code == '200') {
+                this.$notify.success('保存成功！')
+              } else {
+                this.$notify.error(res.msg)
+              }
+            })
+          } else {
+            this.$notify.error(res.msg)
+          }
+        })
+      })
+    },
     save() {
       this.goods.json = this.formData
+      // console.log(this.goods)
       localStorage.setItem(
         'leo-goods/post' + this.goods.id,
         JSON.stringify(this.goods)
       )
-      this.$notify.success('保存成功！')
+      const params = this.goods
+      params.images = this.goods.images.map((image) => {
+        const { id, url, status, checked } = image
+        return { id, url, status, checked }
+      })
+      api_goods_put(this.goods).then((res) => {
+        if (res.code == '200') {
+          this.$notify.success('保存成功！')
+        } else {
+          this.$notify.error(res.msg)
+        }
+      })
     }
   }
 }

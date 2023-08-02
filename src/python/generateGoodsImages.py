@@ -26,14 +26,17 @@ def imagesCover(cover_path, part_path, oe, save_path):
     draw.text(text_position1, text_layer1, font=font, fill=(256, 256, 256))
     new_image.save(save_path)
 
+
 def detailCover(cover_path, part_path, save_path):
     part_img = Image.open(part_path).resize((750, 750))
     cover_img = Image.open(cover_path).resize((1000, 1000))
     final = Image.new('RGBA', (1000, 1000))
     final.paste(cover_img)
-    final.paste(part_img,(125,80))
+    final.paste(part_img, (125, 80))
     final = final.convert('RGB')
     final.save(save_path)
+
+
 def packageCover(box_img_path, part_path, save_path):
     # 打开原始图层
     box = Image.open(box_img_path)
@@ -43,9 +46,9 @@ def packageCover(box_img_path, part_path, save_path):
     width = part.size[0]*height/part.size[1]
     part_resized = part.resize((int(width), height)).convert('RGBA')
 
-    #获取图片某一点颜色
-    color = part.getpixel((2,2))
-    color = (255,255,255)
+    # 获取图片某一点颜色
+    color = part.getpixel((2, 2))
+    color = (255, 255, 255)
     # 创建新图像并合并图层
     new_image = Image.new('RGBA', (1000, 1000), color)
     top = 520
@@ -83,7 +86,7 @@ if __name__ == '__main__':
     productId = sys.argv[6]
     isRmbg = sys.argv[7]
     rembgPath = sys.argv[8]
-    # params =  ["E:/workspace/vue/leo-fly-admin/src/python/generateGoodsImages.py","E:/image/0/package-box.png","C:/Users/Leo/Downloads/leo-image-package.jpg","LR010664","E:/image/373/373-package.png","package","373","1","E:/image/373/temp.png"]
+    # params =  ["F:/wrokspace/vue/leo-fly-admin/src/python/generateGoodsImages.py","G:/image/0/package-box.png","C:/Users/admin/Downloads/leo-image-package.jpg","LR160435","G:/image/4519/4519-package.png","package","4519","1","G:/image/4519/temp.png"]
 
     # coverPath = params[1]
     # coverPart = params[2]
@@ -97,10 +100,10 @@ if __name__ == '__main__':
         if opt == 'alibaba':
             imagesCover(coverPath, coverPart,
                         coverCode, coverSavePath)
-        elif opt=='1688detail':
+        elif opt == '1688detail':
             detailCover(coverPath, coverPart, coverSavePath)
         elif opt == 'package':
-            if isRmbg=='1':
+            if isRmbg == '1':
                 rembg('null', coverPart, rembgPath)
                 packageCover(coverPath, rembgPath, coverSavePath)
             else:
