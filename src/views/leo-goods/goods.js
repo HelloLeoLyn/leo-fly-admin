@@ -70,15 +70,7 @@ export function generateGoods(webSite, form) {
     productId: form.productId,
     platform: webSite,
     subject: json.subject,
-    images: form.images
-      .filter(img => img.checked)
-      .map(img => {
-        const { url, id } = img
-        return {
-          url,
-          id
-        }
-      }),
+    images: form.images,
     mainImage: null,
     tag: null,
     thirdPartId: null,

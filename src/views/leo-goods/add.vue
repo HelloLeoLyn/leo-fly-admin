@@ -52,15 +52,9 @@
         <album v-model="form.alibaba.albumID" @change="e => form.alibaba.albumID = e"></album>
       </el-form-item>
       <el-form-item label="images" prop="images">
-        <el-button type="primary" size="default" @click="sendToAlibaba">sendToAlibaba</el-button>
-        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true" @getImages="e => {
-          form.images = e
-        }
-          " :customzedBtn="[
-    { label: '设置封面图', opt: 'alibaba' },
-    { label: '设置包装图', opt: 'package' },
-    { label: '1688详情封面', opt: '1688detail' }
-  ]" />
+        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
+          v-model="form.images"
+          :customzedBtn="[{ label: '设置封面图', opt: 'alibaba' }, { label: '设置包装图', opt: 'package' },  { label: '1688详情封面', opt: '1688detail' }]" />
         <el-dialog title="" :visible.sync="dialog.show" width="80%">
           <div class="container" v-if="dialog.opt == 'alibaba'">
             <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
@@ -71,17 +65,21 @@
             <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
           </div>
           <div v-if="dialog.opt == 'package'">
-            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg" WatermarkText="vue-img-cutter"
-              WatermarkTextFont="12px Sans-serif" WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
-              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate" :toolBgc="options.toolBgc"
-              :isModal="options.isModal" :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
-              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight" :cutWidth="options.cutWidth"
-              :cutHeight="options.cutHeight" :sizeChange="options.sizeChange" :moveAble="options.moveAble"
-              :imgMove="options.imgMove" :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
-              :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
-              :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble" :previewMode="options.previewMode"
-              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
-              @onPrintImg="onPrintImg">
+            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
+              WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
+              WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
+              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
+              :toolBgc="options.toolBgc" :isModal="options.isModal"
+              :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
+              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight"
+              :cutWidth="options.cutWidth" :cutHeight="options.cutHeight"
+              :sizeChange="options.sizeChange" :moveAble="options.moveAble"
+              :imgMove="options.imgMove" :originalGraph="options.originalGraph"
+              :WatermarkTextX="options.WatermarkTextX" :WatermarkTextY="options.WatermarkTextY"
+              :smallToUpload="options.smallToUpload" :saveCutPosition="options.saveCutPosition"
+              :scaleAble="options.scaleAble" :previewMode="options.previewMode"
+              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index"
+              @cutDown="cutDown" @onPrintImg="onPrintImg">
               <template #open>
                 <button>Choose image</button>
               </template>
@@ -103,10 +101,6 @@
           </span>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="Models" prop="models">
-        <!-- <Models :list="form.models" /> -->
-      </el-form-item>
-
       <el-tabs v-model="platform" type="border-card" tab-position="top">
         <el-tab-pane label="alibaba" name="alibaba">
           <el-form-item label="alibaba.material" prop="alibaba.material" class="input-middle">
@@ -122,7 +116,8 @@
             <Group1688 v-model="form.alibaba.groupID" :categoryID="form.alibaba.categoryID" />
           </el-form-item>
           <el-form-item label="alibaba.prices">
-            <SaleInfo1688 :productId="$route.query.productId" :value="form.alibaba.saleInfo" ref="saleInfo" />
+            <SaleInfo1688 :productId="$route.query.productId" :value="form.alibaba.saleInfo"
+              ref="saleInfo" />
           </el-form-item>
           <el-form-item label="alibaba.stock" prop="alibaba.stock" class="input-middle">
             <el-input v-model="form.alibaba.stock"></el-input>
@@ -132,13 +127,8 @@
               <el-option label="套" value="套"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="alibaba.description" prop="alibaba.description">
-            <el-button type="primary" size="default" @click="generateHtml('alibaba')">generateHtml</el-button>
-            <el-button type="primary" size="default"
-              @click="handleCopy(form.alibaba.descalbumIDription, $event)">copy</el-button>
-          </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="aliexpress" name="aliexpress">
+        <!-- <el-tab-pane label="aliexpress" name="aliexpress">
           <el-form-item label="aliexpress.material" prop="aliexpress.material" class="input-middle">
             <el-input v-model="form.aliexpress.material"></el-input>
           </el-form-item>
@@ -148,7 +138,8 @@
           <el-form-item label="aliexpress.oem" prop="aliexpress.oem" class="input-middle">
             <el-input v-model="form.aliexpress.oem"></el-input>
           </el-form-item>
-          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId" class="input-middle">
+          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId"
+            class="input-middle">
             <el-input v-model="form.aliexpress.manufacturerPartId"></el-input>
           </el-form-item>
           <el-form-item label="aliexpress.unit" prop="aliexpress.unit" class="input-middle">
@@ -164,16 +155,13 @@
           </el-form-item>
           <el-form-item label="aliexpress.packingSizeUrl" class="input-middle">
             <el-select v-model="form.aliexpress.packingSizeUrl" placeholder="" clearable>
-              <el-option label="大包装" value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
+              <el-option label="大包装"
+                value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
               </el-option>
-              <el-option label="小包装" value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
+              <el-option label="小包装"
+                value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="aliexpress.description" prop="aliexpress.description">
-            <el-button type="primary" size="default" @click="generateHtml('aliexpress')">generateHtml</el-button>
-            <el-button type="primary" size="default"
-              @click="handleCopy(form.aliexpress.description, $event)">copy</el-button>
           </el-form-item>
         </el-tab-pane>
         <el-tab-pane label="amazon" name="amazon">
@@ -194,11 +182,7 @@
           <el-form-item label="amazon.price" prop="amazon.price" class="input-middle">
             <el-input v-model="form.amazon.price"></el-input>
           </el-form-item>
-          <el-form-item label="amazon.listing" prop="amazon.listing">
-            <el-button type="primary" size="default" @click="generateHtml('amazon')">generateListing</el-button>
-            <el-button type="primary" size="default" @click="handleCopy(form.amazon.listing, $event)">copy</el-button>
-          </el-form-item>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
       <el-form-item style="
           position: fixed;
@@ -320,7 +304,7 @@ import {
   getShippingInfo,
   generateGoods
 } from './goods.js'
-import { api_goods_templates, api_goods_batch_post } from '@/api/leo-goods'
+import { api_goods_batch_post } from '@/api/leo-goods'
 import { api_python_image_goods_post } from '@/api/leo-python'
 import { imgBase, imgTempPath } from '@/api/index'
 import { listToString } from '@/utils'
@@ -406,20 +390,17 @@ export default {
           material: '半金属',
           subject: '',
           brand: 'MDTZ',
-          images: [],
           unit: '套',
           prices: [
             { quality: '5', price: null },
             { quality: '5', price: null }
           ],
-          stock: '2000',
-          description: ''
+          stock: '2000'
         },
         amazon: {
           material: 'Ceramics/Semimetal',
           subject: '',
           brand: '24MDTZ',
-          images: [],
           unit: 'Sets',
           price: null,
           stock: '99',
@@ -431,11 +412,9 @@ export default {
           brand: 'MDTZ',
           oem: '',
           manufacturerPartId: '',
-          images: [],
           unit: 'Sets',
           price: null,
           stock: '99',
-          description: '',
           packingBoxUrl: '',
           packingSizeUrl:
             'https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png'
@@ -477,7 +456,6 @@ export default {
           unit: [{ required: true, message: '请输入', trigger: 'blur' }],
           stock: [{ required: true, message: '请输入', trigger: 'blur' }],
           price: [{ required: true, message: '请输入', trigger: 'blur' }],
-          description: [{ required: true, message: '请输入', trigger: 'blur' }],
           albumID: [{ required: true, message: '请输入', trigger: 'blur' }],
           categoryID: [{ required: true, message: '请输入', trigger: 'blur' }]
         },
@@ -519,8 +497,7 @@ export default {
           oem: [{ required: true, message: '请输入', trigger: 'blur' }],
           unit: [{ required: true, message: '请输入', trigger: 'blur' }],
           stock: [{ required: true, message: '请输入', trigger: 'blur' }],
-          price: [{ required: true, message: '请输入', trigger: 'blur' }],
-          description: [{ required: true, message: '请输入', trigger: 'blur' }]
+          price: [{ required: true, message: '请输入', trigger: 'blur' }]
         }
       }
     }
@@ -577,9 +554,6 @@ export default {
     },
     cutDown(e) {
       this.dialog.cutImgHref = e.dataURL
-    },
-    sendToAlibaba() {
-      console.log(this.form.alibaba.albumID, this.form.images)
     },
     onAlibabaCoverClk(img, opt) {
       this.dialog.show = !this.dialog.show
@@ -652,47 +626,6 @@ export default {
       api_python_image_goods_post(params).then((res) => {
         this.$notify.success(res.msg)
       })
-    },
-    generateHtml(website) {
-      if (website == 'aliexpress') {
-        let params = {
-          images: this.form.images.map((img) => img.url),
-          models: this.form.models,
-          codes: this.product.code,
-          website,
-          packingBoxUrl: this.form.aliexpress.packingBoxUrl,
-          packingSizeUrl: this.form.aliexpress.packingSizeUrl
-        }
-        api_goods_templates(params).then((res) => {
-          if (res.code == '200') {
-            this.form.aliexpress.description = res.data
-            this.$message.success(res.msg)
-          }
-        })
-      } else if (website == 'alibaba') {
-        let params = {
-          detailCoverUrl: this.form.images[0].url,
-          images: this.form.images.map((img) => img.url),
-          models: this.form.models,
-          website
-        }
-        api_goods_templates(params).then((res) => {
-          if (res.code == '200') {
-            this.form.alibaba.description = res.data
-            this.$message.success(res.msg)
-          }
-        })
-      } else if (website == 'amazon') {
-        let params = {
-          website
-        }
-        api_goods_templates(params).then((res) => {
-          if (res.code == '200') {
-            this.form.amazon.listing = res.data
-            this.$message.success(res.msg)
-          }
-        })
-      }
     },
 
     onSubmit() {

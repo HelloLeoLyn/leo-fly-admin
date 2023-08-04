@@ -59,16 +59,16 @@
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
       <el-form-item label="image" prop="image">
-        <GoodsImages v-model="formData.image" :images="goods.images" @upload="sendImagesToAlibaba"
-          v-if="key.goodsImages == 2001"></GoodsImages>
+        <GoodsImages v-model="formData.image" :images="goods.imagesObj"
+          @upload="sendImagesToAlibaba" v-if="key.goodsImages == 2001"></GoodsImages>
       </el-form-item>
       <el-form-item label="attributes" prop="attributes">
         <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes">
         </Attribute1688>
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <Description :images="goods.images" :models="formData.models" v-model="formData.description"
-          style="height: 500px;overflow: scroll;"></Description>
+        <Description :images="goods.imagesObj" :models="formData.models"
+          v-model="formData.description" style="height: 500px;overflow: scroll;"></Description>
       </el-form-item>
       <el-form-item style="
           position: fixed;
@@ -126,7 +126,8 @@ export default {
       },
       goods: {
         productId: null,
-        images: []
+        images: [],
+        imagesObj: []
       },
       formData: {
         models: [],
@@ -288,15 +289,14 @@ export default {
       }
     },
     getGoodsImages() {
-      const idList = this.goods.images.map((img) => img.id)
-      api_page_image({ idList }).then((res) => {
+      api_page_image({ idList: this.goods.images }).then((res) => {
         const images = res.data.records.map((img) => {
           img.checked = 1
           img.alibaba = img.url
           img.url = service + '/img/' + img.code + '/' + img.name
           return img
         })
-        this.goods.images = images
+        this.goods.imagesObj = images
         this.key.goodsImages++
       })
     },
@@ -306,25 +306,14 @@ export default {
       this.getAttributesTemplate()
     },
     doGet() {
-      const goodsStr = localStorage.getItem('goods_' + this.goodsId)
-      let goods = JSON.parse(goodsStr)
-      if (!goods) {
-        api_goods_get(this.$route.query.goodsId).then((res) => {
-          this.formData = res.data.json
-          this.formData.image = {}
-          this.formData.id = this.$route.query.goodsId
-          this.goods = res.data
-          this.key.attributes++
-          this.getGoodsImages()
-        })
-      } else {
-        this.formData = goods.json
+      api_goods_get(this.$route.query.goodsId).then((res) => {
+        this.formData = res.data.json
         this.formData.image = {}
         this.formData.id = this.$route.query.goodsId
-        this.goods = goods
+        this.goods = res.data
         this.key.attributes++
         this.getGoodsImages()
-      }
+      })
     },
     sendImagesToAlibaba(images) {
       const params = {
@@ -369,16 +358,10 @@ export default {
     },
     save() {
       this.goods.json = this.formData
-      // console.log(this.goods)
       localStorage.setItem(
         'leo-goods/post' + this.goods.id,
         JSON.stringify(this.goods)
       )
-      const params = this.goods
-      params.images = this.goods.images.map((image) => {
-        const { id, url, status, checked } = image
-        return { id, url, status, checked }
-      })
       api_goods_put(this.goods).then((res) => {
         if (res.code == '200') {
           this.$notify.success('保存成功！')

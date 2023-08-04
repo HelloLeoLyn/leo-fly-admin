@@ -80,6 +80,10 @@ export default {
     }
   },
   props: {
+    value: {
+      type: Array,
+      default: () => {}
+    },
     productId: {
       type: [String, Number],
       required: true
@@ -104,12 +108,14 @@ export default {
   mounted() {
     this.load()
   },
+  watch: {
+    productId(val) {
+      if (val) {
+        this.load
+      }
+    }
+  },
   methods: {
-    onConfirm() {
-      this.visible = false
-      this.$emit('getImages', this.images)
-    },
-
     load() {
       getImagesByProductId(this.productId).then((res) => {
         if (res.data && res.data.length > 0) {
@@ -130,7 +136,6 @@ export default {
                   image.name.indexOf('detail') >= 0
                 ) {
                   image.imageName = image.name
-                  image.imageId = image.id
                 }
                 image.productId = image.code
                 image.url =
@@ -146,7 +151,10 @@ export default {
               })
             this.images = images
             this.changeKey++
-            this.$emit('getImages', this.images)
+            this.$emit(
+              'input',
+              this.images.filter((img) => img.checked).map((img) => img.id)
+            )
           })
         }
       })
@@ -161,6 +169,10 @@ export default {
         this.images[key].checked = true
         this.$refs['checked' + image.id][0].className = ''
       }
+      this.$emit(
+        'input',
+        this.images.filter((img) => img.checked).map((img) => img.id)
+      )
     },
 
     handleCustomzedClick(image, opt) {

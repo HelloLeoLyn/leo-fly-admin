@@ -60,7 +60,11 @@
 </template>
 
 <script>
-import { api_goods_page, api_goods_post } from '@/api/leo-goods'
+import {
+  api_goods_page,
+  api_goods_post,
+  api_goods_delete
+} from '@/api/leo-goods'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -163,13 +167,17 @@ export default {
       localStorage.setItem('goods_' + row.id, JSON.stringify(row))
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      api_goods_delete(row.id).then((res) => {
+        if (res.code == 200) {
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+          this.list.splice(index, 1)
+        }
       })
-      this.list.splice(index, 1)
     },
 
     handleDownload() {

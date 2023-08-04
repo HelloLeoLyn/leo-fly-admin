@@ -3,7 +3,8 @@
     <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
         flex-wrap: wrap;">
       <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index" style=" width: 200px;height: 200px;padding: 5px;"
+        <el-col v-for="image, index in checkedList" :key="index"
+          style=" width: 200px;height: 200px;padding: 5px;"
           :class="{ 'goods-image-is-upload': image.status == 2 }">
           <LeoIntervalLoad v-if="image.status != 2" @onLoad="getImage(image)" />
           <vue-hover-mask>
@@ -27,7 +28,8 @@
           <vue-hover-mask @click="handleClick(image)">
             <el-image :src="image.url" width="100%" class="leo-product-images-item" />
             <label style="position: absolute" :ref="'checked' + image.id"
-              :class="{ 'leo-sm-label-checked': image.checked }"><i class="el-icon-check leo-icon-check"></i></label>
+              :class="{ 'leo-sm-label-checked': image.checked }"><i
+                class="el-icon-check leo-icon-check"></i></label>
             <template v-slot:action>
             </template>
           </vue-hover-mask>
@@ -96,11 +98,20 @@ export default {
   watch: {
     value(newValue) {
       this.checkedList = this.images.filter((img) => img.checked)
-      this.image = newValue
+      if (!newValue) {
+        this.$emit(
+          'input',
+          this.alibaba(this.checkedList.map((img) => img.alibaba))
+        )
+      }
     }
   },
   mounted() {
     this.checkedList = this.images.filter((img) => img.checked)
+    this.$emit(
+      'input',
+      this.alibaba(this.checkedList.map((img) => img.alibaba))
+    )
   },
   methods: {
     alibaba(images) {
@@ -121,7 +132,10 @@ export default {
         this.$refs['checked' + image.id][0].className = ''
       }
       this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
+      this.$emit(
+        'input',
+        this.alibaba(this.checkedList.map((img) => img.alibaba))
+      )
     },
 
     handleCustomzedClick(e) {
@@ -140,7 +154,10 @@ export default {
       })
       this.images[index].checked = !this.images[index].checked
       this.checkedList = this.images.filter((img) => img.checked)
-      this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
+      this.$emit(
+        'input',
+        this.alibaba(this.checkedList.map((img) => img.alibaba))
+      )
     },
     getImage(image) {
       api_image_get(image.id).then((res) => {
@@ -148,7 +165,10 @@ export default {
         if (res.data.status === 2) {
           image.url = res.data.url
         }
-        this.$emit('input', this.alibaba(this.checkedList.map(img => img.url)))
+        this.$emit(
+          'input',
+          this.alibaba(this.checkedList.map((img) => img.alibaba))
+        )
       })
     },
     check() {

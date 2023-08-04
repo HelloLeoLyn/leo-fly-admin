@@ -15,7 +15,8 @@
             <div>{{ row.required }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="all" label="isSKUAttribute" prop="isSKUAttribute"> <template slot-scope="{row}">
+        <el-table-column v-if="all" label="isSKUAttribute" prop="isSKUAttribute"> <template
+            slot-scope="{row}">
             <div>{{ row.isSKUAttribute }}</div>
           </template>
         </el-table-column>
@@ -23,7 +24,8 @@
           <template slot-scope="scope">
             <el-form label-width="0" :rules="valueRules" :model="scope.row" ref="nameForm">
               <div v-if="scope.row.required">
-                <el-form-item prop="value" :rules="[{ required: true, message: '请输入value', trigger: 'blur' }]">
+                <el-form-item prop="value"
+                  :rules="[{ required: true, message: '请输入value', trigger: 'blur' }]">
                   <el-input v-model="scope.row.value" class="edit-input">
                   </el-input>
                 </el-form-item>
@@ -58,7 +60,7 @@ export default {
   props: {
     value: {
       type: Array,
-      default: e => {
+      default: (e) => {
         return e
       }
     },
@@ -75,7 +77,12 @@ export default {
   },
   watch: {
     value(newval) {
-      this.list = newval
+      console.log(newval)
+      if (!newval) {
+        this.getAttributes()
+      } else {
+        this.list = newval
+      }
     }
   },
   data() {
@@ -88,8 +95,7 @@ export default {
       modelSet: [],
       brandSet: [],
       templateId: 0,
-      info: {
-      },
+      info: {},
       list: [{ value: null }],
       rules: {
         value: [{ required: true, message: '请输入value', trigger: 'blur' }],
@@ -99,91 +105,99 @@ export default {
     }
   },
   mounted() {
-    this.initFormRules();
+    this.initFormRules()
   },
   created() {
-    if (!this.params.groupID || !this.params.categoryID) {
-      return
-    }
-    api_property_get(
-      LEO_ALIBABA_ATTRIBUTE + this.params.categoryID + '_' + this.params.groupID
-    ).then((res) => {
-      if (res.data) {
-        const list = JSON.parse(res.data.value)
-        new Promise((resolve) => {
-          list.map((obj) => {
-            obj.attributeID = obj.attrID
-            obj.attributeName = obj.name
-            obj.isCustom = false
-            if (obj.name == '适用车型') {
-              obj.set = true
-              obj.invokeName = 'model'
-              obj.value = ''
-            } else if (obj.name == '适用汽车品牌') {
-              obj.value = ''
-              obj.set = true
-              obj.invokeName = 'brand'
-            } else if (obj.name == '货号') {
-              obj.value = listToString(this.params.code, ' ')
-            } else if (obj.name == '型号') {
-              obj.value = listToString(this.params.code, ' ')
-            } else if (obj.name == '配件编号') {
-              obj.value = listToString(this.params.code, ' ')
-            } else if (obj.name == '适用车型年份') {
-              obj.value = ''
-            } else if (obj.name == '计量单位') {
-              obj.invokeName = 'unit'
-            } else if (obj.name == '主要销售地区') {
-              obj.value = '欧洲,北美,南美,东南亚,东北亚,中东,非洲,其他'
-            } else if (obj.name == '主要下游平台') {
-              obj.value = '速卖通,亚马逊,wish,ebay,LAZADA,独立站,其他'
-            }
-            return obj
-          })
-          resolve(list)
-          this.list = list
-          this.$emit('input', list)
-        })
-      } else {
-        api_alibaba_category_attribute_post(this.params).then((res) => {
-          if (res.data.errorCode) {
-            return
-          }
-          const list1 = res.data.attributes.filter((a) => a.required)
-          const list2 = res.data.attributes.filter((a) => !a.required)
-          const list = list1.concat(list2)
-          this.list = list.map((obj) => {
-            obj.value = null
-            if (obj.name == '适用车型') {
-              obj.set = true
-              obj.invokeName = 'model'
-              obj.value = ''
-            }
-            if (obj.name == '货号') {
-              obj.value = listToString(this.params.code, ' ')
-            }
-            if (obj.name == '型号') {
-              obj.value = listToString(this.params.code, ' ')
-            }
-            if (obj.name == '配件编号') {
-              obj.value = listToString(this.params.code, ' ')
-            }
-            return obj
-          })
-        })
-      }
-    })
+    console.log(this.value)
+    this.getAttributes()
   },
   methods: {
     initFormRules() {
-      this.valueRules = {};
+      this.valueRules = {}
       for (let i = 0; i < this.list.length; i++) {
         if (this.list.required == true) {
-          this.$set(this.valueRules, i, [{ required: true, message: `请输入value${i + 1}`, trigger: 'blur' }]);
+          this.$set(this.valueRules, i, [
+            { required: true, message: `请输入value${i + 1}`, trigger: 'blur' }
+          ])
         }
       }
     },
-
+    getAttributes() {
+      if (!this.params.groupID || !this.params.categoryID) {
+        return
+      }
+      api_property_get(
+        LEO_ALIBABA_ATTRIBUTE +
+          this.params.categoryID +
+          '_' +
+          this.params.groupID
+      ).then((res) => {
+        if (res.data) {
+          const list = JSON.parse(res.data.value)
+          new Promise((resolve) => {
+            list.map((obj) => {
+              obj.attributeID = obj.attrID
+              obj.attributeName = obj.name
+              obj.isCustom = false
+              if (obj.name == '适用车型') {
+                obj.set = true
+                obj.invokeName = 'model'
+                obj.value = ''
+              } else if (obj.name == '适用汽车品牌') {
+                obj.value = ''
+                obj.set = true
+                obj.invokeName = 'brand'
+              } else if (obj.name == '货号') {
+                obj.value = listToString(this.params.code, ' ')
+              } else if (obj.name == '型号') {
+                obj.value = listToString(this.params.code, ' ')
+              } else if (obj.name == '配件编号') {
+                obj.value = listToString(this.params.code, ' ')
+              } else if (obj.name == '适用车型年份') {
+                obj.value = ''
+              } else if (obj.name == '计量单位') {
+                obj.invokeName = 'unit'
+              } else if (obj.name == '主要销售地区') {
+                obj.value = '欧洲,北美,南美,东南亚,东北亚,中东,非洲,其他'
+              } else if (obj.name == '主要下游平台') {
+                obj.value = '速卖通,亚马逊,wish,ebay,LAZADA,独立站,其他'
+              }
+              return obj
+            })
+            resolve(list)
+            this.list = list
+            this.$emit('input', list)
+          })
+        } else {
+          api_alibaba_category_attribute_post(this.params).then((res) => {
+            if (res.data.errorCode) {
+              return
+            }
+            const list1 = res.data.attributes.filter((a) => a.required)
+            const list2 = res.data.attributes.filter((a) => !a.required)
+            const list = list1.concat(list2)
+            this.list = list.map((obj) => {
+              obj.value = null
+              if (obj.name == '适用车型') {
+                obj.set = true
+                obj.invokeName = 'model'
+                obj.value = ''
+              }
+              if (obj.name == '货号') {
+                obj.value = listToString(this.params.code, ' ')
+              }
+              if (obj.name == '型号') {
+                obj.value = listToString(this.params.code, ' ')
+              }
+              if (obj.name == '配件编号') {
+                obj.value = listToString(this.params.code, ' ')
+              }
+              return obj
+            })
+          })
+        }
+      })
+    },
     handleChange(row) {
       if (row.invokeName == 'unit') {
         this.$emit('unitChange', row.value)
