@@ -108,8 +108,11 @@ export default {
     this.initFormRules()
   },
   created() {
-    console.log(this.value)
-    this.getAttributes()
+    if (!this.value) {
+      this.getAttributes()
+    } else {
+      this.list = this.value
+    }
   },
   methods: {
     initFormRules() {
