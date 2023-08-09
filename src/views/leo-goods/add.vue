@@ -306,7 +306,7 @@ import {
 } from './goods.js'
 import { api_goods_batch_post } from '@/api/leo-goods'
 import { api_python_image_goods_post } from '@/api/leo-python'
-import { imgBase, imgTempPath } from '@/api/index'
+import { imgBase, imgTempPath } from '@/api/local-setting'
 import { listToString } from '@/utils'
 import Album from '@/components/LeoAlibaba/Album.vue'
 export default {
