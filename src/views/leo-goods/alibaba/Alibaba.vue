@@ -68,7 +68,8 @@
       </el-form-item>
       <el-form-item label="description" prop="description">
         <Description :images="goods.imagesObj" :models="formData.models"
-          v-model="formData.description" style="height: 500px;overflow: scroll;"></Description>
+          v-model="formData.description" style="height: 500px;overflow: scroll;" ref="description">
+        </Description>
       </el-form-item>
       <el-form-item style="
           position: fixed;
@@ -357,6 +358,8 @@ export default {
       })
     },
     save() {
+      // this.formData.description = this.$refs['description'].getVal()
+      // console.log(this.formData.description)
       this.goods.json = this.formData
       localStorage.setItem(
         'leo-goods/post' + this.goods.id,

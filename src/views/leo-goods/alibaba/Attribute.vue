@@ -77,7 +77,6 @@ export default {
   },
   watch: {
     value(newval) {
-      console.log(newval)
       if (!newval) {
         this.getAttributes()
       } else {
