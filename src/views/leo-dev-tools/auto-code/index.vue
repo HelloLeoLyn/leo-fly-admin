@@ -204,7 +204,7 @@
 import { htmlTag } from '@/utils/html'
 import { api_table_list, api_table_info } from '@/api/leo-table'
 import { exists } from '@/api/leo-file'
-import { javaProjectPath, vueProjectPath } from '@/api/index'
+import { javaProjectPath, vueProjectPath } from '@/api/local-setting'
 const constant = {
   javaProjectName: 'leo-fly',
   javaProjectPath,

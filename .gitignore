@@ -24,3 +24,4 @@ yarn.lock
 .eslintrc.js
 .eslintignore
 README.zh-CN.md
+src/api/local-setting.js

@@ -139,7 +139,7 @@ import { service } from '@/api/index'
 import { api_image_put } from '@/api/leo-image'
 import { deepClone } from '@/utils/index'
 import { getBase64Image, dataURLtoFile } from '@/utils/image'
-import { imgBase } from '@/api/index'
+import { imgBase } from '@/api/local-setting'
 import axios from 'axios'
 export default {
   components: {
