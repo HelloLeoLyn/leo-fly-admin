@@ -15,3 +15,24 @@ export function api_alibaba_auth() {
     method: 'get'
   })
 }
+
+export function api_alibaba_product_schema(data) {
+  return request({
+    url: api_pre + '/product/alibaba/schema',
+    method: 'post',
+    data
+  })
+}
+export const apiOptions = [{
+  oceanApiId: {
+    namespace: 'com.alibaba.product',
+    name: 'alibaba.new.product.getSchema',
+    version: 1
+  },
+  desc: '获取商品发布规则和详情',
+  catId: '1032176',
+  scene: 'cbu',
+  offerId: '',
+  bizParam: null
+}]
+

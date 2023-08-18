@@ -344,13 +344,21 @@ export default {
         if (!valid) return
         api_goods_put(this.goods).then((res) => {
           if (res.code == '200') {
-            api_product_alibaba_add(this.formData).then((res) => {
-              if (res.code == '200') {
-                this.$notify.success('保存成功！')
-              } else {
-                this.$notify.error(res.msg)
-              }
-            })
+            api_product_alibaba_add(this.formData)
+              .then(({ code, msg }) => {
+                if (code == '200') {
+                  this.$notify.success('保存成功！')
+                } else {
+                  this.$notify.error(msg)
+                }
+              })
+              .catch(({ code, msg }) => {
+                if (code == '200') {
+                  this.$notify.success('保存成功！')
+                } else {
+                  this.$notify.error(msg)
+                }
+              })
           } else {
             this.$notify.error(res.msg)
           }
