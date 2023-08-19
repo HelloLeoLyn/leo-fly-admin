@@ -2,7 +2,8 @@
   <div>
     <el-button type="primary" size="default" @click="handBltClk(opt)" v-for=" opt,key in apiOptions"
       :key="key">{{opt.desc}}</el-button>
-    <CatProp :catProp="schema.data.catProp" v-model="data.catProp"></CatProp>
+    {{ catProp }}
+    <CatProp :catProp="schema.data.catProp" v-model="catProp" v-if="key==1"></CatProp>
   </div>
 </template>
 <script>
@@ -17,10 +18,17 @@ export default {
     return {
       apiOptions,
       schema,
-      data: {
-        catProp: null
-      }
+      catProp: {},
+      key: 0
     }
+  },
+  mounted() {
+    this.schema.data.catProp.fields.dataSource.forEach((element) => {
+      // this.catProp[element.name] = ''
+    })
+    setTimeout(() => {
+      this.key = 1
+    }, 2000)
   },
   methods: {
     handBltClk(opt) {
