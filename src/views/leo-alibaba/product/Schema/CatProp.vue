@@ -2,22 +2,24 @@
   <div>
     <h1>{{ catProp.fields.label }}</h1>
     <h2>{{ catProp.fields.promote }}</h2>
-    <el-form :model="form" ref="form" :rules="rules" label-width="220px" :inline="false"
-      size="normal">
-      <div v-for="option,key in catProp.fields.dataSource" :key="key">
-        <el-form-item v-if="option.uiType=='select'" :label="option.label+'['+option.uiType+']'"
-          :prop="option.name">
-          <el-select v-model="form[option.name]" value-key="" placeholder="" clearable filterable
-            @change="handleChange(option.name)">
-            <el-option v-for="item in option.dataSource" :key="item.value" :label="item.text"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-else :label="option.label+'['+option.uiType+']'" :prop="option.name">
-          <el-input v-model="form[option.name]"></el-input>
-        </el-form-item>
-      </div>
+    <el-form :model="value" ref="ruleForm" label-width="220px" :inline="false" size="normal" :rules="rules">
+      <el-form-item v-for="option, key in catProp.fields.dataSource" :key="key"
+        :rules="option.required ? [{ required: true, message: `请输入${option.label}`, trigger: 'blur' }] : null"
+        :prop="option.name">
+        <template slot="label">
+          {{ option.label }}<el-button type="text" size="default" @click="showNotice(option)"><i
+              class="el-icon-bell"></i></el-button>
+        </template>
+        <el-select v-if="option.uiType == 'select'" v-model="value[option.name]" value-key="text" placeholder="" clearable
+          filterable @change="handleChange">
+          <el-option v-for="item in option.dataSource" :key="item.value" :label="item.text" :value="item">
+          </el-option>
+        </el-select>
+        <el-input v-else v-model="value[option.name]"></el-input>
+      </el-form-item>
+      <el-form-item label="" size="normal">
+        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -26,58 +28,49 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => {}
+      default: () => { }
     },
     catProp: {
       type: Object,
       required: true
     },
-    rules: {}
   },
   data() {
     return {
-      form: {}
+      form: {},
+      rules: {}
     }
   },
 
   watch: {
-    catProp(newVal) {
-      if (newVal) {
-        setTimeout(() => {
-          console.log(newVal)
-        }, 1000)
-      }
+    value(newVal) {
     }
   },
-  created() {
-    this.catProp.fields.dataSource.forEach((element) => {
-      console.log(element)
-      this.form[element.name] = null
-      this.rules = null
-    })
-    this.initFormRules()
-  },
-  mounted() {
-    this.initFormRules()
-  },
+
   methods: {
-    handleChange(name) {
-      console.log(name)
+    showNotice(item) {
+      console.log(item);
     },
-    initFormRules() {
-      for (let i = 0; i < this.catProp.fields.dataSource.length; i++) {
-        const item = this.catProp.fields.dataSource[i]
-        if (item.required == true) {
-          this.$set(this.rules, item.name, [
-            {
-              required: true,
-              message: `请输入value${item.label}`,
-              trigger: 'blur'
-            }
-          ])
+    handleChange() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          console.log('success submit!!');
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      }
-    }
+      });
+    },
+    submitForm(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          console.log('success submit!!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
   }
 }
 </script>
