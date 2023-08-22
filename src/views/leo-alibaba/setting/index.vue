@@ -1,18 +1,67 @@
 <template>
   <div>
-    <el-button type="primary" size="default" @click="handBltClk(opt)"
-      v-for=" opt, key in apiOptions" :key="key">{{
+    <el-button type="primary" size="default" @click="handBltClk(opt)" v-for=" opt, key in apiOptions" :key="key">{{
       opt.desc }}</el-button>
-    <el-form :model="dataBody" ref="dataBody" :rules="rules" label-width="180px" :inline="false"
-      size="normal">
-      <template v-for="layoutName in  schema.hierarchy.structure[this.schema.hierarchy.root]">
+    <el-form :model="dataBody" ref="dataBody" :rules="rules" label-width="180px" :inline="false" size="normal">
+      <template v-for="layoutName in   schema.hierarchy.structure[this.schema.hierarchy.root] ">
         <el-form-item :key="layoutName" v-if="schema.hierarchy.structure[layoutName]"
           :label="schema.data[layoutName].fields.label">
           <div style="color: #e1870a;">{{ schema.data[layoutName] }}</div>
-          <template v-for="layoutName2 in  schema.hierarchy.structure[layoutName]">
+          <template v-for="layoutName2 in   schema.hierarchy.structure[layoutName] ">
             <el-form-item :key="layoutName2" :label="schema.data[layoutName2].fields.label"
-              v-if="schema.data[layoutName2]">
-              <div style="color: #e10a0d;">{{ schema.data[layoutName2] }}</div>
+              v-if="schema.data[layoutName2]"
+              :rules="schema.data[layoutName2].fields.required ? [{ required: true, message: `请输入${schema.data[layoutName2].fields.label}`, trigger: 'blur' }] : null">
+              <template slot="label">
+                <el-button type="text" size="default" @click="handleObj(schema.data[layoutName2])"
+                  class="el-icon-question">{{ schema.data[layoutName2].fields.label }}</el-button>
+              </template>
+              <div style="color: #6b0caa;" v-if="schema.data[layoutName2].fields.promote"
+                v-html="schema.data[layoutName2].fields.promote.top"></div>
+              <el-input v-if="schema.data[layoutName2].type == 'cbu_title'" v-model="dataBody.layoutName2"
+                :maxlength="schema.data[layoutName2].fields.maxLength" size="normal" clearable
+                :placeholder="schema.data[layoutName2].fields.placeholder"
+                :show-word-limit="schema.data[layoutName2].fields.showCounter"></el-input>
+              <CatProp v-else-if="schema.data[layoutName2].type == 'cbu_cat_prop'" v-model="dataBody.catProp"
+                :catProp="schema.data.catProp"></CatProp>
+              <div style="color: #6b0caa;" v-else-if="schema.data[layoutName2].type == 'cbu_specs'"></div>
+              <template v-else-if="schema.data[layoutName2].type == 'cburadio'">
+                <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value" v-for=" child, key in
+                    schema.data[layoutName2].fields.dataSource">{{ child.text }}
+                  <el-tooltip v-if="child.help" :content="child.help" placement="bottom" effect="light">
+                    <el-button class="el-icon-question" type="text"></el-button>
+                  </el-tooltip>
+                  <!-- <i class="el-icon-question" v-if="child.help"></i> -->
+                </el-radio>
+              </template>
+              <template v-else-if="schema.data[layoutName2].type == 'cbu_unit'">
+                <el-select v-model="dataBody[layoutName2].unit" value-key="" placeholder="" clearable filterable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.unitOptions" :key="item" :label="item"
+                    :value="item">
+                  </el-option>
+                </el-select>
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'priceRange'">
+                <el-table :data="dataBody.priceRange" border class="tableBox">
+                  <el-table-column :label="item.label" v-for="(item, index) in schema.data[layoutName2].fields.column"
+                    :key="index">
+                  </el-table-column>
+                </el-table>
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'totalSales'">
+                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal" clearable></el-input>
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'beginAmount'">
+                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal" clearable></el-input>
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'mixBatch'">
+                <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
+                  <el-checkbox v-for="item,key in schema.data[layoutName2].fields.dataSource" :key="key" :label="item.label" :value="item">
+                    {{ item.label }}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </template>
+              <div v-else style="color: #6b0caa;"></div>
+              <!-- <div style="color: #6b0caa;">{{ schema.data[layoutName2] }}</div> -->
             </el-form-item>
             <el-form-item :key="layoutName2" :label="layoutName2" v-else>
               <div style="color: #e10a0d;">{{ layoutName2 }}</div>
@@ -62,10 +111,10 @@
           <el-form-item :key="layoutName" v-if="schema.data[layoutName].id == 'supplyType'"
             :label="schema.data[layoutName].fields.label" size="normal" prop="supplyType">
             <el-checkbox-group v-model="dataBody.supplyType">
-              <el-checkbox v-for="item, key in schema.data[layoutName].fields.dataSource"
-                :label="item.text" :key="key" :value="item">{{
-                item.text
-              }}<span style="color: #E6A23C">{{ item.help }}</span>
+              <el-checkbox v-for=" item, key  in  schema.data[layoutName].fields.dataSource " :label="item.text"
+                :key="key" :value="item">{{
+                  item.text
+                }}<span style="color: #E6A23C">{{ item.help }}</span>
               </el-checkbox>
             </el-checkbox-group>
             <!-- {{ schema.data[layoutName] }} -->
@@ -73,7 +122,7 @@
           </el-form-item>
           <el-form-item :key="layoutName" v-else-if="schema.data[layoutName].id == 'catNamer'"
             :label="schema.data[layoutName].fields.label" size="normal">
-            <template v-for="(item, index) in schema.data[layoutName].fields.value.pathList">
+            <template v-for="( item, index ) in  schema.data[layoutName].fields.value.pathList ">
               <i :key="index" class="el-icon-arrow-right">{{ item.name }}</i>
             </template>
             <!-- {{ schema.data[layoutName] }} -->
@@ -81,32 +130,27 @@
           <el-form-item :key="layoutName" v-else-if="schema.data[layoutName].id == 'blockProps'"
             :label="schema.data[layoutName].fields.label" size="normal">
             {{ schema.hierarchy.structure['blockProps'] }}
-            <el-form :model="dataBody" ref="blockProps" :rules="rules" label-width="80px"
-              :inline="false" size="normal">
-              <template v-for="layoutName2 in  schema.hierarchy.structure['blockProps']">
+            <el-form :model="dataBody" ref="blockProps" :rules="rules" label-width="80px" :inline="false" size="normal">
+              <template v-for=" layoutName2  in   schema.hierarchy.structure['blockProps'] ">
                 <el-form-item v-if="schema.data[layoutName2].id == 'title'" :key="layoutName2"
                   :label="schema.data[layoutName2].fields.label"
                   :rules="[{ required: true, message: `请输入${schema.data[layoutName2].fields.label}`, trigger: 'blur' }]">
                   <!-- {{ schema.data[layoutName2] }} -->
-                  <el-input v-model="dataBody.title"
-                    :placeholder="schema.data[layoutName2].fields.placeholder" size="normal"
-                    :maxlength="schema.data[layoutName2].fields.maxLength"
-                    show-word-limit></el-input>
+                  <el-input v-model="dataBody.title" :placeholder="schema.data[layoutName2].fields.placeholder"
+                    size="normal" :maxlength="schema.data[layoutName2].fields.maxLength" show-word-limit></el-input>
                 </el-form-item>
-                <el-form-item v-else-if="schema.data[layoutName2].id == 'catProp'"
-                  :key="layoutName2" :label="schema.data[layoutName2].fields.label">
+                <el-form-item v-else-if="schema.data[layoutName2].id == 'catProp'" :key="layoutName2"
+                  :label="schema.data[layoutName2].fields.label">
                   {{ schema.data[layoutName2].fields.promote.top }}
                   <CatProp v-model="dataBody.catProp" :catProp="schema.data.catProp"></CatProp>
                 </el-form-item>
-                <el-form-item v-else size="normal" :label="schema.data[layoutName2].fields.label"
-                  :key="layoutName2">
+                <el-form-item v-else size="normal" :label="schema.data[layoutName2].fields.label" :key="layoutName2">
                   <div style="color: #18b42f;">{{ schema.data[layoutName2] }}</div>
                 </el-form-item>
               </template>
             </el-form>
           </el-form-item>
-          <el-form-item v-else size="normal" :label="schema.data[layoutName].fields.label"
-            :key="layoutName">
+          <el-form-item v-else size="normal" :label="schema.data[layoutName].fields.label" :key="layoutName">
             <div style="color: #18b42f;">{{ schema.data[layoutName] }}</div>
           </el-form-item>
         </template>
@@ -146,15 +190,15 @@ export default {
         cbuUnit: {},
         quotationType: {},
         bPrice: {},
-        priceRange: {},
+        priceRange: [{ pricerange_beginAmount: 2, pricerange_price: null }],
         skuTable: {},
         invReduce: {},
-        totalSales: {},
-        beginAmount: {},
+        totalSales: 999,
+        beginAmount: 5,
         standardPrice: {},
         lightBeginAmount: {},
         processPriceTpl: {},
-        mixBatch: {},
+        mixBatch: [],
         upshelfTime: {},
         relationOffer: {},
         tradeTemplate: {},
@@ -212,7 +256,6 @@ export default {
       let children = this.schema.hierarchy.structure[keys[i]]
       for (let j = 0; j < children.length; j++) {
         if (this.schema.data[children[j]]) {
-          console.log(this.schema.data[children[j]])
           dataBody[this.schema.data[children[j]].id] = {}
         } else {
           console.log(children[j])
@@ -238,11 +281,11 @@ export default {
         }
       })
     },
-    saveAsTemplate() {},
+    saveAsTemplate() { },
     handleObj(obj) {
-      console.log(obj)
-      let index = Object.keys(obj).findIndex((key) => key == 'fields')
-      console.log(index)
+      console.log(JSON.stringify(obj))
+      // let index = Object.keys(obj).findIndex((key) => key == 'fields')
+      // console.log(index)
     }
   }
 }
