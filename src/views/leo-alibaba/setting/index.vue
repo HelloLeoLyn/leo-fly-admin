@@ -35,6 +35,7 @@
                 v-model="dataBody.catProp" :catProp="schema.data.catProp"></CatProp>
               <div style="color: #6b0caa;" v-else-if="schema.data[layoutName2].type == 'cbu_specs'">
               </div>
+
               <template v-else-if="schema.data[layoutName2].type == 'cburadio'">
                 <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value"
                   v-for=" child, key in
@@ -53,6 +54,9 @@
                     :label="item" :value="item">
                   </el-option>
                 </el-select>
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'primaryPicture'">
+                <ImageList :images="[]" :count="5"></ImageList>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'priceRange'">
                 <el-table :data="dataBody.priceRange" border class="tableBox">
@@ -196,10 +200,11 @@ import { schema } from '.'
 import { apiOptions, api_alibaba_product_schema } from '@/api/leo-alibaba'
 import CatProp from '../product/Schema/CatProp.vue'
 import cbu_supply_type from '@/views/leo-alibaba/components/cbu_supply_type'
-// import { deepClone } from '@/utils/index.js'
+import ImageList from '@/components/LeoImage/List.vue'
 export default {
   components: {
     CatProp,
+    ImageList,
     cbu_supply_type
   },
   data() {
@@ -310,8 +315,6 @@ export default {
     saveAsTemplate() {},
     handleObj(obj) {
       console.log(JSON.stringify(obj))
-      // let index = Object.keys(obj).findIndex((key) => key == 'fields')
-      // console.log(index)
     }
   }
 }
