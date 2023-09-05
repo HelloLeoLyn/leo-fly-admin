@@ -68,10 +68,6 @@
         </el-select>
 
       </el-form-item>
-      <el-form-item label="image" prop="image">
-        <Image1688 v-if="$route.params.id" :ref="$route.params.id" :product-id="$route.params.id"
-          :sources="[]" @getImages="getImages" />
-      </el-form-item>
       <el-form-item label="saleInfo" prop="saleInfo">
         <SaleInfo1688 v-if="flag" :id="product.id" @showHistory="showHistory"
           :values="formData.saleInfo" ref="saleInfo" />
@@ -113,7 +109,6 @@ import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
 import Group1688 from '@/views/leo-alibaba/components/Group1688.vue'
 import Attribute1688 from '@/views/leo-alibaba/components/Attribute1688.vue'
 import Subject1688 from '@/views/leo-alibaba/components/Subject1688.vue'
-import Image1688 from '@/components/LeoImage/List.vue'
 import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
 import Description1688 from './components/Description1688.vue'
@@ -145,7 +140,6 @@ export default {
     Group1688,
     Attribute1688,
     Subject1688,
-    Image1688,
     SaleInfo1688,
     ShippingInfo1688,
     Description1688,

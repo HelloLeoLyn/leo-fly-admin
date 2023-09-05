@@ -1,46 +1,24 @@
 <template>
   <div>
-    <el-row style="background-color: #aad9ef;margin: 5px; padding: 10px; display: flex;
-        flex-wrap: wrap;">
-      <draggable :list="checkedList">
-        <el-col v-for="image, index in checkedList" :key="index"
-          style=" width: 200px;height: 200px;">
-          <vue-hover-mask>
-            <el-image :src="image.url" width="100%" class="leo-product-images-item" />
+    <el-row>
+      <template v-if="this.count">
+        <el-col v-for="i in count" :key="i" style=" width: 200px;height: 200px;">
+          <!-- <vue-hover-mask>
+            <el-image src="" width="100%" class="leo-product-images-item" />
             <template v-slot:action>
               <el-button type="text" size="mini" @click="handleRemoveBtnClick(index)">
                 删除
               </el-button>
             </template>
-          </vue-hover-mask>
+          </vue-hover-mask> -->
+          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-col>
-        <el-col :span="4">
-          <el-button type="primary" size="default" @click="visible = true">修改图片</el-button>
-        </el-col>
-      </draggable>
+      </template>
     </el-row>
-    <el-dialog :visible.sync="visible" width="1100" @close="handleClose">
-      <el-row :gutter="5" v-if="images" :key="changeKey">
-        <el-col v-for="image in images" :key="image.id" style="width:180px;">
-          <vue-hover-mask @click="handleClick(image)">
-            <el-image :src="image.url" width="100%" class="leo-product-images-item" />
-            <label style="position: absolute" :ref="'checked' + image.id"
-              :class="{ 'leo-sm-label-checked': image.checked }"><i
-                class="el-icon-check leo-icon-check"></i></label>
-            <template v-slot:action>
-              <el-button type="text" size="mini" v-if="customzedBtn"
-                @click="handleCustomzedClick(image)">{{
-                customzedBtn.label }}
-              </el-button>
-            </template>
-          </vue-hover-mask>
-        </el-col>
-        <el-col>
-          <el-button v-if="resetable" @click="load" type="text">重置</el-button>
-          <el-button v-if="saveable" @click="save" type="text">保存</el-button>
-        </el-col>
-      </el-row>
-    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -72,12 +50,34 @@
   /* 图片的高度 */
 }
 </style>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
 <script>
 import draggable from 'vuedraggable'
 import VueHoverMask from 'vue-hover-mask'
-import { getImagesByProductId } from '@/api/leo-image'
-import { api_get_product } from '@/api/leo-product'
-import { service } from '@/api/index'
 export default {
   components: {
     VueHoverMask,
@@ -85,42 +85,18 @@ export default {
   },
   data() {
     return {
-      service,
       visible: false,
-      imageUrl: null,
-      imageId: null,
-      changeKey: 0,
-      images: [],
-      productImages: [],
       checkedList: []
     }
   },
   props: {
-    sources: {
+    images: {
       type: Array,
-      required: true
+      default: () => {}
     },
-    autoSave: {
-      type: Boolean,
-      default: () => {
-        return false
-      }
-    },
-    resetable: {
-      type: Boolean,
-      default: () => {
-        return false
-      }
-    },
-    saveable: {
-      type: Boolean,
-      default: () => {
-        return false
-      }
-    },
-    productId: {
-      type: [String, Number],
-      required: true
+    count: {
+      type: Number,
+      default: () => {}
     },
     customzedBtn: {
       type: Object,
@@ -128,60 +104,37 @@ export default {
     }
   },
   mounted() {
+    console.log('mounted')
+    if (this.count && this.images) {
+      if (this.count > this.images.length) {
+      } else {
+      }
+    } else {
+      if (this.count && !this.images) {
+      } else if (!this.count && this.images) {
+      } else {
+      }
+    }
     this.load()
   },
+  watch: {
+    images(newValue) {
+      console.log('watch images')
+      if (newValue) {
+        console.log(newValue)
+      }
+    },
+    count(newValue) {
+      console.log('watch count')
+      if (newValue) {
+        console.log(newValue)
+      }
+    }
+  },
+
   methods: {
     handleClose() {
       this.getImages()
-    },
-    save() {
-      const deleteImages = this.images.filter((image) => image.status == -1)
-      const newImages = this.images.filter(
-        (image) => image.checked && image.status != -1
-      )
-      const main = newImages.filter((image) => image.isMain)
-      const params = {
-        id: this.productId,
-        images: newImages.map((image) => image.id),
-        mainImage: main.length == 0 ? newImages[0].id : main[0].id,
-        deleteImages,
-        referStatus: '1'
-      }
-      this.$emit('onSaveClick', params)
-    },
-    load() {
-      getImagesByProductId(this.productId).then((res) => {
-        if (res.data && res.data.length > 0) {
-          api_get_product(this.productId).then((newProduct) => {
-            this.productImages = newProduct.data.images
-            const images = res.data
-              .filter((image) => image.status != -1)
-              .map((image) => {
-                let checkIndex = -1
-                if (this.productImages && this.productImages.length > 0) {
-                  checkIndex = this.productImages.findIndex((pi) => {
-                    return pi == image.id
-                  })
-                }
-                image.productId = image.code
-                image.url =
-                  service +
-                  '/img/' +
-                  image.code +
-                  '/' +
-                  image.name +
-                  '?' +
-                  new Date().getTime()
-                image.checked = checkIndex >= 0
-                return image
-              })
-            this.images = images
-            this.checkedList = this.images.filter((img) => img.checked)
-            this.getImages()
-            this.changeKey++
-          })
-        }
-      })
     },
 
     getImages() {
