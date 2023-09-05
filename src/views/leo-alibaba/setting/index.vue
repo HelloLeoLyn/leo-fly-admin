@@ -1,20 +1,24 @@
 <template>
-  <div>
-    <el-button type="primary" size="default" @click="handBltClk(opt)"
-      v-for=" opt, key in apiOptions" :key="key">{{
+  <div style="padding: 0 20px;background-color: silver;">
+    <el-button type="primary" size="default" @click="handBltClk(opt)" v-for=" opt, key in apiOptions" :key="key">{{
       opt.desc }}</el-button>
-    <el-form :model="dataBody" ref="dataBody" :rules="rules" label-width="180px" :inline="false"
-      size="normal">
-      <template v-for="layoutName in   schema.hierarchy.structure[this.schema.hierarchy.root] ">
+    <el-form :model="dataBody" ref="dataBody" :rules="rules" label-width="180px" :inline="false" size="normal">
+      <div style="background-color: white;"
+        v-for="layoutName in   schema.hierarchy.structure[this.schema.hierarchy.root] ">
         <el-form-item :key="layoutName" v-if="schema.hierarchy.structure[layoutName]"
           :label="schema.data[layoutName].fields.label">
           <template slot="label">
-            <el-button type="text" size="default" @click="handleObj(schema.data[layoutName])"
-              class="el-icon-question">{{ schema.data[layoutName].fields.label }}</el-button>
+            <el-button type="text" size="default" @click="handleObj(schema.data[layoutName])" class="el-icon-question">{{
+              schema.data[layoutName].fields.label }}</el-button>
           </template>
-          <!-- <div style="color: #e1870a;">{{ schema.data[layoutName] }}</div> -->
-          <div style="color: #e1870a;" v-if="schema.data[layoutName].fields.promote"
-            v-html="schema.data[layoutName].fields.promote.right"></div>
+          <div v-if="schema.data[layoutName].fields.promote" v-html="schema.data[layoutName].fields.promote.right"></div>
+          <div v-if="schema.data[layoutName].id == 'blockProps'">
+            <el-button size="default" @click="">使用模板</el-button>
+            第一次使用模板，请点此查看详情学习
+          </div>
+          <div v-if="schema.data[layoutName].id == 'blockTradeInfo'">
+            <el-button size="default" @click="">使用模板</el-button>
+          </div>
           <br>
           <template v-for="layoutName2 in   schema.hierarchy.structure[layoutName] ">
             <el-form-item :key="layoutName2" :label="schema.data[layoutName2].fields.label"
@@ -24,65 +28,57 @@
                 <el-button type="text" size="default" @click="handleObj(schema.data[layoutName2])"
                   class="el-icon-question">{{ schema.data[layoutName2].fields.label }}</el-button>
               </template>
-              <div style="color: #6b0caa;" v-if="schema.data[layoutName2].fields.promote"
-                v-html="schema.data[layoutName2].fields.promote.top"></div>
-              <el-input v-if="schema.data[layoutName2].type == 'cbu_title'"
-                v-model="dataBody.layoutName2"
+              <div v-if="schema.data[layoutName2].fields.promote" v-html="schema.data[layoutName2].fields.promote.top">
+              </div>
+              <el-input v-if="schema.data[layoutName2].type == 'cbu_title'" v-model="dataBody.layoutName2"
                 :maxlength="schema.data[layoutName2].fields.maxLength" size="normal" clearable
                 :placeholder="schema.data[layoutName2].fields.placeholder"
                 :show-word-limit="schema.data[layoutName2].fields.showCounter"></el-input>
-              <CatProp v-else-if="schema.data[layoutName2].type == 'cbu_cat_prop'"
-                v-model="dataBody.catProp" :catProp="schema.data.catProp"></CatProp>
+              <CatProp v-else-if="schema.data[layoutName2].type == 'cbu_cat_prop'" v-model="dataBody.catProp"
+                :catProp="schema.data.catProp"></CatProp>
               <div style="color: #6b0caa;" v-else-if="schema.data[layoutName2].type == 'cbu_specs'">
               </div>
               <template v-else-if="schema.data[layoutName2].type == 'cburadio'">
-                <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value"
-                  v-for=" child, key in
+                <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value" v-for=" child, key in
                     schema.data[layoutName2].fields.dataSource">{{ child.text }}
-                  <el-tooltip v-if="child.help" :content="child.help" placement="bottom"
-                    effect="light">
+                  <el-tooltip v-if="child.help" :content="child.help" placement="bottom" effect="light">
                     <el-button class="el-icon-question" type="text"></el-button>
                   </el-tooltip>
                   <!-- <i class="el-icon-question" v-if="child.help"></i> -->
                 </el-radio>
               </template>
               <template v-else-if="schema.data[layoutName2].type == 'cbu_unit'">
-                <el-select v-model="dataBody[layoutName2].unit" value-key="" placeholder=""
-                  clearable filterable>
-                  <el-option v-for="item in schema.data[layoutName2].fields.unitOptions" :key="item"
-                    :label="item" :value="item">
+                <el-select v-model="dataBody[layoutName2].unit" value-key="" placeholder="" clearable filterable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.unitOptions" :key="item" :label="item"
+                    :value="item">
                   </el-option>
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'priceRange'">
                 <el-table :data="dataBody.priceRange" border class="tableBox">
-                  <el-table-column :label="item.label"
-                    v-for="(item, index) in schema.data[layoutName2].fields.column" :key="index">
+                  <el-table-column :label="item.label" v-for="(item, index) in schema.data[layoutName2].fields.column"
+                    :key="index">
                   </el-table-column>
                 </el-table>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'totalSales'">
-                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal"
-                  clearable></el-input>
+                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal" clearable></el-input>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'beginAmount'">
-                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal"
-                  clearable></el-input>
+                <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal" clearable></el-input>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'mixBatch'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox v-for="item,key in schema.data[layoutName2].fields.dataSource"
-                    :key="key" :label="item.label" :value="item">
+                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource" :key="key"
+                    :label="item.label" :value="item">
                     {{ item.label }}
                   </el-checkbox>
                 </el-checkbox-group>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'upshelfTime'">
-                <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value"
-                  v-for=" child, key in
+                <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value" v-for=" child, key in
                     schema.data[layoutName2].fields.dataSource">{{ child.text }}
-                  <el-tooltip v-if="child.help" :content="child.help" placement="bottom"
-                    effect="light">
+                  <el-tooltip v-if="child.help" :content="child.help" placement="bottom" effect="light">
                     <el-button class="el-icon-question" type="text"></el-button>
                   </el-tooltip>
                   <!-- <i class="el-icon-question" v-if="child.help"></i> -->
@@ -90,12 +86,10 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'tradeTemplate'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox
-                    v-for="item,key in schema.data[layoutName2].fields.processTemplateList"
-                    :key="key" :label="item.name" :value="item">
+                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.processTemplateList" :key="key"
+                    :label="item.name" :value="item">
                     {{ item.name }}
-                    <el-tooltip v-if="item.help" :content="item.help" placement="bottom"
-                      effect="light">
+                    <el-tooltip v-if="item.help" :content="item.help" placement="bottom" effect="light">
                       <el-button class="el-icon-question" type="text"></el-button>
                     </el-tooltip>
                   </el-checkbox>
@@ -103,24 +97,23 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'privacy'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox v-for="item,key in schema.data[layoutName2].fields.dataSource"
-                    :key="key" :label="item.text" :value="item">
+                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource" :key="key"
+                    :label="item.text" :value="item">
                     {{ item.text }}
                   </el-checkbox>
                 </el-checkbox-group>
               </template>
               <template v-else-if="schema.data[layoutName2].type == 'cbuselect'">
-                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder="" clearable
-                  filterable>
-                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource"
-                    :key="item.value" :label="item.text" :value="item">
+                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder="" clearable filterable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item.value"
+                    :label="item.text" :value="item">
                   </el-option>
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'seven_day'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox v-for="item,key in schema.data[layoutName2].fields.dataSource"
-                    :key="key" :label="item.text" :value="item">
+                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource" :key="key"
+                    :label="item.text" :value="item">
                     {{ item.text }}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -129,48 +122,41 @@
                 </div>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'cbuSendAddress'">
-                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder=""
-                  clearable>
-                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource"
-                    :key="item.value" :label="item.text" :value="item">
+                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder="" clearable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item.value"
+                    :label="item.text" :value="item">
                   </el-option>
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'freight'">
-                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder=""
-                  clearable>
-                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item"
-                    :label="item" :value="item">
+                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder="" clearable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item" :label="item"
+                    :value="item">
                   </el-option>
                 </el-select>
-                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder=""
-                  clearable>
-                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item"
-                    :label="item" :value="item">
+                <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder="" clearable>
+                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item" :label="item"
+                    :value="item">
                   </el-option>
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'userCategory'">
-                <el-select v-model="dataBody[layoutName2]" multiple placeholder="请选择"
-                  value-key="text">
-                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource"
-                    :key="item.value" :label="item.text" :value="item">
+                <el-select v-model="dataBody[layoutName2]" multiple placeholder="请选择" value-key="text">
+                  <el-option v-for="item in schema.data[layoutName2].fields.dataSource" :key="item.value"
+                    :label="item.text" :value="item">
                   </el-option>
                 </el-select>
               </template>
               <div v-else style="color: #6b0caa;"></div>
             </el-form-item>
-            <!-- <el-form-item :key="layoutName2" :label="layoutName2" v-else>
-              <div style="color: #e10a0d;">{{ layoutName2 }}</div>
-            </el-form-item> -->
           </template>
         </el-form-item>
         <template v-else>
           <el-form-item :key="layoutName" v-if="schema.data[layoutName].id == 'supplyType'"
             :label="schema.data[layoutName].fields.label" size="normal" prop="supplyType">
             <el-checkbox-group v-model="dataBody.supplyType">
-              <el-checkbox v-for=" item, key  in  schema.data[layoutName].fields.dataSource "
-                :label="item.text" :key="key" :value="item">{{
+              <el-checkbox v-for=" item, key  in  schema.data[layoutName].fields.dataSource " :label="item.text"
+                :key="key" :value="item">{{
                   item.text
                 }}<span style="color: #E6A23C">{{ item.help }}</span>
               </el-checkbox>
@@ -183,7 +169,7 @@
             </template>
           </el-form-item>
         </template>
-      </template>
+      </div>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('dataBody')">立即创建</el-button>
         <el-button>取消</el-button>
@@ -307,7 +293,7 @@ export default {
         }
       })
     },
-    saveAsTemplate() {},
+    saveAsTemplate() { },
     handleObj(obj) {
       console.log(JSON.stringify(obj))
       // let index = Object.keys(obj).findIndex((key) => key == 'fields')
@@ -316,3 +302,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+em {
+  color: #e1870a;
+}
+</style>
