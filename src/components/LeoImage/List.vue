@@ -3,14 +3,6 @@
     <el-row>
       <template v-if="this.count">
         <el-col v-for="i in count" :key="i" style=" width: 200px;height: 200px;">
-          <!-- <vue-hover-mask>
-            <el-image src="" width="100%" class="leo-product-images-item" />
-            <template v-slot:action>
-              <el-button type="text" size="mini" @click="handleRemoveBtnClick(index)">
-                删除
-              </el-button>
-            </template>
-          </vue-hover-mask> -->
           <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
             :show-file-list="false">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -86,7 +78,8 @@ export default {
   data() {
     return {
       visible: false,
-      checkedList: []
+      checkedList: [],
+      imageUrl: ''
     }
   },
   props: {
@@ -115,7 +108,6 @@ export default {
       } else {
       }
     }
-    this.load()
   },
   watch: {
     images(newValue) {
