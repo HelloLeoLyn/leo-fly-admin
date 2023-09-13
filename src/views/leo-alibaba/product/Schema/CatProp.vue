@@ -3,7 +3,8 @@
     <el-form :model="value" ref="catProp" label-width="180px" :inline="false" size="normal">
       <el-row :gutter="20">
         <el-col :span="12" :offset="0" v-for="option, key in catProp.fields.dataSource" :key="key">
-          <el-form-item class="leo-inner-form-item" :label="option.label + '[' + option.uiType + ']' + '[' + option.required + ']'"
+          <el-form-item class="leo-inner-form-item"
+            :label="option.label + '[' + option.uiType + ']' + '[' + option.required + ']'"
             :prop="option.name" :rules="option.required ? [{
               required: true,
               message: `请输入${option.label}`,
@@ -12,11 +13,14 @@
             <template slot="label">
               {{ option.label }}
               <!-- {{ option.label + '[' + option.uiType + ']' }} -->
-              <el-button type="text" size="default" @click="showNotice(option)"><i class="el-icon-info" /></el-button>
+              <el-button type="text" size="default" @click="showNotice(option)"><i
+                  class="el-icon-info" /></el-button>
             </template>
-            <el-select v-if="option.uiType == 'select'" v-model="value[option.name]" value-key="name" placeholder=""
-              clearable filterable @change="e => handleChange(e)" @input="input">
-              <el-option v-for="item, key in option.dataSource" :key="key" :label="item.text" :value="item">{{ item.text
+            <el-select v-if="option.uiType == 'select'" v-model="value[option.name]"
+              value-key="value" placeholder="" clearable filterable @change="e => handleChange(e)"
+              @input="input">
+              <el-option v-for="item, key in option.dataSource" :key="key" :label="item.text"
+                :value="item">{{ item.text
               }}
               </el-option>
             </el-select>
@@ -34,7 +38,7 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
     catProp: {
       type: Object,
@@ -79,7 +83,7 @@ export default {
 }
 </script>
 <style lang="scss">
-  .leo-inner-form-item{
-    margin-bottom: 40px;
-  }
+.leo-inner-form-item {
+  margin-bottom: 40px;
+}
 </style>

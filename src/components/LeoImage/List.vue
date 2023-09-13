@@ -3,10 +3,19 @@
     <el-row>
       <template v-if="this.count">
         <el-col v-for="i in count" :key="i" style=" width: 200px;height: 200px;">
+          <!-- <vue-hover-mask>
+            <el-image src="" width="100%" class="leo-product-images-item" />
+            <template v-slot:action>
+              <el-button type="text" size="mini" @click="handleRemoveBtnClick(index)">
+                删除
+              </el-button>
+            </template>
+          </vue-hover-mask> -->
           <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
             :show-file-list="false">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar"> -->
+            <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+            <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-col>
       </template>
@@ -50,9 +59,11 @@
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -61,6 +72,7 @@
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;

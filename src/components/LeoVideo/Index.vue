@@ -7,16 +7,15 @@
           <el-button type="primary" size="mini" @click="play">
             播放
           </el-button>
-          <el-upload :limit="1">
+          <el-upload :limit="1" action="null">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </template>
       </vue-hover-mask>
-      <el-upload v-else :limit="1">
+      <el-upload v-else :limit="1" action="null">
         <i class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
-
     </div>
     <el-dialog title="视频播放" :visible.sync="visible" @close="close">
       <video src="http://localhost:8080/video/0/tc.mp4" autoplay ref="myVideo" controls
@@ -26,7 +25,6 @@
         <el-button type="primary" @click="click">OK</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 <style>
