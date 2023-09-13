@@ -59,17 +59,13 @@
                 <ImageList :images="[]" :count="5"></ImageList>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'primaryVideo'">
-                <LeoVideo src="" ></LeoVideo>
+                <LeoVideo src=""></LeoVideo>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'industrySelectVideo'">
-                <LeoVideo src="" ></LeoVideo>
+                <LeoVideo src=""></LeoVideo>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'priceRange'">
-                <el-table :data="dataBody.priceRange" border class="tableBox">
-                  <el-table-column :label="item.label" v-for="(item, index) in schema.data[layoutName2].fields.column"
-                    :key="index">
-                  </el-table-column>
-                </el-table>
+                <priceRange :product-id="0"  v-model="dataBody.priceRange" />
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'totalSales'">
                 <el-input v-model="dataBody[layoutName2]" placeholder="" size="normal" clearable></el-input>
@@ -194,12 +190,14 @@ import CatProp from '../product/Schema/CatProp.vue'
 import cbu_supply_type from '@/views/leo-alibaba/components/cbu_supply_type'
 import ImageList from '@/components/LeoImage/List.vue'
 import LeoVideo from '@/components/LeoVideo/Index'
+import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
 export default {
   components: {
     CatProp,
     ImageList,
     LeoVideo,
-    cbu_supply_type
+    cbu_supply_type,
+    priceRange
   },
   data() {
     return {
@@ -297,6 +295,7 @@ export default {
     },
 
     onSubmit(formName) {
+      console.log(this.dataBody);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log('submit!!')

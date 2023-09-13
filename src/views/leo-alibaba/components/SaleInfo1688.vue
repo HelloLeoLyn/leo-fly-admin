@@ -3,12 +3,7 @@
     <el-form :model="params" :rules="rules" ref="params" label-width="0px">
       <el-switch v-model="setting"></el-switch>
       <div v-if="setting">
-        <!-- <el-row>
-          <el-checkbox v-model="params.supportOnlineTrade">supportOnlineTrade</el-checkbox>
-          <el-checkbox v-model="params.mixWholeSale">mixWholeSale</el-checkbox>
-          <el-checkbox v-model="params.priceAuth">priceAuth</el-checkbox>
-        </el-row> -->
-        <el-table :data="params.priceRanges" border class="tableBox">
+         <el-table :data="params.priceRanges" border class="tableBox">
           <el-table-column label="startQuantity">
             <template slot-scope="{row,$index}">
               <el-form-item label-width="0" :prop="'priceRanges.' + $index + '.startQuantity'"

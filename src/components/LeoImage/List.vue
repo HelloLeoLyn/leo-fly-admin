@@ -11,10 +11,10 @@
               </el-button>
             </template>
           </vue-hover-mask> -->
-          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false">
+            <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar"> -->
+            <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+            <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-col>
       </template>
@@ -58,9 +58,11 @@
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -69,6 +71,7 @@
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
@@ -92,15 +95,15 @@ export default {
   props: {
     images: {
       type: Array,
-      default: () => {}
+      default: () => { }
     },
     count: {
       type: Number,
-      default: () => {}
+      default: () => { }
     },
     customzedBtn: {
       type: Object,
-      default: () => {}
+      default: () => { }
     }
   },
   mounted() {
@@ -115,7 +118,6 @@ export default {
       } else {
       }
     }
-    this.load()
   },
   watch: {
     images(newValue) {

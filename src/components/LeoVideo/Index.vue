@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false">
-      <video v-if="imageUrl" :src="imageUrl" class="avatar"></video>
+      <video v-if="src" :src="src" class="avatar"></video>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
   </div>
