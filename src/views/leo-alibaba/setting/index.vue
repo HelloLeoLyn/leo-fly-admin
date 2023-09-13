@@ -8,7 +8,7 @@
         <el-form-item :key="layoutName" v-if="schema.hierarchy.structure[layoutName]"
           :label="schema.data[layoutName].fields.label">
           <template slot="label">
-            <el-button type="text" size="default" @click="handleObj(schema.data[layoutName])" class="el-icon-question">{{
+            <el-button type="text" size="default" @click="handleObj(layoutName)" class="el-icon-question">{{
               schema.data[layoutName].fields.label }}</el-button>
           </template>
           <div v-if="schema.data[layoutName].fields.promote" v-html="schema.data[layoutName].fields.promote.right"></div>
@@ -25,12 +25,12 @@
               v-if="schema.data[layoutName2]"
               :rules="schema.data[layoutName2].fields.required ? [{ required: true, message: `请输入${schema.data[layoutName2].fields.label}`, trigger: 'blur' }] : null">
               <template slot="label">
-                <el-button type="text" size="default" @click="handleObj(schema.data[layoutName2])"
+                <el-button type="text" size="default" @click="handleObj(layoutName2)"
                   class="el-icon-question">{{ schema.data[layoutName2].fields.label }}</el-button>
               </template>
               <div v-if="schema.data[layoutName2].fields.promote" v-html="schema.data[layoutName2].fields.promote.top">
               </div>
-              <el-input v-if="schema.data[layoutName2].type == 'cbu_title'" v-model="dataBody.layoutName2"
+              <el-input v-if="schema.data[layoutName2].id == 'title'" v-model="dataBody.title"
                 :maxlength="schema.data[layoutName2].fields.maxLength" size="normal" clearable
                 :placeholder="schema.data[layoutName2].fields.placeholder"
                 :show-word-limit="schema.data[layoutName2].fields.showCounter"></el-input>
@@ -238,7 +238,7 @@ export default {
         description: {},
         detailVideo: {},
         userCategory: [],
-        title: {},
+        title: '',
         catProp: {},
         importProp: {},
         productDocument: {},
@@ -306,8 +306,8 @@ export default {
       })
     },
     saveAsTemplate() { },
-    handleObj(obj) {
-      console.log(JSON.stringify(obj))
+    handleObj(key) {
+      console.log(JSON.stringify(this.schema.data[key]),JSON.stringify(this.dataBody[key]))
     }
   }
 }
