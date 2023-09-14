@@ -171,6 +171,36 @@
                   </el-option>
                 </el-select>
               </template>
+              <template v-else-if="schema.data[layoutName2].id == 'weight'">
+                <el-input style="width: 200px;" v-model="dataBody.weight" placeholder=""
+                  size="normal" clearable>
+                  <template slot="append">kg/{{dataBody.cbuUnit.unit}}</template>
+                </el-input>
+                {{ schema.data[layoutName2].fields.promote.right }}
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'suttleWeight'">
+                <el-input style="width: 200px;" v-model="dataBody.suttleWeight" placeholder=""
+                  size="normal" clearable>
+                  <template slot="append">kg/{{dataBody.cbuUnit.unit}}</template>
+                </el-input>
+                {{ schema.data[layoutName2].fields.promote.right }}
+              </template>
+              <template v-else-if="schema.data[layoutName2].id == 'volume'">
+                <el-input style="width: 200px;" v-model="dataBody.volume.length" placeholder="长"
+                  size="normal" clearable>
+                  <template slot="append">cm</template>
+                </el-input>
+                <el-input style="width: 200px;" v-model="dataBody.volume.width" placeholder="宽"
+                  size="normal" clearable>
+                  <template slot="append">cm</template>
+                </el-input>
+                <el-input style="width: 200px;" v-model="dataBody.volume.height" placeholder="高"
+                  size="normal" clearable>
+                  <template slot="append">cm</template>
+                </el-input>
+                <div v-html="schema.data[layoutName2].fields.promote.bottom">
+                </div>
+              </template>
               <div v-else style="color: #6b0caa;"></div>
             </el-form-item>
           </template>
@@ -243,7 +273,7 @@ export default {
             text: '支持混批'
           }
         ],
-        upshelfTime: {},
+        upshelfTime: { value: 1 },
         relationOffer: {},
         tradeTemplate: {},
         privacy: {},
@@ -259,9 +289,13 @@ export default {
           freightId: 14729534
         },
         officialLogistics: {},
-        weight: {},
-        suttleWeight: {},
-        volume: {},
+        weight: null,
+        suttleWeight: null,
+        volume: {
+          height: 20,
+          width: 15,
+          length: 10
+        },
         description: {},
         detailVideo: {},
         userCategory: [],
@@ -328,7 +362,18 @@ export default {
         JSON.stringify(this.dataBody[key])
       )
     },
-    mixBatchPreChange() {}
+    mixBatchPreChange(e) {
+      if (e) {
+        this.dataBody.mixBatch = [
+          {
+            value: 17026,
+            text: '支持混批'
+          }
+        ]
+      } else {
+        this.dataBody.mixBatch = []
+      }
+    }
   }
 }
 </script>

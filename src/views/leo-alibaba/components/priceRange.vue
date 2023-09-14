@@ -73,8 +73,7 @@ export default {
         show: false,
         productId: this.productId
       },
-      rules: {
-      },
+      rules: {}
     }
   },
 
@@ -83,9 +82,11 @@ export default {
       this.history.show = !this.history.show
     },
     addPriceRow() {
+      this.value.push({ pricerange_beginAmount: null, pricerange_price: null })
     },
-    removePriceRow() {
-    },
+    removePriceRow(index) {
+      this.value.splice(index, 1)
+    }
   }
 }
 </script>
