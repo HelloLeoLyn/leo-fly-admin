@@ -300,19 +300,7 @@ export default {
     }
   },
   mounted() {
-    let keys = Object.keys(this.schema.hierarchy.structure)
-    let dataBody = {}
-    for (let i = 0; i < keys.length; i++) {
-      let children = this.schema.hierarchy.structure[keys[i]]
-      for (let j = 0; j < children.length; j++) {
-        if (this.schema.data[children[j]]) {
-          dataBody[this.schema.data[children[j]].id] = {}
-        } else {
-          console.log(children[j])
-        }
-      }
-    }
-    console.log(dataBody)
+    
   },
   methods: {
     handBltClk(opt) {
