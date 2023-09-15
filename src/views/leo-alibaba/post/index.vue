@@ -139,7 +139,7 @@
                 v-else-if="schema.data[layoutName2].id == 'primaryPicture'"
               >
                 <primaryPicture
-                  v-model="dataBody.primaryPicture"
+                  v-model="dataBody.primaryPicture" :product-id="$route.params.id"
                 ></primaryPicture>
               </template>
               <template
@@ -570,6 +570,7 @@ export default {
   },
   mounted () {},
   created () {
+    console.log(this.$route.params);
     this.dataBody.userCategory = [{ value: '152550850', text: '刹车片' }]
   },
   methods: {

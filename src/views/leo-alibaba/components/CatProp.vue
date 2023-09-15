@@ -27,9 +27,9 @@
             <el-input v-else v-model="value[option.name]" @input="input"></el-input>
           </el-form-item></el-col>
       </el-row>
-      <el-form-item label="" size="normal">
+      <!-- <el-form-item label="" size="normal">
         <el-button type="primary" @click="submitForm('catProp')">立即创建</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -47,7 +47,6 @@ export default {
   },
   data() {
     return {
-      form: {}
     }
   },
 
