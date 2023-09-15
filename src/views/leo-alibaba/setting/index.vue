@@ -208,6 +208,11 @@
         <template v-else>
           <el-form-item :key="layoutName" v-if="schema.data[layoutName].id == 'supplyType'"
             :label="schema.data[layoutName].fields.label" size="normal" prop="supplyType">
+            <template slot="label">
+              <el-button type="text" size="default" @click="handleObj(layoutName)"
+                class="el-icon-question">{{
+              schema.data[layoutName].fields.label }}</el-button>
+            </template>
             <el-checkbox-group v-model="dataBody.supplyType">
               <el-checkbox v-for=" item, key  in  schema.data[layoutName].fields.dataSource "
                 :label="item.text" :key="key" :value="item">{{
