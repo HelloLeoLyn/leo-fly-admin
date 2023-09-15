@@ -33,7 +33,7 @@
       </el-button-group>
       <el-button @click="onSubmit">提交</el-button>
     </div>
-    <div v-if="productItems.length > 0">
+    <!-- <div v-if="productItems.length > 0">
       <el-row v-for="item, i in productItems" :key="i" class="leo-web-collector-product-item"
         :class="{ active: isActive === i }" @click="isActive = i" @click.native="isActive = i">
         <el-col :span="16">
@@ -53,7 +53,7 @@
           </el-button>
         </el-col>
       </el-row>
-    </div>
+    </div> -->
     <div  class="images">
       <leo-hover-image class="image" v-for="image, key in images" :key="key" :image="image" style="padding:5px"
         @click="e => handleLeoHoverImageClick(e, image, 0, key)" />
@@ -101,7 +101,6 @@ import {
 } from '@/api/leo-spider'
 import { getQueryObject } from '@/utils/index'
 import LeoHoverImage from '@/components/LeoImage/Hover.vue'
-import { trim } from 'jquery'
 export default {
   name: 'LeoWebCollector',
   components: { JsonEditor, LeoHoverImage, LeoProductItem, ClassifiedImage },

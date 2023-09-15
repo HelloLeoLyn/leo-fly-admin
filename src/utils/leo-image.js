@@ -57,3 +57,11 @@ function naturl(src) {
     })
   return result
 }
+export function parseImage(image) {
+  image.url = service +
+    '/img/' +
+    image.code +
+    '/' +
+    image.name
+  return image
+}

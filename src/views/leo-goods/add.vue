@@ -288,7 +288,7 @@
 <script>
 import clip from '@/utils/clipboard'
 import { api_get_product_more } from '@/api/leo-product'
-import Images from './components/Images.vue'
+import Images from '@/views/leo-image/components/Images.vue'
 import CssImage from '@/components/LeoImage/Css.vue'
 import Models from './components/Models'
 import Attributes from '../leo-product/components/Attributes.vue'

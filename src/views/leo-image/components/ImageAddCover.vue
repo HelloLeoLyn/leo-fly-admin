@@ -1,0 +1,223 @@
+<template>
+  <div class="leo-add-cover">
+    <Images :images="images" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
+      :customzedBtn="[{ label: '设置封面图', opt: 'alibaba' }, { label: '设置包装图', opt: 'package' },  { label: '1688详情封面', opt: '1688detail' }]" />
+    <el-dialog title="" :visible.sync="dialog.show" width="80%" style="z-index: 1;">
+      <div class="container" v-if="dialog.opt == 'alibaba'">
+        <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
+        <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
+      </div>
+      <div class="container-1688detail" v-if="dialog.opt == '1688detail'">
+        <img class="bottom-image" :src="dialog.coverUrl" alt="底层图片" />
+        <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
+      </div>
+      <div v-if="dialog.opt == 'package'">
+        <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
+          WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
+          WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
+          :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
+          :toolBgc="options.toolBgc" :isModal="options.isModal"
+          :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
+          :boxWidth="options.boxWidth" :boxHeight="options.boxHeight" :cutWidth="options.cutWidth"
+          :cutHeight="options.cutHeight" :sizeChange="options.sizeChange"
+          :moveAble="options.moveAble" :imgMove="options.imgMove"
+          :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
+          :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
+          :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble"
+          :previewMode="options.previewMode" :quality="options.quality"
+          :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
+          @onPrintImg="onPrintImg">
+          <template #open>
+            <button>Choose image</button>
+          </template>
+          <template #confirm>
+            <div></div>
+          </template>
+          <template #cancel>
+            <div></div>
+          </template>
+        </ImgCutter>
+        <div class="container">
+          <img class="package-bottom-image" :src="dialog.cutImgHref" alt="底层图片" />
+          <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
+        </div>
+      </div>
+      <span slot="footer">
+        <el-button @click="dialog.show = false">Cancel</el-button>
+        <el-button type="primary" @click="generateImages()">生成图片</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+<style lang="scss">
+.leo-add-cover {
+  padding: 20px;
+  .container {
+    border: 1px solid rgb(31, 175, 201);
+    margin: 0 auto;
+    position: relative;
+    width: 800px;
+    /* 容器宽度等于顶层图片的宽度 */
+    height: 800px;
+
+    /* 容器高度等于顶层图片的高度 */
+    .bottom-image {
+      position: absolute;
+      top: 500px;
+      /* 使底层图片的顶部位于容器的中央 */
+      left: 50%;
+      /* 使底层图片的左侧位于容器的中央 */
+      transform: translate(-50%, -50%);
+      /* 使用负边距将底层图片向左和向上移动自身宽高的一半 */
+      width: 600px;
+      height: 600px;
+    }
+
+    .top-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 800px;
+    }
+  }
+
+  .container-1688detail {
+    border: 1px solid rgb(31, 175, 201);
+    margin: 0 auto;
+    position: relative;
+    width: 800px;
+    /* 容器宽度等于顶层图片的宽度 */
+    height: 800px;
+
+    /* 容器高度等于顶层图片的高度 */
+    .bottom-image {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+    }
+
+    .top-image {
+      position: absolute;
+      top: 80px;
+      left: 100px;
+      width: 600px;
+      height: 600px;
+    }
+  }
+
+  .package-bottom-image {
+    position: absolute;
+    top: 520px;
+    /* 使底层图片的顶部位于容器的中央 */
+    left: 50%;
+    /* 使底层图片的左侧位于容器的中央 */
+    transform: translate(-50%, -50%);
+    /* 使用负边距将底层图片向左和向上移动自身宽高的一半 */
+    width: auto;
+    height: 300px;
+  }
+}
+</style>
+<script>
+import { imgBase, imgTempPath } from '@/api/local-setting'
+import Images from './Images.vue'
+export default {
+  props: {
+    images: {
+      type: Array,
+      // required: true
+      default: (e) => {
+        return e
+      }
+    }
+  },
+  components: { Images },
+  data() {
+    return {
+      dialog: {
+        show: false,
+        coverPath: imgBase + '/0/alibaba-cover.png',
+        coverUrl: 'http://localhost:8080/img/0/alibaba-cover.png',
+        coverPart: '',
+        coverPartUrl: null,
+        coverCode: '',
+        coverSavePath: '',
+        cutImgHref: '',
+        name: '',
+        isRmbg: false
+      },
+      options: {
+        isModal: false,
+        showChooseBtn: false,
+        lockScroll: true,
+        label: '选择本地图片',
+        boxWidth: 600,
+        boxHeight: 600,
+        cutWidth: 300,
+        cutHeight: 300,
+        tool: '',
+        toolBgc: 'none',
+        sizeChange: true,
+        moveAble: true,
+        originalGraph: true,
+        crossOrigin: true,
+        crossOriginHeader: '*',
+        rate: '',
+        WatermarkText: '',
+        WatermarkTextFont: '',
+        WatermarkTextColor: '',
+        WatermarkTextX: 0.95,
+        WatermarkTextY: 0.95,
+        smallToUpload: true,
+        saveCutPosition: true,
+        scaleAble: true,
+        imgMove: true,
+        toolBoxOverflow: false,
+        index: '',
+        previewMode: true,
+        fileType: '',
+        quality: 1
+      }
+    }
+  },
+  methods: {
+    onAlibabaCoverClk(img, opt) {
+      this.dialog.show = !this.dialog.show
+      this.dialog.coverPartUrl = img.url
+      this.dialog.opt = opt
+      this.dialog.id = img.id
+      this.dialog.imageName = img.imageName
+      if (opt == 'alibaba') {
+        this.dialog.coverUrl = 'http://localhost:8080/img/0/alibaba-cover.png'
+        this.dialog.coverPath = imgBase + '0/alibaba-cover.png'
+        this.dialog.coverPart = img.path
+        this.dialog.coverSavePath =
+          imgBase + this.productId + '/' + this.productId + '-cover.png'
+        this.dialog.name = this.productId + '-cover.png'
+        this.dialog.isRmbg = false
+      } else if (opt == 'package') {
+        this.dialog.coverUrl = 'http://localhost:8080/img/0/package-box.png'
+        this.dialog.coverPath = imgBase + '0/package-box.png'
+        this.dialog.coverPart = imgTempPath + 'leo-image-package.jpg'
+        this.dialog.coverSavePath =
+          imgBase + this.productId + '/' + this.productId + '-package.png'
+        this.dialog.name = this.productId + '-package.png'
+        this.$refs.imgCutterModal.handleOpen({
+          name: img.id,
+          src: img.url
+        })
+        this.dialog.isRmbg = true
+      } else if (opt == '1688detail') {
+        this.dialog.coverUrl = 'http://localhost:8080/img/0/detail-cover.jpg'
+        this.dialog.coverPath = imgBase + '0/detail-cover.jpg'
+        this.dialog.coverPart = img.path
+        this.dialog.coverSavePath =
+          imgBase + this.productId + '/' + this.productId + '-detail-cover.jpg'
+        this.dialog.name = this.productId + '-detail-cover.jpg'
+        this.dialog.isRmbg = false
+      }
+    }
+  }
+}
+</script>

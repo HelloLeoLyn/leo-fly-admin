@@ -1,18 +1,17 @@
 <template>
-  <div style="padding: 0 20px;background-color: silver;">
+  <div style="padding: 0 20px; background-color: silver">
     <el-button type="primary" size="default" @click="handBltClk(opt)"
-      v-for=" opt, key in apiOptions" :key="key">{{
-      opt.desc }}</el-button>
+      v-for="(opt, key) in apiOptions" :key="key">{{ opt.desc }}</el-button>
     <el-form :model="dataBody" ref="dataBody" :rules="rules" label-width="180px" :inline="false"
       size="normal">
-      <div style="background-color: white;" :key="layoutName"
-        v-for="layoutName in   schema.hierarchy.structure[this.schema.hierarchy.root] ">
+      <div style="background-color: white" :key="layoutName" v-for="layoutName in schema.hierarchy.structure[
+          this.schema.hierarchy.root
+        ]">
         <el-form-item :key="layoutName" v-if="schema.hierarchy.structure[layoutName]"
           :label="schema.data[layoutName].fields.label">
           <template slot="label">
             <el-button type="text" size="default" @click="handleObj(layoutName)"
-              class="el-icon-question">{{
-              schema.data[layoutName].fields.label }}</el-button>
+              class="el-icon-question">{{ schema.data[layoutName].fields.label }}</el-button>
           </template>
           <div v-if="schema.data[layoutName].fields.promote"
             v-html="schema.data[layoutName].fields.promote.right"></div>
@@ -23,30 +22,38 @@
           <div v-if="schema.data[layoutName].id == 'blockTradeInfo'">
             <el-button size="default">使用模板</el-button>
           </div>
-          <br>
-          <template v-for="layoutName2 in   schema.hierarchy.structure[layoutName] ">
+          <br />
+          <template v-for="layoutName2 in schema.hierarchy.structure[layoutName]">
             <el-form-item :key="layoutName2" :label="schema.data[layoutName2].fields.label"
-              v-if="schema.data[layoutName2]"
-              :rules="schema.data[layoutName2].fields.required ? [{ required: true, message: `请输入${schema.data[layoutName2].fields.label}`, trigger: 'blur' }] : null">
+              v-if="schema.data[layoutName2]" :rules="
+                schema.data[layoutName2].fields.required
+                  ? [
+                      {
+                        required: true,
+                        message: `请输入${schema.data[layoutName2].fields.label}`,
+                        trigger: 'blur'
+                      }
+                    ]
+                  : null
+              ">
               <template slot="label">
                 <el-button type="text" size="default" @click="handleObj(layoutName2)"
                   class="el-icon-question">{{ schema.data[layoutName2].fields.label }}</el-button>
               </template>
               <div v-if="schema.data[layoutName2].fields.promote"
-                v-html="schema.data[layoutName2].fields.promote.top">
-              </div>
+                v-html="schema.data[layoutName2].fields.promote.top"></div>
               <el-input v-if="schema.data[layoutName2].id == 'title'" v-model="dataBody.title"
                 :maxlength="schema.data[layoutName2].fields.maxLength" size="normal" clearable
                 :placeholder="schema.data[layoutName2].fields.placeholder"
                 :show-word-limit="schema.data[layoutName2].fields.showCounter"></el-input>
               <CatProp v-else-if="schema.data[layoutName2].type == 'cbu_cat_prop'"
                 v-model="dataBody.catProp" :catProp="schema.data.catProp"></CatProp>
-              <div style="color: #6b0caa;" v-else-if="schema.data[layoutName2].type == 'cbu_specs'">
+              <div style="color: #6b0caa" v-else-if="schema.data[layoutName2].type == 'cbu_specs'">
               </div>
               <template v-else-if="schema.data[layoutName2].type == 'cburadio'">
                 <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value"
-                  v-for=" child, key in
-                    schema.data[layoutName2].fields.dataSource">{{ child.text }}
+                  v-for="(child, key) in schema.data[layoutName2].fields
+                    .dataSource">{{ child.text }}
                   <el-tooltip v-if="child.help" :content="child.help" placement="bottom"
                     effect="light">
                     <el-button class="el-icon-question" type="text"></el-button>
@@ -63,7 +70,7 @@
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'primaryPicture'">
-                <ImageList :images="[]" :count="5"></ImageList>
+                <primaryPicture v-model="dataBody.primaryPicture"></primaryPicture>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'primaryVideo'">
                 <LeoVideo src="http://localhost:8080/img/0/tc.mp4"></LeoVideo>
@@ -95,8 +102,8 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'upshelfTime'">
                 <el-radio v-model="dataBody[layoutName2].value" :key="key" :label="child.value"
-                  v-for=" child, key in
-                    schema.data[layoutName2].fields.dataSource">{{ child.text }}
+                  v-for="(child, key) in schema.data[layoutName2].fields
+                    .dataSource">{{ child.text }}
                   <el-tooltip v-if="child.help" :content="child.help" placement="bottom"
                     effect="light">
                     <el-button class="el-icon-question" type="text"></el-button>
@@ -106,9 +113,8 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'tradeTemplate'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox
-                    v-for="item, key in schema.data[layoutName2].fields.processTemplateList"
-                    :key="key" :label="item.name" :value="item">
+                  <el-checkbox v-for="(item, key) in schema.data[layoutName2].fields
+                      .processTemplateList" :key="key" :label="item.name" :value="item">
                     {{ item.name }}
                     <el-tooltip v-if="item.help" :content="item.help" placement="bottom"
                       effect="light">
@@ -119,8 +125,8 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'privacy'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource"
-                    :key="key" :label="item.text" :value="item">
+                  <el-checkbox v-for="(item, key) in schema.data[layoutName2].fields
+                      .dataSource" :key="key" :label="item.text" :value="item">
                     {{ item.text }}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -135,14 +141,13 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'seven_day'">
                 <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
-                  <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource"
-                    :key="key" :label="item.text" :value="item">
+                  <el-checkbox v-for="(item, key) in schema.data[layoutName2].fields
+                      .dataSource" :key="key" :label="item.text" :value="item">
                     {{ item.text }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <div v-if="schema.data[layoutName2].fields.promote"
-                  v-html="schema.data[layoutName2].fields.promote.bottom">
-                </div>
+                  v-html="schema.data[layoutName2].fields.promote.bottom"></div>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'cbuSendAddress'">
                 <el-select v-model="dataBody[layoutName2]" value-key="text" placeholder=""
@@ -172,36 +177,35 @@
                 </el-select>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'weight'">
-                <el-input style="width: 200px;" v-model="dataBody.weight" placeholder=""
+                <el-input style="width: 200px" v-model="dataBody.weight" placeholder=""
                   size="normal" clearable>
-                  <template slot="append">kg/{{dataBody.cbuUnit.unit}}</template>
+                  <template slot="append">kg/{{ dataBody.cbuUnit.unit }}</template>
                 </el-input>
                 {{ schema.data[layoutName2].fields.promote.right }}
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'suttleWeight'">
-                <el-input style="width: 200px;" v-model="dataBody.suttleWeight" placeholder=""
+                <el-input style="width: 200px" v-model="dataBody.suttleWeight" placeholder=""
                   size="normal" clearable>
-                  <template slot="append">kg/{{dataBody.cbuUnit.unit}}</template>
+                  <template slot="append">kg/{{ dataBody.cbuUnit.unit }}</template>
                 </el-input>
                 {{ schema.data[layoutName2].fields.promote.right }}
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'volume'">
-                <el-input style="width: 200px;" v-model="dataBody.volume.length" placeholder="长"
+                <el-input style="width: 200px" v-model="dataBody.volume.length" placeholder="长"
                   size="normal" clearable>
                   <template slot="append">cm</template>
                 </el-input>
-                <el-input style="width: 200px;" v-model="dataBody.volume.width" placeholder="宽"
+                <el-input style="width: 200px" v-model="dataBody.volume.width" placeholder="宽"
                   size="normal" clearable>
                   <template slot="append">cm</template>
                 </el-input>
-                <el-input style="width: 200px;" v-model="dataBody.volume.height" placeholder="高"
+                <el-input style="width: 200px" v-model="dataBody.volume.height" placeholder="高"
                   size="normal" clearable>
                   <template slot="append">cm</template>
                 </el-input>
-                <div v-html="schema.data[layoutName2].fields.promote.bottom">
-                </div>
+                <div v-html="schema.data[layoutName2].fields.promote.bottom"></div>
               </template>
-              <div v-else style="color: #6b0caa;"></div>
+              <div v-else style="color: #6b0caa"></div>
             </el-form-item>
           </template>
         </el-form-item>
@@ -213,17 +217,18 @@
                 class="el-icon-question">{{
               schema.data[layoutName].fields.label }}</el-button>
             </template>
+
             <el-checkbox-group v-model="dataBody.supplyType">
-              <el-checkbox v-for=" item, key  in  schema.data[layoutName].fields.dataSource "
-                :label="item.text" :key="key" :value="item">{{
-                  item.text
-                }}<span style="color: #E6A23C">{{ item.help }}</span>
+              <el-checkbox v-for="(item, key) in schema.data[layoutName].fields.dataSource"
+                :label="item.text" :key="key" :value="item">{{ item.text
+                }}<span style="color: #e6a23c">{{ item.help }}</span>
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item :key="layoutName" v-else-if="schema.data[layoutName].id == 'catNamer'"
             :label="schema.data[layoutName].fields.label" size="normal">
-            <template v-for="( item, index ) in  schema.data[layoutName].fields.value.pathList ">
+            <template v-for="(item, index) in schema.data[layoutName].fields.value
+                .pathList">
               <i :key="index" class="el-icon-arrow-right">{{ item.name }}</i>
             </template>
           </el-form-item>
@@ -239,18 +244,20 @@
 <script>
 import { schema } from '.'
 import { apiOptions, api_alibaba_product_schema } from '@/api/leo-alibaba'
-import CatProp from '../product/Schema/CatProp.vue'
+import CatProp from '../components/CatProp.vue'
 import cbu_supply_type from '@/views/leo-alibaba/components/cbu_supply_type'
 import ImageList from '@/components/LeoImage/List.vue'
-import LeoVideo from '@/components/LeoVideo/Index'
+import LeoVideo from '@/components/LeoVideo/Index.vue'
 import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
+import primaryPicture from '@/views/leo-alibaba/components/primaryPicture'
 export default {
   components: {
     CatProp,
     ImageList,
     LeoVideo,
     cbu_supply_type,
-    priceRange
+    priceRange,
+    primaryPicture
   },
   data() {
     return {
@@ -298,17 +305,23 @@ export default {
         suttleWeight: null,
         volume: {
           height: 20,
-          width: 15,
+          width: 12,
           length: 10
         },
         description: {},
         detailVideo: {},
         userCategory: [],
         title: '',
-        catProp: {},
+        catProp: {
+          'p-100000729': { value: 21959, text: '否' },
+          'p-287': { value: 25423961, text: '半金属' },
+          'p-3567': { value: 47673, text: '刹车片' },
+          'p-182282223': { value: 21958, text: '是' },
+          'p-2176': 'MDTZ'
+        },
         importProp: {},
         productDocument: {},
-        primaryPicture: {},
+        primaryPicture: { imageList: [] },
         primaryVideo: {},
         industrySelectVideo: {},
         globalMessage: {},
@@ -338,20 +351,9 @@ export default {
       }
     }
   },
-  mounted() {
-    let keys = Object.keys(this.schema.hierarchy.structure)
-    let dataBody = {}
-    for (let i = 0; i < keys.length; i++) {
-      let children = this.schema.hierarchy.structure[keys[i]]
-      for (let j = 0; j < children.length; j++) {
-        if (this.schema.data[children[j]]) {
-          dataBody[this.schema.data[children[j]].id] = {}
-        } else {
-          console.log(children[j])
-        }
-      }
-    }
-    console.log(dataBody)
+  mounted() {},
+  created() {
+    this.dataBody.userCategory = [{ value: '152550850', text: '刹车片' }]
   },
   methods: {
     handBltClk(opt) {
