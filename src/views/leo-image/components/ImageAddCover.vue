@@ -1,8 +1,34 @@
 <template>
   <div class="leo-add-cover">
-    <Images :images="images" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
-      :customzedBtn="[{ label: '设置封面图', opt: 'alibaba' }, { label: '设置包装图', opt: 'package' },  { label: '1688详情封面', opt: '1688detail' }]" />
-    <el-dialog title="" :visible.sync="dialog.show" width="80%" style="z-index: 1;">
+    <Images
+      :images="images"
+      @onCustomzedClick="onAlibabaCoverClk"
+      :reloadable="true"
+      :customzedBtn="[
+        { label: '设置封面图', opt: 'alibaba' },
+        { label: '设置包装图', opt: 'package' },
+        { label: '1688详情封面', opt: '1688detail' }
+      ]"
+      @onPrepare="onUploadPrepare"
+    />
+    <album1688 v-model="albumID"></album1688
+    ><el-button
+      type="primary"
+      size="default"
+      @click="
+        sendImagesToAlibaba(
+          images.filter(img => img.checked),
+          albumID
+        )
+      "
+      >onConfirm</el-button
+    >
+    <el-dialog
+      title=""
+      :visible.sync="dialog.show"
+      width="80%"
+      :modal-append-to-body="false"
+    >
       <div class="container" v-if="dialog.opt == 'alibaba'">
         <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
         <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
@@ -12,21 +38,40 @@
         <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
       </div>
       <div v-if="dialog.opt == 'package'">
-        <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
-          WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
-          WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
-          :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
-          :toolBgc="options.toolBgc" :isModal="options.isModal"
-          :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
-          :boxWidth="options.boxWidth" :boxHeight="options.boxHeight" :cutWidth="options.cutWidth"
-          :cutHeight="options.cutHeight" :sizeChange="options.sizeChange"
-          :moveAble="options.moveAble" :imgMove="options.imgMove"
-          :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
-          :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
-          :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble"
-          :previewMode="options.previewMode" :quality="options.quality"
-          :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
-          @onPrintImg="onPrintImg">
+        <ImgCutter
+          ref="imgCutterModal"
+          label="选择本地图片"
+          fileType="jpeg"
+          WatermarkText="vue-img-cutter"
+          WatermarkTextFont="12px Sans-serif"
+          WatermarkTextColor="#00ff00"
+          :crossOrigin="options.crossOrigin"
+          :crossOriginHeader="options.crossOriginHeader"
+          :rate="options.rate"
+          :toolBgc="options.toolBgc"
+          :isModal="options.isModal"
+          :showChooseBtn="options.showChooseBtn"
+          :lockScroll="options.lockScroll"
+          :boxWidth="options.boxWidth"
+          :boxHeight="options.boxHeight"
+          :cutWidth="options.cutWidth"
+          :cutHeight="options.cutHeight"
+          :sizeChange="options.sizeChange"
+          :moveAble="options.moveAble"
+          :imgMove="options.imgMove"
+          :originalGraph="options.originalGraph"
+          :WatermarkTextX="options.WatermarkTextX"
+          :WatermarkTextY="options.WatermarkTextY"
+          :smallToUpload="options.smallToUpload"
+          :saveCutPosition="options.saveCutPosition"
+          :scaleAble="options.scaleAble"
+          :previewMode="options.previewMode"
+          :quality="options.quality"
+          :toolBoxOverflow="options.true"
+          :index="options.index"
+          @cutDown="cutDown"
+          @onPrintImg="onPrintImg"
+        >
           <template #open>
             <button>Choose image</button>
           </template>
@@ -38,7 +83,11 @@
           </template>
         </ImgCutter>
         <div class="container">
-          <img class="package-bottom-image" :src="dialog.cutImgHref" alt="底层图片" />
+          <img
+            class="package-bottom-image"
+            :src="dialog.cutImgHref"
+            alt="底层图片"
+          />
           <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
         </div>
       </div>
@@ -120,21 +169,33 @@
 }
 </style>
 <script>
+import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { imgBase, imgTempPath } from '@/api/local-setting'
 import Images from './Images.vue'
+import { api_python_image_goods_post } from '@/api/leo-python'
+import { service } from '@/api/index'
+import ImgCutter from 'vue-img-cutter'
+import album1688 from '@/views/leo-alibaba/components/album1688'
 export default {
   props: {
     images: {
       type: Array,
       // required: true
-      default: (e) => {
+      default: e => {
+        return e
+      }
+    },
+    productId: {
+      type: [String, Number],
+      default: e => {
         return e
       }
     }
   },
-  components: { Images },
-  data() {
+  components: { Images, ImgCutter, album1688 },
+  data () {
     return {
+      albumID: '',
       dialog: {
         show: false,
         coverPath: imgBase + '/0/alibaba-cover.png',
@@ -182,7 +243,79 @@ export default {
     }
   },
   methods: {
-    onAlibabaCoverClk(img, opt) {
+    sendImagesToAlibaba (images, albumID) {
+      console.log(images,albumID);
+      const params = {
+        images,
+        albumID
+      }
+      return
+      api_photo_alibaba_uload_batch(params).then(({ data }) => {
+        if (data.code == '001994') {
+          api_alibaba_auth().then(res => {
+            MessageBox.confirm(
+              '还未登录阿里巴巴平台，是否打开登录页面',
+              '提示',
+              {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            ).then(() => {
+              window.open(res.data)
+            })
+          })
+        }
+      })
+    },
+    onUploadPrepare () {},
+    onUploadConfirm () {},
+    onPrintImg (e) {
+      this.dialog.cutImgHref = e.dataURL
+    },
+    cutDown (e) {
+      this.dialog.cutImgHref = e.dataURL
+    },
+    generateImages () {
+      if (this.dialog.opt == 'package') {
+        let link = document.createElement('a')
+        link.setAttribute('href', this.dialog.cutImgHref)
+        link.download = 'leo-image-package.jpg'
+        link.click()
+      }
+      const {
+        coverPath,
+        coverPart,
+        coverCode,
+        coverSavePath,
+        coverUrlPath,
+        opt,
+        name,
+        isRmbg,
+        imageId
+      } = this.dialog
+      const params = {
+        coverPath,
+        coverPart,
+        coverCode,
+        coverSavePath,
+        opt,
+        productId: this.productId,
+        name,
+        isRmbg,
+        imageId
+      }
+      api_python_image_goods_post(params).then(res => {
+        this.$notify.success(res.msg)
+        this.images.push({
+          url: coverUrlPath,
+          id: res.data.imageId,
+          status: 1,
+          checked: false
+        })
+      })
+    },
+    onAlibabaCoverClk (img, opt) {
       this.dialog.show = !this.dialog.show
       this.dialog.coverPartUrl = img.url
       this.dialog.opt = opt
@@ -195,6 +328,13 @@ export default {
         this.dialog.coverSavePath =
           imgBase + this.productId + '/' + this.productId + '-cover.png'
         this.dialog.name = this.productId + '-cover.png'
+        this.dialog.coverUrlPath =
+          service +
+          '/img/' +
+          this.productId +
+          '/' +
+          this.productId +
+          '-cover.png'
         this.dialog.isRmbg = false
       } else if (opt == 'package') {
         this.dialog.coverUrl = 'http://localhost:8080/img/0/package-box.png'
@@ -202,6 +342,13 @@ export default {
         this.dialog.coverPart = imgTempPath + 'leo-image-package.jpg'
         this.dialog.coverSavePath =
           imgBase + this.productId + '/' + this.productId + '-package.png'
+        this.dialog.coverUrlPath =
+          service +
+          '/img/' +
+          this.productId +
+          '/' +
+          this.productId +
+          '-package.png'
         this.dialog.name = this.productId + '-package.png'
         this.$refs.imgCutterModal.handleOpen({
           name: img.id,

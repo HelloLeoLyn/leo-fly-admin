@@ -465,8 +465,6 @@ import ImageList from '@/components/LeoImage/List.vue'
 import LeoVideo from '@/components/LeoVideo/Index.vue'
 import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
 import primaryPicture from '@/views/leo-alibaba/components/primaryPicture'
-import { api_get_product_more } from '@/api/leo-product'
-import { api_product_alibaba_save } from '@/api/leo-product-alibaba'
 export default {
   components: {
     CatProp,
