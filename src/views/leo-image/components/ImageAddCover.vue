@@ -21,7 +21,7 @@
       <el-col :span="6" v-for="(image, index) in images" :key="image.id">
         <div style="width: 200px; height: 200px; padding: 10px; margin: 10px"
           :class="{'is-uploaded':image.status==2}">
-          <el-image :src="image.url" width="100%" @click="handleImageClick(index)"
+          <el-image :src="image.src" width="100%" @click="handleImageClick(index)"
             :class="{'prepare-upload':image.checked}" />
         </div>
       </el-col>
@@ -301,7 +301,7 @@ export default {
     },
     onAlibabaCoverClk(img, opt) {
       this.dialog.show = !this.dialog.show
-      this.dialog.coverPartUrl = img.url
+      this.dialog.coverPartUrl = img.src
       this.dialog.opt = opt
       this.dialog.id = img.id
       this.dialog.imageName = img.imageName
@@ -336,7 +336,7 @@ export default {
         this.dialog.name = this.productId + '-package.png'
         this.$refs.imgCutterModal.handleOpen({
           name: img.id,
-          src: img.url
+          src: img.src
         })
         this.dialog.isRmbg = true
       } else if (opt == '1688detail') {

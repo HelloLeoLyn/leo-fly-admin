@@ -68,7 +68,7 @@ export default {
 .leo-product-attributes {
   .fix {
     position: fixed;
-    bottom: 500px;
+    top: 200px;
     right: 0;
     z-index: 1;
     // background-color: rgb(244, 250, 250);

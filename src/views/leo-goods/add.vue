@@ -128,61 +128,6 @@
             </el-select>
           </el-form-item>
         </el-tab-pane>
-        <!-- <el-tab-pane label="aliexpress" name="aliexpress">
-          <el-form-item label="aliexpress.material" prop="aliexpress.material" class="input-middle">
-            <el-input v-model="form.aliexpress.material"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.brand" prop="aliexpress.brand" class="input-middle">
-            <el-input v-model="form.aliexpress.brand"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.oem" prop="aliexpress.oem" class="input-middle">
-            <el-input v-model="form.aliexpress.oem"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.manufacturerPartId" prop="aliexpress.manufacturerPartId"
-            class="input-middle">
-            <el-input v-model="form.aliexpress.manufacturerPartId"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.unit" prop="aliexpress.unit" class="input-middle">
-            <el-select v-model="form.aliexpress.unit">
-              <el-option label="套" value="套"> </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="aliexpress.price" prop="aliexpress.price" class="input-middle">
-            <el-input v-model="form.aliexpress.price"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.stock" prop="aliexpress.stock" class="input-middle">
-            <el-input v-model="form.aliexpress.stock"></el-input>
-          </el-form-item>
-          <el-form-item label="aliexpress.packingSizeUrl" class="input-middle">
-            <el-select v-model="form.aliexpress.packingSizeUrl" placeholder="" clearable>
-              <el-option label="大包装"
-                value="https://ae01.alicdn.com/kf/S29350e49854c4fa2a579d48203881418P.png">
-              </el-option>
-              <el-option label="小包装"
-                value="https://ae01.alicdn.com/kf/Se74b334a2a66473ebe5505e8e9d32b04m.png">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-tab-pane>
-        <el-tab-pane label="amazon" name="amazon">
-          <el-form-item label="amazon.material" prop="amazon.material" class="input-middle">
-            <el-input v-model="form.amazon.material"></el-input>
-          </el-form-item>
-          <el-form-item label="amazon.brand" prop="amazon.brand" class="input-middle">
-            <el-input v-model="form.amazon.brand"></el-input>
-          </el-form-item>
-          <el-form-item label="amazon.unit" prop="amazon.unit" class="input-middle">
-            <el-select v-model="form.aliexpress.unit">
-              <el-option label="Sets" value="Sets"> </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="amazon.stock" prop="amazon.stock" class="input-middle">
-            <el-input v-model="form.amazon.stock"></el-input>
-          </el-form-item>
-          <el-form-item label="amazon.price" prop="amazon.price" class="input-middle">
-            <el-input v-model="form.amazon.price"></el-input>
-          </el-form-item>
-        </el-tab-pane> -->
       </el-tabs>
       <el-form-item style="
           position: fixed;
@@ -290,7 +235,6 @@ import clip from '@/utils/clipboard'
 import { api_get_product_more } from '@/api/leo-product'
 import Images from '@/views/leo-image/components/Images.vue'
 import CssImage from '@/components/LeoImage/Css.vue'
-import Models from './components/Models'
 import Attributes from '../leo-product/components/Attributes.vue'
 import SaleInfo1688 from '../leo-alibaba/components/SaleInfo1688.vue'
 import Category1688 from '../leo-alibaba/components/Category1688.vue'
@@ -312,7 +256,6 @@ import Album from '@/components/LeoAlibaba/Album.vue'
 export default {
   components: {
     Images,
-    Models,
     Attributes,
     SaleInfo1688,
     Category1688,

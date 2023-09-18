@@ -3,10 +3,8 @@
     <el-button
       type="primary"
       size="default"
-      @click="handBltClk(opt)"
-      v-for="(opt, key) in apiOptions"
-      :key="key"
-      >{{ opt.desc }}</el-button
+      @click="handBltClk(apiOptions.getSchema)"
+      >{{ apiOptions.getSchema.desc }}</el-button
     >
     <el-form
       :model="dataBody"
@@ -90,11 +88,16 @@
                 :placeholder="schema.data[layoutName2].fields.placeholder"
                 :show-word-limit="schema.data[layoutName2].fields.showCounter"
               ></el-input>
-              <CatProp
-                v-else-if="schema.data[layoutName2].type == 'cbu_cat_prop'"
-                v-model="dataBody.catProp"
-                :catProp="schema.data.catProp"
-              ></CatProp>
+              <template v-else-if="schema.data[layoutName2].id == 'catProp'">
+                <el-button type="primary" size="default" @click="autoSet"
+                  >设置</el-button
+                >
+                <CatProp
+                  v-model="dataBody.catProp"
+                  :catProp="schema.data.catProp"
+                  v-if="init.catProp"
+                ></CatProp>
+              </template>
               <div
                 style="color: #6b0caa"
                 v-else-if="schema.data[layoutName2].type == 'cbu_specs'"
@@ -139,7 +142,8 @@
                 v-else-if="schema.data[layoutName2].id == 'primaryPicture'"
               >
                 <primaryPicture
-                  v-model="dataBody.primaryPicture" :product-id="$route.params.id"
+                  v-model="dataBody.primaryPicture"
+                  :product-id="$route.params.id"
                 ></primaryPicture>
               </template>
               <template
@@ -447,24 +451,46 @@
           </el-form-item>
         </template>
       </div>
-      <el-form-item>
+      <br />
+      <br />
+      <el-form-item
+        style="
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background-color: rgb(244, 250, 250);
+        "
+      >
         <el-button type="primary" @click="onSubmit('dataBody')"
           >立即创建</el-button
         >
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="save" style="margin-left: 20px"
+          >保存</el-button
+        >
       </el-form-item>
     </el-form>
+    <Attributes :productId="$route.params.id" :product="product"></Attributes>
+    <Helper :productId="$route.params.id" :product="product"></Helper>
   </div>
 </template>
 <script>
-import { schema } from '.'
-import { apiOptions, api_alibaba_product_schema } from '@/api/leo-alibaba'
+import { schema, initCatProp } from '.'
+//  components
 import CatProp from '../components/CatProp.vue'
 import cbu_supply_type from '@/views/leo-alibaba/components/cbu_supply_type'
 import ImageList from '@/components/LeoImage/List.vue'
 import LeoVideo from '@/components/LeoVideo/Index.vue'
 import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
 import primaryPicture from '@/views/leo-alibaba/components/primaryPicture'
+import Attributes from '@/views/leo-product/components/Attributes.vue'
+import Helper from '@/views/leo-product/components/Helper.vue'
+//  api
+import {
+  apiOptions,
+  api_alibaba_product_schema,
+  api_alibaba_product_add
+} from '@/api/leo-alibaba'
+import { api_get_product_more } from '@/api/leo-product'
 export default {
   components: {
     CatProp,
@@ -472,10 +498,16 @@ export default {
     LeoVideo,
     cbu_supply_type,
     priceRange,
-    primaryPicture
+    primaryPicture,
+    Attributes,
+    Helper
   },
   data () {
     return {
+      init: {
+        catProp: false
+      },
+      product: null,
       apiOptions,
       schema,
       catPropOptions: [],
@@ -519,11 +551,21 @@ export default {
         weight: null,
         suttleWeight: null,
         volume: {
-          height: 20,
+          height: 10,
           width: 12,
-          length: 10
+          length: 20
         },
-        description: {},
+        description: {
+          detailList: [
+            {
+              id: '0',
+              title: '图文详情',
+              contentUrl: null,
+              content: '<p>这是测试</p>',
+              isRequired: true
+            }
+          ]
+        },
         detailVideo: {},
         userCategory: [],
         title: '',
@@ -532,7 +574,10 @@ export default {
           'p-287': { value: 25423961, text: '半金属' },
           'p-3567': { value: 47673, text: '刹车片' },
           'p-182282223': { value: 21958, text: '是' },
-          'p-2176': 'MDTZ'
+          'p-2176': 'MDTZ',
+          'p-157878556': null,
+          name: 'a',
+          age: 7
         },
         importProp: {},
         productDocument: {},
@@ -568,21 +613,41 @@ export default {
   },
   mounted () {},
   created () {
-    console.log(this.$route.params);
     this.dataBody.userCategory = [{ value: '152550850', text: '刹车片' }]
+    api_get_product_more(this.$route.params.id).then(res => {
+      this.product = res.data
+    })
   },
   methods: {
-    handBltClk (opt) {
-      api_alibaba_product_schema(opt).then(res => {
+    autoSet () {
+      this.dataBody.title = this.product.subject
+      let catProp = initCatProp(this.dataBody.catProp, this.product)
+      this.$set(this.dataBody, 'catProp', catProp)
+      this.init.catProp = true
+    },
+    save () {
+      localStorage.setItem(
+        'alibaba_post_' + this.product.id,
+        JSON.stringify(this.form)
+      )
+      this.$notify.success('保存成功！')
+    },
+    handBltClk (data) {
+      api_alibaba_product_schema(data).then(res => {
         console.log(res)
       })
     },
 
     onSubmit (formName) {
-      console.log(this.dataBody)
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log('submit!!')
+          const params = Object.assign(apiOptions.add, {
+            dataBody: JSON.stringify(this.dataBody)
+          })
+          console.log(params)
+          api_alibaba_product_add(params).then(res => {
+            console.log(res)
+          })
         } else {
           console.log('error submit!!')
           return false

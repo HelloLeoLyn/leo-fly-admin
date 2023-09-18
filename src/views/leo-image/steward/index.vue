@@ -36,7 +36,7 @@
       <div class="prepareListArea">
         可插入的图片，点击选择
         <div class="images">
-          <img :src="image.url" :class="{ active: image.checked, image: true }"
+          <img :src="image.src" :class="{ active: image.checked, image: true }"
             v-for="(image, key) in images.filter(img=>img.status==2)" :key="key"
             style="padding: 5px" @click="handleLeoHoverImageClick(image)" />
         </div>
@@ -51,7 +51,7 @@
         <el-row :gutter="20">
           <draggable v-model="checkedList" group="article" class="dragArea">
             <el-col :span="3" :offset="0" v-for="index in count" :key="index">
-              <img v-if="checkedList[index - 1]" :src="checkedList[index - 1].url" alt=""
+              <img v-if="checkedList[index - 1]" :src="checkedList[index - 1].src" alt=""
                 style="width: 100px; height: 100px" />
               <div v-else style="
                   width: 100px;

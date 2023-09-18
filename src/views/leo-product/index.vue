@@ -98,17 +98,6 @@
                 上传1688
               </el-button>
             </el-col>
-            <el-col :span="6">
-              <el-button @click="sendTo1688(scope.row.id)" size="small" type="text" plai>
-                上传亚马逊
-              </el-button>
-            </el-col>
-            <el-col :span="6">
-              <el-button @click="$router.push('/leo-goods/aliexpress-prepare/' + scope.row.id)" size="small" type="text"
-                plai>
-                上传速卖通
-              </el-button>
-            </el-col>
             <el-col :span="6" v-if="scope.row.status != 666">
               <el-button size="small" type="text" plain @click="$router('/leo-goods/aliexpress/prepare')">删除
               </el-button>

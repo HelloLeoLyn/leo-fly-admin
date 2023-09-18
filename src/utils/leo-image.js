@@ -58,7 +58,7 @@ function naturl(src) {
   return result
 }
 export function parseImage(image) {
-  image.url = service +
+  image.src = service +
     '/img/' +
     image.code +
     '/' +

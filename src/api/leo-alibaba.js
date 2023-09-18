@@ -18,21 +18,42 @@ export function api_alibaba_auth() {
 
 export function api_alibaba_product_schema(data) {
   return request({
-    url: api_pre + '/product/alibaba/schema',
+    url: api_pre + '/product/new/alibaba/schema',
     method: 'post',
     data
   })
 }
-export const apiOptions = [{
-  oceanApiId: {
-    namespace: 'com.alibaba.product',
-    name: 'alibaba.new.product.getSchema',
-    version: 1
+export function api_alibaba_product_add(data) {
+  return request({
+    url: api_pre + '/product/new/alibaba/add',
+    method: 'post',
+    data
+  })
+}
+export const apiOptions = {
+  getSchema: {
+    oceanApiId: {
+      namespace: 'com.alibaba.product',
+      name: 'alibaba.new.product.getSchema',
+      version: 1
+    },
+    desc: '获取商品发布规则和详情',
+    catId: '1032176',
+    scene: 'cbu',
+    offerId: '',
+    bizParam: null
   },
-  desc: '获取商品发布规则和详情',
-  catId: '1032176',
-  scene: 'cbu',
-  offerId: '',
-  bizParam: null
-}]
+  add: {
+    oceanApiId: {
+      namespace: 'com.alibaba.product',
+      name: 'alibaba.new.product.add',
+      version: 1
+    },
+    desc: '新版商品发布',
+    catId: '1032176',
+    scene: 'cbu',
+    offerId: '',
+    bizParam: null
+  }
+}
 

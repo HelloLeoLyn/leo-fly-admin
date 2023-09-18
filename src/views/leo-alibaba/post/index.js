@@ -308,7 +308,7 @@ export const schema = {
         uiType: 'cbublock',
         promote: {
           right:
-            '<a href=\'https://56.1688.com/\' target=\'_blank\'>阿里巴巴推荐物流，运费低至8折！</a>'
+            "<a href='https://56.1688.com/' target='_blank'>阿里巴巴推荐物流，运费低至8折！</a>"
         }
       },
       position: 'body'
@@ -425,7 +425,7 @@ export const schema = {
         promote: {
           top: '如您已持有TUV（莱茵）产品认证证书，请填写报告上的纯数字证书号以及Blatt Page纯数字编码（无需空格）',
           bottom:
-            '<div class=\'warn\'>填写上栏产品认证证书编号，即为确认授权该证书出具机构等向阿里巴巴提供该证书对应的产品检测认证数据，包括公司名、证书号、地址、类型、检测标准、产品名称、规格参数、证书有效期等并加以展示（如为非自身产品，确认已获取产品方同意可作出前述授权确认），且可超链接自证书出具机构网站，便于用户查询确认。如无法确认，请勿填写</div>'
+            "<div class='warn'>填写上栏产品认证证书编号，即为确认授权该证书出具机构等向阿里巴巴提供该证书对应的产品检测认证数据，包括公司名、证书号、地址、类型、检测标准、产品名称、规格参数、证书有效期等并加以展示（如为非自身产品，确认已获取产品方同意可作出前述授权确认），且可超链接自证书出具机构网站，便于用户查询确认。如无法确认，请勿填写</div>"
         },
         asyncCheck: false
       },
@@ -518,7 +518,7 @@ export const schema = {
         uiType: 'cbublock',
         promote: {
           right:
-            '<em>详情图片文案避免字体侵权</em><a href=\'/page/redirect.html?name=marketDetailDescNorm\' target=\'_blank\'>查看规范</a>'
+            "<em>详情图片文案避免字体侵权</em><a href='/page/redirect.html?name=marketDetailDescNorm' target='_blank'>查看规范</a>"
         }
       },
       position: 'body'
@@ -2147,4 +2147,16 @@ export const productAddParams = {
       }
     }
   }
+}
+import { listToString } from "@/utils"
+export function initCatProp(catProp, product) {
+  const models = JSON.parse(product.model)
+  catProp['p-9573'] = listToString(product.code, ',')
+  catProp['p-1398'] = listToString(product.code, ',')
+  catProp['p-151466146'] = product.brand
+  catProp['p-2553'] = models[0].model
+  catProp['p-3151'] = models[0].model
+  catProp['p-346'] = '中国'
+  catProp['p-157878556'] = models[0].year
+  return catProp
 }
