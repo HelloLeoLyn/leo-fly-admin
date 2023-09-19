@@ -7,8 +7,8 @@
       >{{ apiOptions.getSchema.desc }}</el-button
     >
     <el-form
-      :model="dataBody"
-      ref="dataBody"
+      :model="formValues"
+      ref="formValues"
       :rules="rules"
       label-width="180px"
       :inline="false"
@@ -81,7 +81,7 @@
               ></div>
               <el-input
                 v-if="schema.data[layoutName2].id == 'title'"
-                v-model="dataBody.title"
+                v-model="formValues.title"
                 :maxlength="schema.data[layoutName2].fields.maxLength"
                 size="normal"
                 clearable
@@ -93,7 +93,7 @@
                   >设置</el-button
                 >
                 <CatProp
-                  v-model="dataBody.catProp"
+                  v-model="formValues.catProp"
                   :catProp="schema.data.catProp"
                   v-if="init.catProp"
                 ></CatProp>
@@ -104,7 +104,7 @@
               ></div>
               <template v-else-if="schema.data[layoutName2].type == 'cburadio'">
                 <el-radio
-                  v-model="dataBody[layoutName2].value"
+                  v-model="formValues[layoutName2].value"
                   :key="key"
                   :label="child.value"
                   v-for="(child, key) in schema.data[layoutName2].fields
@@ -123,7 +123,7 @@
               </template>
               <template v-else-if="schema.data[layoutName2].type == 'cbu_unit'">
                 <el-select
-                  v-model="dataBody[layoutName2].unit"
+                  v-model="formValues[layoutName2].unit"
                   value-key=""
                   placeholder=""
                   clearable
@@ -142,7 +142,7 @@
                 v-else-if="schema.data[layoutName2].id == 'primaryPicture'"
               >
                 <primaryPicture
-                  v-model="dataBody.primaryPicture"
+                  v-model="formValues.primaryPicture"
                   :product-id="$route.params.id"
                 ></primaryPicture>
               </template>
@@ -157,11 +157,11 @@
                 <LeoVideo src=""></LeoVideo>
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'priceRange'">
-                <priceRange :product-id="0" v-model="dataBody.priceRange" />
+                <priceRange :product-id="0" v-model="formValues.priceRange" />
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'totalSales'">
                 <el-input
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   placeholder=""
                   size="normal"
                   clearable
@@ -171,7 +171,7 @@
                 v-else-if="schema.data[layoutName2].id == 'beginAmount'"
               >
                 <el-input
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   placeholder=""
                   size="normal"
                   clearable
@@ -179,12 +179,12 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'mixBatch'">
                 <el-checkbox
-                  v-model="dataBody.mixBatchPre"
+                  v-model="formValues.mixBatchPre"
                   @change="mixBatchPreChange"
                 >
                   <!-- {{ item.label }} -->
                 </el-checkbox>
-                <!-- <el-checkbox-group v-model="dataBody[layoutName2]" size="normal">
+                <!-- <el-checkbox-group v-model="formValues[layoutName2]" size="normal">
                   <el-checkbox v-for="item, key in schema.data[layoutName2].fields.dataSource"
                     :key="key" :label="item.label" :value="item">
                     {{ item.label }}
@@ -195,7 +195,7 @@
                 v-else-if="schema.data[layoutName2].id == 'upshelfTime'"
               >
                 <el-radio
-                  v-model="dataBody[layoutName2].value"
+                  v-model="formValues[layoutName2].value"
                   :key="key"
                   :label="child.value"
                   v-for="(child, key) in schema.data[layoutName2].fields
@@ -216,7 +216,7 @@
                 v-else-if="schema.data[layoutName2].id == 'tradeTemplate'"
               >
                 <el-checkbox-group
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   size="normal"
                 >
                   <el-checkbox
@@ -243,7 +243,7 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'privacy'">
                 <el-checkbox-group
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   size="normal"
                 >
                   <el-checkbox
@@ -261,7 +261,7 @@
                 v-else-if="schema.data[layoutName2].type == 'cbuselect'"
               >
                 <el-select
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   value-key="text"
                   placeholder=""
                   clearable
@@ -278,7 +278,7 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'seven_day'">
                 <el-checkbox-group
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   size="normal"
                 >
                   <el-checkbox
@@ -300,7 +300,7 @@
                 v-else-if="schema.data[layoutName2].id == 'cbuSendAddress'"
               >
                 <el-select
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   value-key="text"
                   placeholder=""
                   clearable
@@ -316,7 +316,7 @@
               </template>
               <template v-else-if="schema.data[layoutName2].id == 'freight'">
                 <el-select
-                  v-model="dataBody[layoutName2].freightType"
+                  v-model="formValues[layoutName2].freightType"
                   placeholder=""
                   clearable
                 >
@@ -326,7 +326,7 @@
                   </el-option> -->
                 </el-select>
                 <el-select
-                  v-model="dataBody[layoutName2].freightId"
+                  v-model="formValues[layoutName2].freightId"
                   placeholder=""
                   clearable
                 >
@@ -337,7 +337,7 @@
                 v-else-if="schema.data[layoutName2].id == 'userCategory'"
               >
                 <el-select
-                  v-model="dataBody[layoutName2]"
+                  v-model="formValues[layoutName2]"
                   multiple
                   placeholder="请选择"
                   value-key="text"
@@ -354,13 +354,13 @@
               <template v-else-if="schema.data[layoutName2].id == 'weight'">
                 <el-input
                   style="width: 200px"
-                  v-model="dataBody.weight"
+                  v-model="formValues.weight"
                   placeholder=""
                   size="normal"
                   clearable
                 >
                   <template slot="append"
-                    >kg/{{ dataBody.cbuUnit.unit }}</template
+                    >kg/{{ formValues.cbuUnit.unit }}</template
                   >
                 </el-input>
                 {{ schema.data[layoutName2].fields.promote.right }}
@@ -370,13 +370,13 @@
               >
                 <el-input
                   style="width: 200px"
-                  v-model="dataBody.suttleWeight"
+                  v-model="formValues.suttleWeight"
                   placeholder=""
                   size="normal"
                   clearable
                 >
                   <template slot="append"
-                    >kg/{{ dataBody.cbuUnit.unit }}</template
+                    >kg/{{ formValues.cbuUnit.unit }}</template
                   >
                 </el-input>
                 {{ schema.data[layoutName2].fields.promote.right }}
@@ -384,7 +384,7 @@
               <template v-else-if="schema.data[layoutName2].id == 'volume'">
                 <el-input
                   style="width: 200px"
-                  v-model="dataBody.volume.length"
+                  v-model="formValues.volume.length"
                   placeholder="长"
                   size="normal"
                   clearable
@@ -393,7 +393,7 @@
                 </el-input>
                 <el-input
                   style="width: 200px"
-                  v-model="dataBody.volume.width"
+                  v-model="formValues.volume.width"
                   placeholder="宽"
                   size="normal"
                   clearable
@@ -402,7 +402,7 @@
                 </el-input>
                 <el-input
                   style="width: 200px"
-                  v-model="dataBody.volume.height"
+                  v-model="formValues.volume.height"
                   placeholder="高"
                   size="normal"
                   clearable
@@ -425,7 +425,7 @@
             size="normal"
             prop="supplyType"
           >
-            <el-checkbox-group v-model="dataBody.supplyType">
+            <el-checkbox-group v-model="formValues.supplyType">
               <el-checkbox
                 v-for="(item, key) in schema.data[layoutName].fields.dataSource"
                 :label="item.text"
@@ -461,7 +461,7 @@
           background-color: rgb(244, 250, 250);
         "
       >
-        <el-button type="primary" @click="onSubmit('dataBody')"
+        <el-button type="primary" @click="onSubmit('formValues')"
           >立即创建</el-button
         >
         <el-button type="primary" @click="save" style="margin-left: 20px"
@@ -511,7 +511,7 @@ export default {
       apiOptions,
       schema,
       catPropOptions: [],
-      dataBody: {
+      formValues: {
         saleProp: {},
         onlineTrade: { value: 17410 },
         cbuUnit: { unit: '套' },
@@ -533,10 +533,10 @@ export default {
           }
         ],
         upshelfTime: { value: 1 },
-        relationOffer: {},
-        tradeTemplate: {},
-        privacy: {},
-        buyerProtection: {},
+        relationOffer: null,
+        tradeTemplate: null,
+        privacy: null,
+        buyerProtection: null,
         deliveryTime: { value: '3', text: '三天发货' },
         seven_day: {},
         cbuSendAddress: {
@@ -613,22 +613,33 @@ export default {
   },
   mounted () {},
   created () {
-    this.dataBody.userCategory = [{ value: '152550850', text: '刹车片' }]
+    this.formValues.userCategory = [{ value: '152550850', text: '刹车片' }]
     api_get_product_more(this.$route.params.id).then(res => {
       this.product = res.data
+      this.autoSet()
+      this.readStorage()
     })
   },
   methods: {
     autoSet () {
-      this.dataBody.title = this.product.subject
-      let catProp = initCatProp(this.dataBody.catProp, this.product)
-      this.$set(this.dataBody, 'catProp', catProp)
+      this.formValues.title = this.product.subject
+      let catProp = initCatProp(this.formValues.catProp, this.product)
+      this.$set(this.formValues, 'catProp', catProp)
       this.init.catProp = true
+    },
+    readStorage () {
+      const string = localStorage.getItem(
+        'alibaba_post_' + this.$route.params.id
+      )
+      if (string) {
+        const json = JSON.parse(string)
+        this.formValues = Object.assign(this.formValues, json)
+      }
     },
     save () {
       localStorage.setItem(
         'alibaba_post_' + this.product.id,
-        JSON.stringify(this.form)
+        JSON.stringify(this.formValues)
       )
       this.$notify.success('保存成功！')
     },
@@ -642,11 +653,15 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           const params = Object.assign(apiOptions.add, {
-            dataBody: JSON.stringify(this.dataBody)
+            dataBody: JSON.stringify({
+              formValues: this.formValues
+            })
           })
-          console.log(params)
           api_alibaba_product_add(params).then(res => {
-            console.log(res)
+            if (res.code == 200) {
+              this.$message.success(res.msg)
+              console.log(res.data)
+            }
           })
         } else {
           console.log('error submit!!')
@@ -659,19 +674,19 @@ export default {
     handleObj (key) {
       console.log(
         JSON.stringify(this.schema.data[key]),
-        JSON.stringify(this.dataBody[key])
+        JSON.stringify(this.formValues[key])
       )
     },
     mixBatchPreChange (e) {
       if (e) {
-        this.dataBody.mixBatch = [
+        this.formValues.mixBatch = [
           {
             value: 17026,
             text: '支持混批'
           }
         ]
       } else {
-        this.dataBody.mixBatch = []
+        this.formValues.mixBatch = []
       }
     }
   }

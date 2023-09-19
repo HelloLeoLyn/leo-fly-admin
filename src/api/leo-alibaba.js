@@ -51,9 +51,12 @@ export const apiOptions = {
     },
     desc: '新版商品发布',
     catId: '1032176',
-    scene: 'cbu',
+    scene: 'popular',
     offerId: '',
-    bizParam: null
+    bizParam: null,
+    // dataBody: {
+    //   formValues: null
+    // }
   }
 }
 
