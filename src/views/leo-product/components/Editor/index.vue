@@ -1,6 +1,7 @@
 <template>
-  <div class="leo-product-helper">
-    <el-button type="primary" size="default" @click="handleClick" class="fix">product助手</el-button>
+  <div class="leo-product-editor">
+    <el-button :type="type" :size="size" @click="handleClick"
+      :class="{'fix':isFix}">{{editorName}}</el-button>
     <el-dialog title="product助手" :visible.sync="visible" width="60%">
       {{ productId }}
       <el-button type="primary" size="default" @click="handleJsonClick">Json</el-button>
@@ -23,6 +24,10 @@
 <script>
 export default {
   props: {
+    editorName: {
+      type: String,
+      default: '产品编辑器'
+    },
     productId: {
       type: [Number, String],
       default: (e) => {
@@ -34,6 +39,20 @@ export default {
       default: (e) => {
         return e
       }
+    },
+    size: {
+      type: String,
+      default: (e) => {
+        return e
+      }
+    },
+    type: {
+      type: String,
+      default: 'primary'
+    },
+    isFix: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -65,7 +84,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.leo-product-helper {
+.leo-product-editor {
   .fix {
     position: fixed;
     top: 300px;

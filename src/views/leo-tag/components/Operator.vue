@@ -3,29 +3,14 @@
     <el-button :type="type" size="default" @click="handleClick" :size="size">{{
       $t('common.tag')
     }}</el-button>
-    <el-dialog
-      title=""
-      :visible.sync="visible"
-      width="80%"
-      :append-to-body="true"
-      :modal-append-to-body="false"
-    >
+    <el-dialog title="" :visible.sync="visible" width="80%" :append-to-body="true"
+      :modal-append-to-body="false">
       <div>
         <template v-for="(item, index) in tags">
-          <el-button
-            v-if="item.checked"
-            plain
-            type="warning"
-            @click="handleTagClick(index)"
-            >{{ item.name }}</el-button
-          >
-          <el-button
-            v-else
-            plain
-            type="primary"
-            @click="handleTagClick(index)"
-            >{{ item.name }}</el-button
-          >
+          <el-button :key="index" v-if="item.checked" plain type="warning"
+            @click="handleTagClick(index)">{{ item.name }}</el-button>
+          <el-button :key="index" v-else plain type="primary"
+            @click="handleTagClick(index)">{{ item.name }}</el-button>
         </template>
       </div>
       <span slot="footer">
@@ -42,34 +27,34 @@ export default {
   props: {
     productId: {
       type: [String, Number],
-      default: e => {
+      default: (e) => {
         return e
       }
     },
     type: {
       type: [String],
-      default: e => {
+      default: (e) => {
         return e
       }
     },
     size: {
       type: String,
-      default: e => {
+      default: (e) => {
         return e
       }
     },
     tagIdList: {
       type: Array,
-      default: e => {
+      default: (e) => {
         return e
       }
     }
   },
   watch: {
     productId: {
-      handler (val) {
+      handler(val) {
         if (val) {
-          console.log(this.tagIdList);
+          console.log(this.tagIdList)
           if (!this.tagIdList) {
             // this.$message.error('tagIdList is require')
           }
@@ -77,7 +62,7 @@ export default {
       }
     },
     tagIdList: {
-      handler (val) {
+      handler(val) {
         if (val) {
           if (!this.productId) {
             this.$message.error('productId is require')
@@ -87,20 +72,20 @@ export default {
     }
   },
   methods: {
-    handleClick () {
+    handleClick() {
       this.visible = !this.visible
     },
-    onConfirm () {
-      const checkedList = this.tags.filter(t => t.checked)
+    onConfirm() {
+      const checkedList = this.tags.filter((t) => t.checked)
       this.$emit('onConfirm', checkedList)
       this.visible = !this.visible
     },
-    handleTagClick (index) {
+    handleTagClick(index) {
       // this.tags[index].checked = !this.tags[index].checked
       this.$set(this.tags[index], 'checked', !this.tags[index].checked)
     }
   },
-  data () {
+  data() {
     return {
       visible: false,
       tags: [],
@@ -110,7 +95,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     api_tag_page(this.query).then(({ data }) => {
       this.tags = data.records
     })
