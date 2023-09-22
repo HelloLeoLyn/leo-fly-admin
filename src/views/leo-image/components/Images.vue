@@ -3,17 +3,27 @@
     <el-row :gutter="5" v-if="images" :key="changeKey">
       <el-col :span="6" v-for="(image, index) in images" :key="image.id">
         <div style="width: 200px; height: 200px; padding: 10px; margin: 10px">
-          <vue-hover-mask style="width: 180px; height: 180px; background-color: gray">
+          <vue-hover-mask
+            style="width: 180px; height: 180px; background-color: gray"
+          >
             <el-image :src="image.src" width="100%" />
             <template v-slot:action>
               <el-row v-for="(btn, key) in customzedBtn" :key="key">
-                <el-button type="text" size="mini"
-                  @click="handleCustomzedClick(image, btn.opt,index)">{{ btn.label }}
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="handleCustomzedClick(image, btn.opt, index)"
+                  >{{ btn.label }}
                 </el-button>
               </el-row>
               <el-row>
-                <el-button type="text" size="mini" v-if="bigBtn"
-                  @click="handleBigBtnClick(image.src,index)">大图</el-button>
+                <el-button
+                  type="text"
+                  size="mini"
+                  v-if="bigBtn"
+                  @click="handleBigBtnClick(image.src, index)"
+                  >大图</el-button
+                >
               </el-row>
             </template>
           </vue-hover-mask>
@@ -31,7 +41,7 @@ export default {
   components: {
     VueHoverMask
   },
-  data() {
+  data () {
     return {
       visible: false,
       imageUrl: null,
@@ -59,22 +69,25 @@ export default {
     }
   },
   methods: {
-    handleCustomzedClick(image, opt) {
+    handleCustomzedClick (image, opt) {
       const key = this.getIdIndex(image.id)
       this.images[key].checked = !this.images[key].checked
       this.$emit('onCustomzedClick', image, opt)
     },
-    getIdIndex(id) {
-      return this.images.findIndex((img) => {
+    getIdIndex (id) {
+      return this.images.findIndex(img => {
         return img.id == id
       })
     },
-    handleBigBtnClick(src) {
+    handleBigBtnClick (src) {
       if (this.checkable) {
         this.image.checked = !this.image.checked
       }
       this.visible = true
       this.imageUrl = src
+    },
+    click (l) {
+      console.log(l)
     }
   }
 }

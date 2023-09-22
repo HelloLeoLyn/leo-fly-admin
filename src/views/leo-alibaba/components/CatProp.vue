@@ -97,7 +97,6 @@ export default {
     value: {
       handler (newValue) {
         // 将外部传递的对象值更新到内部
-        console.log(newValue)
         this.model = Object.assign({}, newValue)
       },
       immediate: true // 立即触发一次，以确保初始化时同步

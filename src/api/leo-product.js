@@ -37,6 +37,13 @@ export function product_update_api(data) {
     data
   })
 }
+export function product_update_batch_api(data) {
+  return request({
+    url: api_pre + '/product/batch',
+    method: 'put',
+    data
+  })
+}
 export function product_update_api_all(data) {
   return request({
     url: api_pre + '/product/all',

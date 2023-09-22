@@ -79,7 +79,7 @@
                 v-if="schema.data[layoutName2].fields.promote"
                 v-html="schema.data[layoutName2].fields.promote.top"
               ></div>
-              <el-input
+              <!-- <el-input
                 v-if="schema.data[layoutName2].id == 'title'"
                 v-model="formValues.title"
                 :maxlength="schema.data[layoutName2].fields.maxLength"
@@ -87,7 +87,15 @@
                 clearable
                 :placeholder="schema.data[layoutName2].fields.placeholder"
                 :show-word-limit="schema.data[layoutName2].fields.showCounter"
-              ></el-input>
+                @input="changeValue('title')"
+                @keyup.enter="changeValue('title')"
+              ></el-input> -->
+              <LeoInput
+                v-if="schema.data[layoutName2].id == 'title'"
+                v-model="formValues.title"
+                :show-word-limit="schema.data[layoutName2].fields.showCounter"
+                :max-length="schema.data[layoutName2].fields.maxLength"
+              ></LeoInput>
               <template v-else-if="schema.data[layoutName2].id == 'catProp'">
                 <el-button type="primary" size="default" @click="autoSet"
                   >设置</el-button
@@ -413,6 +421,14 @@
                   v-html="schema.data[layoutName2].fields.promote.bottom"
                 ></div>
               </template>
+              <template v-if="schema.data[layoutName2].id == 'description'">
+                <Description1688
+                  :product-id="$route.params.id"
+                  :product="product"
+                  style="height: 500px; overflow: scroll"
+                  v-model="formValues.description"
+                ></Description1688>
+              </template>
               <div v-else style="color: #6b0caa"></div>
             </el-form-item>
           </template>
@@ -484,6 +500,8 @@ import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
 import primaryPicture from '@/views/leo-alibaba/components/primaryPicture'
 import Attributes from '@/views/leo-product/components/Attributes.vue'
 import Helper from '@/views/leo-product/components/Helper.vue'
+import Description1688 from '../components/Description1688.vue'
+import LeoInput from '@/components/LeoInput/index.vue'
 //  api
 import {
   apiOptions,
@@ -492,6 +510,7 @@ import {
 } from '@/api/leo-alibaba'
 import { api_get_product_more } from '@/api/leo-product'
 export default {
+  name: 'LeoAlibabaPost',
   components: {
     CatProp,
     ImageList,
@@ -500,7 +519,9 @@ export default {
     priceRange,
     primaryPicture,
     Attributes,
-    Helper
+    Helper,
+    Description1688,
+    LeoInput
   },
   data () {
     return {
@@ -533,9 +554,8 @@ export default {
           }
         ],
         upshelfTime: { value: 1 },
-        relationOffer: null,
-        tradeTemplate: null,
-        privacy: null,
+        tradeTemplate: {},
+        privacy: {},
         buyerProtection: null,
         deliveryTime: { value: '3', text: '三天发货' },
         seven_day: {},
@@ -555,17 +575,7 @@ export default {
           width: 12,
           length: 20
         },
-        description: {
-          detailList: [
-            {
-              id: '0',
-              title: '图文详情',
-              contentUrl: null,
-              content: '<p>这是测试</p>',
-              isRequired: true
-            }
-          ]
-        },
+        description: null,
         detailVideo: {},
         userCategory: [],
         title: '',
@@ -611,29 +621,34 @@ export default {
       }
     }
   },
-  mounted () {},
   created () {
     this.formValues.userCategory = [{ value: '152550850', text: '刹车片' }]
     api_get_product_more(this.$route.params.id).then(res => {
       this.product = res.data
       this.autoSet()
-      this.readStorage()
+      this.read()
+      this.init.catProp = true
     })
   },
   methods: {
     autoSet () {
-      this.formValues.title = this.product.subject
       let catProp = initCatProp(this.formValues.catProp, this.product)
       this.$set(this.formValues, 'catProp', catProp)
-      this.init.catProp = true
     },
-    readStorage () {
+    read () {
       const string = localStorage.getItem(
         'alibaba_post_' + this.$route.params.id
       )
-      if (string) {
+      if (string && string !== 'undefined') {
         const json = JSON.parse(string)
-        this.formValues = Object.assign(this.formValues, json)
+        // Object.keys(json).forEach(key => {
+        //   this.formValues[key] = json[key]
+        // })
+        this.formValues.title = json.title
+        this.formValues.primaryPicture = json.primaryPicture
+        this.formValues.catProp = json.catProp
+        this.formValues.priceRange = json.priceRange
+        this.formValues.weight = json.weight
       }
     },
     save () {
@@ -657,10 +672,9 @@ export default {
               formValues: this.formValues
             })
           })
-          api_alibaba_product_add(params).then(res => {
-            if (res.code == 200) {
-              this.$message.success(res.msg)
-              console.log(res.data)
+          api_alibaba_product_add(params).then((code, data) => {
+            if (data.result.result.success == true) {
+              this.$message.success('successfully!')
             }
           })
         } else {

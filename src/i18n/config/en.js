@@ -72,6 +72,7 @@ export default {
     }
   },
   common: {
+    tag: 'Tag',
     data:'Data',
     task:'Task',
     work:'Work',

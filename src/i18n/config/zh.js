@@ -69,10 +69,11 @@ export default {
     }
   },
   common: {
-    data:'数据',
-    task:'任务',
-    work:'工作',
-    copy:'复制',
+    tag: '标签',
+    data: '数据',
+    task: '任务',
+    work: '工作',
+    copy: '复制',
     todo: '准备做',
     working: '进行中',
     fail: '失败',
@@ -116,6 +117,5 @@ export default {
     confirm: {
       label: '确认'
     }
-  }
-
+  },
 }

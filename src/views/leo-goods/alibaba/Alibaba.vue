@@ -67,9 +67,9 @@
         </Attribute1688>
       </el-form-item>
       <el-form-item label="description" prop="description">
-        <Description :images="goods.imagesObj" :models="formData.models"
+        <Description1688 :images="goods.imagesObj" :models="formData.models"
           v-model="formData.description" style="height: 500px;overflow: scroll;" ref="description">
-        </Description>
+        </Description1688>
       </el-form-item>
       <el-form-item style="
           position: fixed;
@@ -91,7 +91,7 @@ import Album from '@/components/LeoAlibaba/Album.vue'
 import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
 import GoodsImages from '@/components/LeoImage/Goods.vue'
-import Description from '@/views/leo-alibaba/components/Description1688.vue'
+import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import Attribute1688 from '@/views/leo-goods/alibaba/Attribute.vue'
 import { api_goods_get, api_goods_put } from '@/api/leo-goods'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
@@ -111,7 +111,7 @@ export default {
     ShippingInfo1688,
     GoodsImages,
     Attribute1688,
-    Description
+    Description1688
   },
   props: [],
   data() {
