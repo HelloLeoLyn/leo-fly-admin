@@ -21,7 +21,7 @@
         >确认</el-button
       >
     </div>
-    <Images
+    <LeoImageHoverList
       v-if="isEditModel"
       :images="images"
       @onCustomzedClick="onAlibabaCoverClk"
@@ -224,6 +224,17 @@ export default {
       default: e => {
         return e
       }
+    },
+    defaultEditModel: {
+      type: Boolean,
+      default: () => {
+        return false
+      }
+    }
+  },
+  watch: {
+    defaultEditModel (newVal) {
+      this.isEditModel = newVal
     }
   },
   components: { LeoImageHoverList, ImgCutter, album1688 },

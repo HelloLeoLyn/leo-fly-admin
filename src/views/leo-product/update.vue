@@ -129,6 +129,12 @@
         </el-button>
       </div>
       <h2>图片</h2>
+      <ImageAddCover
+        :images="product.images"
+        :product-id="product.id"
+        :default-edit-model="true"
+      >
+      </ImageAddCover>
       <h2>{{ $t('autoPart.oe') }}</h2>
       <leo-array-string
         :reset="true"
@@ -225,6 +231,7 @@
       </el-row>
     </el-dialog>
     <side-catalog class="catalog" v-bind="catalogProps"></side-catalog>
+    <Helper :productId="$route.params.id" :product="product"></Helper>
     <LeoHistory
       :productId="history.productId"
       v-model="history"
@@ -244,6 +251,8 @@ import 'vue-side-catalog/lib/vue-side-catalog.css'
 import LeoWebCollector from '@/components/LeoWebCollector'
 import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
+import ImageAddCover from '../leo-image/components/ImageAddCover.vue'
+import Helper from './components/Helper.vue'
 import {
   api_get_product_more,
   api_product_image_main,
@@ -266,7 +275,9 @@ export default {
     LeoProductReset,
     LeoWebCollector,
     LeoHistory,
-    Category1688
+    Category1688,
+    ImageAddCover,
+    Helper
   },
   directives: { waves },
   data () {
@@ -406,7 +417,7 @@ export default {
         if (this.product.images) {
           this.images = this.product.images.map(image => {
             image.productId = image.code
-            image.url =
+            image.src =
               service +
               '/img/' +
               image.code +

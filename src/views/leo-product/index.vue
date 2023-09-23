@@ -50,6 +50,7 @@
         >
         </Editor>
         <IsUpload
+          style="padding-left: 10px;"
           class="filter-item"
           :products="multipleSelection"
           :isBatch="true"

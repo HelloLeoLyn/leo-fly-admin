@@ -2,7 +2,7 @@
   <div>
     <h1>ImageAddCover</h1>
     <ImageAddCover :images="images" :product-id="productId"> </ImageAddCover>
-    <h1>Images</h1>
+    <h1>HoverList</h1>
     <HoverList
       :images="images"
       :reloadable="true"
@@ -34,6 +34,12 @@ export default {
           id: 40547,
           exph: null,
           large: 'http://127.0.0.1:8080/product/image/40547'
+        },
+        {
+          src: 'http://127.0.0.1:8080/product/image/40548',
+          id: 40548,
+          exph: null,
+          large: 'http://127.0.0.1:8080/product/image/40548'
         }
       ],
       productId: 8
