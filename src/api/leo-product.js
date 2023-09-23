@@ -142,11 +142,10 @@ export function api_product_collector(data) {
   })
 }
 
-export function api_product_image_main(data) {
+export function api_product_image_main(productId, imageId) {
   return request({
-    url: api_pre + '/product/image/main',
+    url: api_pre + '/product/image/main?productId=' + productId + '&imageId=' + imageId,
     method: 'put',
-    data
   })
 }
 export function api_product_reset(data) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="5" v-if="images" :key="changeKey">
+    <el-row :gutter="5" v-if="images">
       <el-col :span="6" v-for="(image, index) in images" :key="image.id">
         <div style="width: 200px; height: 200px; padding: 10px; margin: 10px">
           <vue-hover-mask
@@ -44,10 +44,7 @@ export default {
   data () {
     return {
       visible: false,
-      imageUrl: null,
-      imageId: null,
-      changeKey: 0,
-      productImages: []
+      imageUrl: null
     }
   },
   props: {

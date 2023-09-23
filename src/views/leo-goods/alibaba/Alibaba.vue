@@ -58,10 +58,6 @@
       <el-form-item label="shippingInfo" prop="shippingInfo">
         <ShippingInfo1688 v-model="formData.shippingInfo" />
       </el-form-item>
-      <el-form-item label="image" prop="image">
-        <GoodsImages v-model="formData.image" :images="goods.imagesObj"
-          @upload="sendImagesToAlibaba" v-if="key.goodsImages == 2001"></GoodsImages>
-      </el-form-item>
       <el-form-item label="attributes" prop="attributes">
         <Attribute1688 v-model="formData.attributes" :params="formData" :key="key.attributes">
         </Attribute1688>
@@ -90,7 +86,6 @@ import Subject1688 from '@/views/leo-alibaba/components/Subject1688.vue'
 import Album from '@/components/LeoAlibaba/Album.vue'
 import SaleInfo1688 from '@/views/leo-alibaba/components/SaleInfo1688.vue'
 import ShippingInfo1688 from '@/views/leo-alibaba/components/ShippingInfo1688.vue'
-import GoodsImages from '@/components/LeoImage/Goods.vue'
 import Description1688 from '@/views/leo-alibaba/components/Description1688.vue'
 import Attribute1688 from '@/views/leo-goods/alibaba/Attribute.vue'
 import { api_goods_get, api_goods_put } from '@/api/leo-goods'
@@ -109,7 +104,6 @@ export default {
     Album,
     SaleInfo1688,
     ShippingInfo1688,
-    GoodsImages,
     Attribute1688,
     Description1688
   },

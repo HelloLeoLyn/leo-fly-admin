@@ -1,25 +1,38 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10">
-      <el-col :span="6" v-for="item,key in components" :key="key">
+      <el-col :span="6" v-for="(item, key) in components" :key="key">
         <el-card shadow="hover" body-style="height:180px">
-          <p>{{item.comment}}</p>
-          <el-button type="primary" plain @click="handleBtnClk(item)">点击显示</el-button>
-          <el-button v-clipboard:copy="copy(item.code)" v-clipboard:success="clipboardSuccess"
-            type="primary" icon="el-icon-document">
+          <p>{{ item.comment }}</p>
+          <el-button type="primary" plain @click="handleBtnClk(item)"
+            >点击显示</el-button
+          >
+          <el-button
+            v-clipboard:copy="copy(item.code)"
+            v-clipboard:success="clipboardSuccess"
+            type="primary"
+            icon="el-icon-document"
+          >
             复制
           </el-button>
         </el-card>
       </el-col>
     </el-row>
+    <ImageExample></ImageExample>
     <el-dialog :title="lDialog.title" :visible.sync="lDialog.show" width="800">
-      <el-input type="textarea" v-model="lDialog.content" :rows="lDialog.input_row" />
+      <el-input
+        type="textarea"
+        v-model="lDialog.content"
+        :rows="lDialog.input_row"
+      />
       <el-image v-if="lDialog.image" :src="lDialog.image" />
-      <el-button @click="generate">
-        生成
-      </el-button>
-      <el-button v-clipboard:copy="lDialog.content" v-clipboard:success="clipboardSuccess"
-        type="primary" icon="el-icon-document">
+      <el-button @click="generate"> 生成 </el-button>
+      <el-button
+        v-clipboard:copy="lDialog.content"
+        v-clipboard:success="clipboardSuccess"
+        type="primary"
+        icon="el-icon-document"
+      >
         复制
       </el-button>
     </el-dialog>
@@ -27,12 +40,14 @@
 </template>
 <script>
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+import ImageExample from './components/ImageExample.vue'
 export default {
   directives: {
     clipboard
   },
+  components: { ImageExample },
   name: 'LeoImageIndex',
-  data() {
+  data () {
     return {
       components: [
         {
@@ -54,10 +69,10 @@ export default {
   },
 
   methods: {
-    generate() {
+    generate () {
       this.lDialog.image = 'data:image/png;base64,' + this.lDialog.content
     },
-    handleBtnClk(sql) {
+    handleBtnClk (sql) {
       this.lDialog.show = true
       this.lDialog.title = sql.comment
       this.lDialog.content = this.objToString(sql.code)
@@ -65,14 +80,14 @@ export default {
       console.log(length)
       this.lDialog.input_row = length > 5 ? length : 5
     },
-    copy(obj) {
+    copy (obj) {
       return this.objToString(obj)
     },
-    objToString(obj) {
+    objToString (obj) {
       if (typeof obj === 'object') {
         let temp = ''
         if (obj.constructor === Array) {
-          obj.forEach((no) => {
+          obj.forEach(no => {
             temp = temp + no + '\n'
           })
         }
@@ -81,7 +96,7 @@ export default {
         return obj
       }
     },
-    clipboardSuccess() {
+    clipboardSuccess () {
       this.$message({
         message: 'Copy successfully',
         type: 'success',

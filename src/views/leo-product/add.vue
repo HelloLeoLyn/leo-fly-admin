@@ -90,8 +90,6 @@
 import waves from '@/directive/waves' // waves directive
 
 import SideCatalog from 'vue-side-catalog'
-import LeoImage from '@/components/LeoImage/local.vue'
-import LeoAutoImage from '@/components/LeoImage/Auto.vue'
 import VueHoverMask from 'vue-hover-mask'
 import LeoArrayString from '@/components/LeoArray/string.vue'
 import 'vue-side-catalog/lib/vue-side-catalog.css'
@@ -109,8 +107,6 @@ export default {
     VueHoverMask,
     LeoArrayString,
     SideCatalog,
-    LeoImage,
-    LeoAutoImage,
     LeoWebCollector,
     Category1688
   },

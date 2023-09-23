@@ -129,14 +129,6 @@
         </el-button>
       </div>
       <h2>图片</h2>
-      <LeoImageProduct
-        :ref="$route.params.id"
-        :productId="$route.params.id"
-        :key="leoProductImagesKey"
-        :reloadable="true"
-        :renewable="true"
-        @onSaveClick="handleImageSaveClick"
-      />
       <h2>{{ $t('autoPart.oe') }}</h2>
       <leo-array-string
         :reset="true"
@@ -233,16 +225,18 @@
       </el-row>
     </el-dialog>
     <side-catalog class="catalog" v-bind="catalogProps"></side-catalog>
-    <LeoHistory :productId="history.productId" v-model="history" :key="history.count" direction="btt"></LeoHistory>
+    <LeoHistory
+      :productId="history.productId"
+      v-model="history"
+      :key="history.count"
+      direction="btt"
+    ></LeoHistory>
   </div>
 </template>
 <script>
 import waves from '@/directive/waves' // waves directive
-
 import SideCatalog from 'vue-side-catalog'
-import LeoImage from '@/components/LeoImage/local.vue'
 import LeoProductReset from './components/Reset.vue'
-
 import LeoElCarousel from '@/components/LeoElCarousel'
 import VueHoverMask from 'vue-hover-mask'
 import LeoArrayString from '@/components/LeoArray/string.vue'
@@ -250,9 +244,6 @@ import 'vue-side-catalog/lib/vue-side-catalog.css'
 import LeoWebCollector from '@/components/LeoWebCollector'
 import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
-import LeoImageProduct from '@/components/LeoImage/Product.vue'
-import LeoAutoImage from '@/components/LeoImage/Auto.vue'
-import LeoHoverImage from '@/components/LeoImage/Hover.vue'
 import {
   api_get_product_more,
   api_product_image_main,
@@ -268,15 +259,11 @@ import { api_image_delete } from '@/api/leo-image'
 export default {
   name: 'LeoProductDetail',
   components: {
-    LeoImageProduct,
     LeoElCarousel,
     VueHoverMask,
     LeoArrayString,
     SideCatalog,
-    LeoImage,
     LeoProductReset,
-    LeoHoverImage,
-    LeoAutoImage,
     LeoWebCollector,
     LeoHistory,
     Category1688
@@ -509,17 +496,13 @@ export default {
         })
     },
     handleConfirmMainImage (image) {
-      const product = {
-        id: this.id,
-        mainImage: image.id
-      }
       this.$confirm('是否确定更改主图?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          api_product_image_main(product).then(res => {
+          api_product_image_main(this.id, image.id).then(res => {
             if (res.code === '200') {
               this.product.mainImage = image.id
 

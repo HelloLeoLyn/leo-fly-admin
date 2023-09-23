@@ -17,7 +17,7 @@ export const fields = {
   },
   categoryId: {
     key: 'categoryId',
-    uiType: 'input',
+    uiType: 'category',
     checked: false,
     disable: false
   },
@@ -136,7 +136,7 @@ export const fields = {
     disable: false
   }
 }
-export function parseHtmlObj (key) {
+export function parseHtmlObj(key) {
   return { key, uiType: 'input', checked: false, disable: false }
 }
 export default {

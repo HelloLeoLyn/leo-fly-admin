@@ -494,7 +494,6 @@ import { schema, initCatProp } from '.'
 //  components
 import CatProp from '../components/CatProp.vue'
 import cbu_supply_type from '@/views/leo-alibaba/components/cbu_supply_type'
-import ImageList from '@/components/LeoImage/List.vue'
 import LeoVideo from '@/components/LeoVideo/Index.vue'
 import priceRange from '@/views/leo-alibaba/components/priceRange.vue'
 import primaryPicture from '@/views/leo-alibaba/components/primaryPicture'
@@ -513,7 +512,6 @@ export default {
   name: 'LeoAlibabaPost',
   components: {
     CatProp,
-    ImageList,
     LeoVideo,
     cbu_supply_type,
     priceRange,

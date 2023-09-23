@@ -1,14 +1,13 @@
 <template>
   <div class="app-container leo-auto-part-index">
     <div class="filter-container">
-      <QueryParams></QueryParams>
-      
+      <QueryParams ref="queryParams"></QueryParams>
       <el-button
         v-waves
         class="filter-item"
         type="primary"
         icon="el-icon-search"
-        @click="doSearch"
+        @click="onClickSearch"
       >
         {{ $t('common.search') }}
       </el-button>
@@ -47,7 +46,17 @@
           class="filter-item"
           style="margin-left: 10px"
           @onConfirm="e => onTagsConfrim(true, e)"
-        ></Editor>
+          :alternativeKeys="['status', 'referStatus']"
+        >
+        </Editor>
+        <IsUpload
+          class="filter-item"
+          :products="multipleSelection"
+          :isBatch="true"
+          @onSubmitUpdateReferStatus="onSubmitUpdateReferStatus"
+          @onFinished="onIsUploadFinish"
+        >
+        </IsUpload>
         <el-button-group class="filter-item" style="margin-left: 10px">
           <el-button type="primary" @click="handWorkClick">
             {{ $t('common.work') }}
@@ -92,6 +101,7 @@
       :data="list"
       style="width: 100%"
       ref="productsTable"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="id" width="80" />
@@ -129,6 +139,7 @@
       <el-table-column v-if="more" prop="weight" label="weight" />
       <el-table-column v-if="more" prop="packageSize" label="packageSize" />
       <el-table-column prop="status" label="status" width="80" />
+      <el-table-column prop="referStatus" label="referStatus" width="80" />
       <el-table-column
         prop="error"
         label="error"
@@ -178,7 +189,7 @@
                 上传1688
               </el-button>
             </el-col>
-            <el-col :span="6" v-if="scope.row.status != 666">
+            <el-col :span="6">
               <el-button
                 size="small"
                 type="text"
@@ -187,7 +198,7 @@
                 >删除
               </el-button>
             </el-col>
-            <el-col :span="6" v-if="scope.row.status != 666">
+            <el-col :span="6">
               <Operator
                 class="filter-item"
                 :product-id="scope.row.id"
@@ -196,6 +207,17 @@
                 size="small"
                 @onConfirm="e => onTagsConfrim(false, e, scope.row.id)"
               ></Operator>
+            </el-col>
+            <el-col :span="6">
+              <IsUpload
+                class="filter-item"
+                :products="[scope.row]"
+                type="text"
+                size="small"
+                @onSubmitUpdateReferStatus="onSubmitUpdateReferStatus"
+                @onFinished="onIsUploadFinish"
+              >
+              </IsUpload>
             </el-col>
           </el-row>
         </template>
@@ -206,7 +228,7 @@
       :total="total"
       :page.sync="listQuery.current"
       :limit.sync="listQuery.size"
-      @pagination="doSearch"
+      @pagination="onClickSearch"
     />
     <el-dialog
       title="update"
@@ -305,13 +327,14 @@
 import LeoEditPane from '@/components/LeoEditPane'
 import LeoWebCollector from '@/components/LeoWebCollector'
 import LeoExport from '@/components/LeoExport'
-import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
 import waves from '@/directive/waves' // waves directive
 import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import LeoNewTask from '@/views/leo-work/components/LeoNewTask.vue'
 import Operator from '@/views/leo-tag/components/Operator'
 import Editor from './components/Editor/index.vue'
 import QueryParams from './components/QueryParams.vue'
+import IsUpload from '../leo-alibaba/components/IsUpload.vue'
+
 import {
   product_page_api,
   product_update_api,
@@ -337,10 +360,10 @@ export default {
     LeoEditPane,
     LeoExport,
     LeoWebCollector,
-    Category1688,
     Operator,
     Editor,
-    QueryParams
+    QueryParams,
+    IsUpload
   },
   directives: { waves },
   filters: {
@@ -348,6 +371,7 @@ export default {
   },
   data () {
     return {
+      multipleSelection: [],
       taskProductDialog: {
         existsId: [],
         show: false,
@@ -374,13 +398,8 @@ export default {
       current_row: -1,
       total: 0,
       listQuery: {
-        referStatus: '',
-        status: -1,
-        name: null,
         size: 10,
-        current: 1,
-        categoryId: null,
-        code: ''
+        current: 1
       },
       list: [],
       loading: false,
@@ -434,7 +453,7 @@ export default {
     }
   },
   created () {
-    this.doSearch()
+    this.doSearch(this.listQuery)
   },
   methods: {
     onWorkDialogConfirm (work) {
@@ -535,18 +554,34 @@ export default {
           })
         })
     },
-    doSearch () {
-      this.listQuery.code = this.listQuery.code.replaceAll(' ', '')
-      product_page_api(this.listQuery).then(res => {
+    doSearch (queryParams) {
+      product_page_api(queryParams).then(res => {
         this.list = res.data.records
         this.total = res.data.total
       })
+    },
+    onClickSearch () {
+      let queryParams = this.parseParams()
+      queryParams = Object.assign(queryParams, this.listQuery)
+      this.doSearch(queryParams)
+    },
+    parseParams () {
+      const queryParams = this.$refs.queryParams.getParams()
+      let listQuery = {}
+      if (queryParams) {
+        queryParams.forEach(param => {
+          if (param.key && param.value) {
+            listQuery[param.key] = param.value
+          }
+        })
+      }
+      return listQuery
     },
     removeInTableData (index) {
       this.list.splice(index, 1)
       this.total = this.total - 1
       if (this.total < this.listQuery.size || this.list.length <= 1) {
-        this.doSearch()
+        this.onClickSearch()
       }
     },
     valid (id) {
@@ -782,6 +817,15 @@ export default {
       } else {
         return null
       }
+    },
+    onSubmitUpdateReferStatus (product) {
+      product_update_api(product).then(() => {})
+    },
+    onIsUploadFinish () {
+      this.onClickSearch()
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     }
   }
 }

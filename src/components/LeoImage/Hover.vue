@@ -2,20 +2,31 @@
   <div>
     <vue-hover-mask @click="handleClick(image)" class="leo-vue-hover">
       <!-- 默认插槽 -->
-      <img :src="image.url" :width="width" :height="height">
-      <label style="position: absolute" :ref="image.id" class=""><i class="el-icon-check leo-icon-check"></i></label>
+      <img :src="image.src" :width="width" :height="height" />
+      <label style="position: absolute" :ref="image.id" class=""
+        ><i class="el-icon-check leo-icon-check"></i
+      ></label>
       <!-- action插槽 -->
       <template v-slot:action>
         <!-- <el-tooltip></el-tooltip> -->
         <div v-if="image.exph">
-          <span style="font-size:12px">{{ image.expw }}X{{ image.exph }}</span>
-          <br>
+          <span style="font-size: 12px">{{ image.expw }}X{{ image.exph }}</span>
+          <br />
         </div>
-
-        <el-button type="text" size="mini" v-if="removeBtn" @click="handleRemoveBtnClick">删除
+        <el-button
+          type="text"
+          size="mini"
+          v-if="removeBtn"
+          @click="handleRemoveBtnClick"
+          >删除
         </el-button>
-        <el-button type="text" size="mini" v-if="bigBtn" @click="handleBigBtnClick">大图</el-button>
-
+        <el-button
+          type="text"
+          size="mini"
+          v-if="bigBtn"
+          @click="handleBigBtnClick"
+          >大图</el-button
+        >
       </template>
     </vue-hover-mask>
     <el-dialog :visible.sync="visible" width="1100">
@@ -30,7 +41,7 @@ export default {
   components: {
     VueHoverMask
   },
-  data() {
+  data () {
     return {
       service,
       visible: false,
@@ -73,7 +84,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     if (this.image.checked) {
       this.$refs[this.image.id].className = 'leo-sm-label'
     } else {
@@ -81,7 +92,7 @@ export default {
     }
   },
   methods: {
-    handleClick(image) {
+    handleClick (image) {
       if (!this.checkable && !this.checkable2) {
         return
       }
@@ -97,13 +108,13 @@ export default {
       }
       this.$emit('click', image.checked)
     },
-    handleBigBtnClick() {
+    handleBigBtnClick () {
       if (this.checkable) {
         this.image.checked = !this.image.checked
       }
       this.visible = true
     },
-    handleRemoveBtnClick() {
+    handleRemoveBtnClick () {
       if (this.checkable) {
         this.image.checked = !this.image.checked
       }

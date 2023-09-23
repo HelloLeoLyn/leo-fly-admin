@@ -51,56 +51,6 @@
       <el-form-item label="alibaba.albumID" prop="alibaba.albumID" class="input-middle">
         <album v-model="form.alibaba.albumID" @change="e => form.alibaba.albumID = e"></album>
       </el-form-item>
-      <el-form-item label="images" prop="images">
-        <Images :product-id="product.id" @onCustomzedClick="onAlibabaCoverClk" :reloadable="true"
-          v-model="form.images"
-          :customzedBtn="[{ label: '设置封面图', opt: 'alibaba' }, { label: '设置包装图', opt: 'package' },  { label: '1688详情封面', opt: '1688detail' }]" />
-        <el-dialog title="" :visible.sync="dialog.show" width="80%">
-          <div class="container" v-if="dialog.opt == 'alibaba'">
-            <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
-            <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
-          </div>
-          <div class="container-1688detail" v-if="dialog.opt == '1688detail'">
-            <img class="bottom-image" :src="dialog.coverUrl" alt="底层图片" />
-            <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
-          </div>
-          <div v-if="dialog.opt == 'package'">
-            <ImgCutter ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
-              WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
-              WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
-              :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
-              :toolBgc="options.toolBgc" :isModal="options.isModal"
-              :showChooseBtn="options.showChooseBtn" :lockScroll="options.lockScroll"
-              :boxWidth="options.boxWidth" :boxHeight="options.boxHeight"
-              :cutWidth="options.cutWidth" :cutHeight="options.cutHeight"
-              :sizeChange="options.sizeChange" :moveAble="options.moveAble"
-              :imgMove="options.imgMove" :originalGraph="options.originalGraph"
-              :WatermarkTextX="options.WatermarkTextX" :WatermarkTextY="options.WatermarkTextY"
-              :smallToUpload="options.smallToUpload" :saveCutPosition="options.saveCutPosition"
-              :scaleAble="options.scaleAble" :previewMode="options.previewMode"
-              :quality="options.quality" :toolBoxOverflow="options.true" :index="options.index"
-              @cutDown="cutDown" @onPrintImg="onPrintImg">
-              <template #open>
-                <button>Choose image</button>
-              </template>
-              <template #confirm>
-                <div></div>
-              </template>
-              <template #cancel>
-                <div></div>
-              </template>
-            </ImgCutter>
-            <div class="container">
-              <img class="package-bottom-image" :src="dialog.cutImgHref" alt="底层图片" />
-              <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
-            </div>
-          </div>
-          <span slot="footer">
-            <el-button @click="dialog.show = false">Cancel</el-button>
-            <el-button type="primary" @click="generateImages()">生成图片</el-button>
-          </span>
-        </el-dialog>
-      </el-form-item>
       <el-tabs v-model="platform" type="border-card" tab-position="top">
         <el-tab-pane label="alibaba" name="alibaba">
           <el-form-item label="alibaba.material" prop="alibaba.material" class="input-middle">
@@ -233,8 +183,6 @@
 <script>
 import clip from '@/utils/clipboard'
 import { api_get_product_more } from '@/api/leo-product'
-import Images from '@/views/leo-image/components/Images.vue'
-import CssImage from '@/components/LeoImage/Css.vue'
 import Attributes from '../leo-product/components/Attributes.vue'
 import SaleInfo1688 from '../leo-alibaba/components/SaleInfo1688.vue'
 import Category1688 from '../leo-alibaba/components/Category1688.vue'
@@ -255,12 +203,10 @@ import { listToString } from '@/utils'
 import Album from '@/components/LeoAlibaba/Album.vue'
 export default {
   components: {
-    Images,
     Attributes,
     SaleInfo1688,
     Category1688,
     Group1688,
-    CssImage,
     ImgCutter,
     Album,
     LeoArray

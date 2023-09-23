@@ -54,7 +54,6 @@ export default {
     productId: {
       handler(val) {
         if (val) {
-          console.log(this.tagIdList)
           if (!this.tagIdList) {
             // this.$message.error('tagIdList is require')
           }

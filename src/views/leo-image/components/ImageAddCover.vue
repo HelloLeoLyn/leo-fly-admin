@@ -205,7 +205,7 @@ import { api_alibaba_auth } from '@/api/leo-alibaba'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
 import { imgBase, imgTempPath } from '@/api/local-setting'
-import Images from './Images.vue'
+import LeoImageHoverList from '@/components/LeoImage/HoverList.vue'
 import { api_python_image_goods_post } from '@/api/leo-python'
 import { service } from '@/api/index'
 import ImgCutter from 'vue-img-cutter'
@@ -226,7 +226,7 @@ export default {
       }
     }
   },
-  components: { Images, ImgCutter, album1688 },
+  components: { LeoImageHoverList, ImgCutter, album1688 },
   data () {
     return {
       isEditModel: false,

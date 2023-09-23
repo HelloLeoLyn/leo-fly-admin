@@ -90,10 +90,8 @@
 </style>
 <script>
 import { warehouse_dict } from '@/utils/dict'
-import LeoLocalImage from '@/components/LeoImage/local.vue'
 export default {
   name: 'LeoInStock',
-  components: { 'leo-local-image': LeoLocalImage },
   data() {
     return {
       list: [],
