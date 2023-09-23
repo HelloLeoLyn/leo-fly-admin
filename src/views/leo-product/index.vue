@@ -1,38 +1,83 @@
 <template>
   <div class="app-container leo-auto-part-index">
     <div class="filter-container">
-      <el-input v-model="listQuery.code" placeholder="oe" style="width: 200px" class="filter-item"
-        @keyup.enter.native="doSearch" @keyup="listQuery.code = listQuery.code.trim()" />
+      <QueryParams></QueryParams>
+      <el-input
+        v-model="listQuery.code"
+        placeholder="oe"
+        style="width: 200px"
+        class="filter-item"
+        @keyup.enter.native="doSearch"
+        @keyup="listQuery.code = listQuery.code.trim()"
+      />
       <el-select v-model="listQuery.status" class="filter-item">
-        <el-option v-for="item in product_status" :key="item.status" :label="item.label"
-          :value="item.status" />
+        <el-option
+          v-for="item in product_status"
+          :key="item.status"
+          :label="item.label"
+          :value="item.status"
+        />
       </el-select>
-      <el-select v-model="listQuery.referStatus" class="filter-item">
-        <el-option label="" value="" />
-        <el-option label="未上传1688" value="0" />
-      </el-select>
-      <el-input v-model="listQuery.name" style="width: 200px" class="filter-item" placeholder="name"
-        @keyup.enter.native="doSearch" />
-      <el-input v-model="listQuery.subject" style="width: 200px" class="filter-item"
-        placeholder="subject" @keyup.enter.native="doSearch" />
+      <el-input
+        v-model="listQuery.name"
+        style="width: 200px"
+        class="filter-item"
+        placeholder="name"
+        @keyup.enter.native="doSearch"
+      />
+      <el-input
+        v-model="listQuery.subject"
+        style="width: 200px"
+        class="filter-item"
+        placeholder="subject"
+        @keyup.enter.native="doSearch"
+      />
       <Category1688 v-model="listQuery.categoryId"> </Category1688>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="doSearch">
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="doSearch"
+      >
         {{ $t('common.search') }}
       </el-button>
-      <leo-export v-waves class="filter-item" type="primary" :list="[]" :columns="[]"
-        :label="$t('common.export')" />
+      <leo-export
+        v-waves
+        class="filter-item"
+        type="primary"
+        :list="[]"
+        :columns="[]"
+        :label="$t('common.export')"
+      />
       <el-row style="text-align: right">
-        <el-checkbox v-model="more" class="filter-item" style="margin-left: 15px">
+        <el-checkbox
+          v-model="more"
+          class="filter-item"
+          style="margin-left: 15px"
+        >
           {{ $t('common.more') }}
         </el-checkbox>
-        <el-button class="filter-item" style="margin-left: 10px" type="primary" icon="el-icon-edit"
-          @click="addProduct">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+          @click="addProduct"
+        >
           {{ $t('common.add') }}
         </el-button>
-        <Operator class="filter-item" style="margin-left: 10px" type="primary"
-          @onConfirm="e => onTagsConfrim(true, e)"></Operator>
-        <Editor class="filter-item" style="margin-left: 10px"
-          @onConfirm="e => onTagsConfrim(true, e)"></Editor>
+        <Operator
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          @onConfirm="e => onTagsConfrim(true, e)"
+        ></Operator>
+        <Editor
+          class="filter-item"
+          style="margin-left: 10px"
+          @onConfirm="e => onTagsConfrim(true, e)"
+        ></Editor>
         <el-button-group class="filter-item" style="margin-left: 10px">
           <el-button type="primary" @click="handWorkClick">
             {{ $t('common.work') }}
@@ -40,31 +85,52 @@
         </el-button-group>
       </el-row>
     </div>
-    <leo-new-task workType="90" :key="workTaskDialog.Key" :workTaskDialog="workTaskDialog.show"
-      :confirmBtnTxt="workTaskDialog.confirmBtnTxt" :referNo="workTaskDialog.referNo"
-      @childCloseDialog="workTaskDialog.show = false" @onWorkDialogConfirm="onWorkDialogConfirm" />
-    <el-dialog title="任务产品" :visible.sync="taskProductDialog.show" width="60%">
+    <leo-new-task
+      workType="90"
+      :key="workTaskDialog.Key"
+      :workTaskDialog="workTaskDialog.show"
+      :confirmBtnTxt="workTaskDialog.confirmBtnTxt"
+      :referNo="workTaskDialog.referNo"
+      @childCloseDialog="workTaskDialog.show = false"
+      @onWorkDialogConfirm="onWorkDialogConfirm"
+    />
+    <el-dialog
+      title="任务产品"
+      :visible.sync="taskProductDialog.show"
+      width="60%"
+    >
       <el-table :data="taskProductDialog.tableData" border stripe>
         <el-table-column label="image" width="80">
           <template slot-scope="{ row }">
-            <el-image v-if="row.mainImage"
-              :src="service + '/product/image/' + row.mainImage + '/50X50'" />
+            <el-image
+              v-if="row.mainImage"
+              :src="service + '/product/image/' + row.mainImage + '/50X50'"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="code"> </el-table-column>
       </el-table>
       <span slot="footer">
-        <el-button type="primary" @click="onWorkTaskDialogConfirm">OK</el-button>
+        <el-button type="primary" @click="onWorkTaskDialogConfirm"
+          >OK</el-button
+        >
       </span>
     </el-dialog>
-
-    <el-table v-loading="loading" border :data="list" style="width: 100%" ref="productsTable">
+    <el-table
+      v-loading="loading"
+      border
+      :data="list"
+      style="width: 100%"
+      ref="productsTable"
+    >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="id" width="80" />
       <el-table-column label="image" width="80">
         <template slot-scope="{ row }">
-          <el-image v-if="row.mainImage"
-            :src="service + '/product/image/' + row.mainImage + '/50X50'" />
+          <el-image
+            v-if="row.mainImage"
+            :src="service + '/product/image/' + row.mainImage + '/50X50'"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="categoryId" label="categoryId" width="120" />
@@ -76,8 +142,11 @@
       </el-table-column>
       <el-table-column prop="name" label="name">
         <template slot-scope="{ row, $index }">
-          <leo-edit-pane :key="row.id" :options="[{ key: 'name', value: row.name }]"
-            @onConfirmClick="v => updateName(v, $index)" />
+          <leo-edit-pane
+            :key="row.id"
+            :options="[{ key: 'name', value: row.name }]"
+            @onConfirmClick="v => updateName(v, $index)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="tag">
@@ -90,53 +159,104 @@
       <el-table-column v-if="more" prop="weight" label="weight" />
       <el-table-column v-if="more" prop="packageSize" label="packageSize" />
       <el-table-column prop="status" label="status" width="80" />
-      <el-table-column prop="error" label="error" width="180" v-if="listQuery.status == 400" />
-
+      <el-table-column
+        prop="error"
+        label="error"
+        width="180"
+        v-if="listQuery.status == 400"
+      />
       <el-table-column label="actions" fixed="right" width="380">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="6">
-              <el-button size="small" type="text" plain @click="update(scope.row.id)">修改</el-button>
+              <el-button
+                size="small"
+                type="text"
+                plain
+                @click="update(scope.row.id)"
+                >修改</el-button
+              >
             </el-col>
             <el-col :span="6">
-              <el-button size="small" type="text" plain @click="showHistory(scope.row)">销售记录
+              <el-button
+                size="small"
+                type="text"
+                plain
+                @click="showHistory(scope.row)"
+                >销售记录
               </el-button>
             </el-col>
             <el-col :span="6">
-              <el-button @click="
+              <el-button
+                @click="
                   $router.push('/leo-goods/add?productId=' + scope.row.id)
-                " size="small" type="text" plai>
+                "
+                size="small"
+                type="text"
+                plai
+              >
                 商品预处理
               </el-button>
             </el-col>
             <el-col :span="6">
-              <el-button @click="sendTo1688(scope.row.id)" size="small" type="text" plai>
+              <el-button
+                @click="sendTo1688(scope.row.id)"
+                size="small"
+                type="text"
+                plai
+              >
                 上传1688
               </el-button>
             </el-col>
             <el-col :span="6" v-if="scope.row.status != 666">
-              <el-button size="small" type="text" plain
-                @click="$router('/leo-goods/aliexpress/prepare')">删除
+              <el-button
+                size="small"
+                type="text"
+                plain
+                @click="$router('/leo-goods/aliexpress/prepare')"
+                >删除
               </el-button>
             </el-col>
             <el-col :span="6" v-if="scope.row.status != 666">
-              <Operator class="filter-item" :product-id="scope.row.id"
-                :tag-id-list="scope.row.tagIds" type="text" size="small"
-                @onConfirm="e => onTagsConfrim(false, e, scope.row.id)"></Operator>
+              <Operator
+                class="filter-item"
+                :product-id="scope.row.id"
+                :tag-id-list="scope.row.tagIds"
+                type="text"
+                size="small"
+                @onConfirm="e => onTagsConfrim(false, e, scope.row.id)"
+              ></Operator>
             </el-col>
           </el-row>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.current"
-      :limit.sync="listQuery.size" @pagination="doSearch" />
-
-    <el-dialog title="update" :visible.sync="update_dialog" @close="handleUpdateDialogClose" center>
-      <el-transfer style="text-align: left; display: inline-block" class="leo-transfer"
-        v-model="transfer.value" filterable :titles="['oe', 'refNo']" :format="{
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.current"
+      :limit.sync="listQuery.size"
+      @pagination="doSearch"
+    />
+    <el-dialog
+      title="update"
+      :visible.sync="update_dialog"
+      @close="handleUpdateDialogClose"
+      center
+    >
+      <el-transfer
+        style="text-align: left; display: inline-block"
+        class="leo-transfer"
+        v-model="transfer.value"
+        filterable
+        :titles="['oe', 'refNo']"
+        :format="{
           noChecked: '${total}',
           hasChecked: '${checked}/${total}'
-        }" @change="handleChange" :data="transfer.data">
+        }"
+        @change="handleChange"
+        :data="transfer.data"
+      >
         <el-row slot-scope="{ option }">
           <el-col :span="14">{{ option.label }}</el-col>
           <el-col :span="10">
@@ -148,17 +268,41 @@
             </button>
           </el-col>
         </el-row>
-        <el-button class="transfer-footer" slot="left-footer" size="small" @click="saveCode">save
+        <el-button
+          class="transfer-footer"
+          slot="left-footer"
+          size="small"
+          @click="saveCode"
+          >save
         </el-button>
-        <el-button class="transfer-footer" slot="left-footer" size="small" @click="addOE">addOE
+        <el-button
+          class="transfer-footer"
+          slot="left-footer"
+          size="small"
+          @click="addOE"
+          >addOE
         </el-button>
-        <el-button class="transfer-footer" slot="right-footer" size="small" @click="saveCode">save
+        <el-button
+          class="transfer-footer"
+          slot="right-footer"
+          size="small"
+          @click="saveCode"
+          >save
         </el-button>
-        <el-button class="transfer-footer" slot="right-footer" size="small" @click="addRef">addRef
+        <el-button
+          class="transfer-footer"
+          slot="right-footer"
+          size="small"
+          @click="addRef"
+          >addRef
         </el-button>
       </el-transfer>
     </el-dialog>
-    <LeoHistory :productId="history.productId" v-model="history" :key="history.count"></LeoHistory>
+    <LeoHistory
+      :productId="history.productId"
+      v-model="history"
+      :key="history.count"
+    ></LeoHistory>
   </div>
 </template>
 <style lang="scss">
@@ -197,6 +341,7 @@ import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import LeoNewTask from '@/views/leo-work/components/LeoNewTask.vue'
 import Operator from '@/views/leo-tag/components/Operator'
 import Editor from './components/Editor/index.vue'
+import QueryParams from './components/QueryParams.vue'
 import {
   product_page_api,
   product_update_api,
@@ -224,13 +369,14 @@ export default {
     LeoWebCollector,
     Category1688,
     Operator,
-    Editor
+    Editor,
+    QueryParams
   },
   directives: { waves },
   filters: {
-    codeFilter: (e) => listToString(e, ' ')
+    codeFilter: e => listToString(e, ' ')
   },
-  data() {
+  data () {
     return {
       taskProductDialog: {
         existsId: [],
@@ -317,28 +463,28 @@ export default {
       tagDict: {}
     }
   },
-  created() {
+  created () {
     this.doSearch()
   },
   methods: {
-    onWorkDialogConfirm(work) {
+    onWorkDialogConfirm (work) {
       work.content = JSON.stringify(
-        this.taskProductDialog.tableData.map((o) => {
+        this.taskProductDialog.tableData.map(o => {
           return { id: o.id, type: 'product' }
         })
       )
       if (work.content.length > 0) {
         work.existContent = 1
       }
-      api_work_post(work).then((res) => {
+      api_work_post(work).then(res => {
         this.$notify.success(res.msg)
       })
     },
-    onWorkTaskDialogConfirm() {
+    onWorkTaskDialogConfirm () {
       this.taskProductDialog.show = !this.taskProductDialog.show
       this.workTaskDialog.show = !this.workTaskDialog.show
     },
-    handWorkClick() {
+    handWorkClick () {
       const selection = this.$refs['productsTable'].selection
       if (!selection || selection.length == 0) {
         this.$message.error('请选择要添加任务的数据，最多只能添加20条数据')
@@ -358,7 +504,7 @@ export default {
         )
         return
       }
-      selection.forEach((product) => {
+      selection.forEach(product => {
         if (this.taskProductDialog.existsId.indexOf(product.id) == -1) {
           this.taskProductDialog.existsId.push(product.id)
           this.taskProductDialog.tableData.push(product)
@@ -367,11 +513,11 @@ export default {
       this.taskProductDialog.show = !this.taskProductDialog.show
       this.$refs['productsTable'].clearSelection()
     },
-    parseReferStatus(referStatus, rightIndex) {
+    parseReferStatus (referStatus, rightIndex) {
       let start = referStatus.length - rightIndex - 1
       return referStatus.substr(start, start + 1)
     },
-    values(row) {
+    values (row) {
       if (!row.mainImage) {
         return {
           code: row.code[0],
@@ -390,24 +536,24 @@ export default {
         }
       }
     },
-    done(row, index) {
+    done (row, index) {
       const params = {
         id: row.id,
         status: 666
       }
-      product_update_api(params).then((res) => {
+      product_update_api(params).then(res => {
         this.removeInTableData(index)
         this.$notify.success(res.msg)
       })
     },
-    onConfrimDelete(row, index) {
+    onConfrimDelete (row, index) {
       this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          product_delete_api(row.id).then((res) => {
+          product_delete_api(row.id).then(res => {
             this.removeInTableData(index)
             this.$notify.success(res.msg)
           })
@@ -419,48 +565,48 @@ export default {
           })
         })
     },
-    doSearch() {
+    doSearch () {
       this.listQuery.code = this.listQuery.code.replaceAll(' ', '')
-      product_page_api(this.listQuery).then((res) => {
+      product_page_api(this.listQuery).then(res => {
         this.list = res.data.records
         this.total = res.data.total
       })
     },
-    removeInTableData(index) {
+    removeInTableData (index) {
       this.list.splice(index, 1)
       this.total = this.total - 1
       if (this.total < this.listQuery.size || this.list.length <= 1) {
         this.doSearch()
       }
     },
-    valid(id) {
-      product_valid_api(id).then((res) => {
+    valid (id) {
+      product_valid_api(id).then(res => {
         if (res.code === '200') {
           this.$message.success(res.msg)
         }
       })
     },
-    addToSync(id, site, index) {
+    addToSync (id, site, index) {
       const params = {
         id: id,
         status: 200,
         brand: site
       }
-      product_update_api(params).then((res) => {
+      product_update_api(params).then(res => {
         this.removeInTableData(index)
         this.$notify.success(res.msg)
       })
     },
-    view(id) {
+    view (id) {
       this.$router.push(`detail/${id}`)
     },
-    update(id) {
+    update (id) {
       this.$router.push(`update/${id}`)
     },
-    sendTo1688(id) {
+    sendTo1688 (id) {
       this.$router.push(`/leo-alibaba/post/${id}`)
     },
-    updateBtnClick(row, key, index) {
+    updateBtnClick (row, key, index) {
       this.update_dialog = true
       this.editForm.key = key
       this.editForm.id = row.id
@@ -472,19 +618,19 @@ export default {
         this.transfer.data = []
         let i = 0
         if (this.editForm.code && this.editForm.code.length > 0) {
-          this.editForm.code.forEach((oe) => {
+          this.editForm.code.forEach(oe => {
             this.transfer.data.push({ label: oe, key: i++ })
           })
         }
         if (this.editForm.refNo && this.editForm.refNo.length > 0) {
-          this.editForm.refNo.forEach((no) => {
+          this.editForm.refNo.forEach(no => {
             this.transfer.value.push(i)
             this.transfer.data.push({ label: no, key: i++ })
           })
         }
       }
     },
-    handleUpdateDialogClose() {
+    handleUpdateDialogClose () {
       if (this.editForm.key === 'code' || this.editForm.key === 'refNo') {
         this.list[this.editForm.index].code = this.editForm.code
         this.list[this.editForm.index].refNo = this.editForm.refNo
@@ -493,22 +639,22 @@ export default {
           this.editForm[this.editForm.key]
       }
     },
-    updateOnSubmit() {
-      product_update_all_api(this.editForm).then((res) => {
+    updateOnSubmit () {
+      product_update_all_api(this.editForm).then(res => {
         if (res.code === '200') {
           this.$message.success(res.msg)
         }
       })
     },
-    namePolice(name) {
+    namePolice (name) {
       return name.replaceAll(' ', '_').replaceAll(':', '').toLowerCase()
     },
 
-    keysSync() {
-      const f_list = this.checked_list.filter((f) => f.checked)
+    keysSync () {
+      const f_list = this.checked_list.filter(f => f.checked)
       const product = {}
       const json = {}
-      f_list.forEach((i) => {
+      f_list.forEach(i => {
         if (this.prodcut_keys.indexOf(i.lable) >= 0) {
           product[i.lable] = i.value
         } else {
@@ -517,15 +663,15 @@ export default {
       })
       product.json = JSON.stringify(json)
       product.id = this.current_id
-      product_update_api(product).then((res) => {
+      product_update_api(product).then(res => {
         console.log(res)
       })
     },
 
-    handleChange(value, direction, movedKeys) {
+    handleChange (value, direction, movedKeys) {
       console.log(value, direction, movedKeys)
     },
-    addCode(codeType) {
+    addCode (codeType) {
       this.$prompt('请输入oe号', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -540,47 +686,45 @@ export default {
         }
       })
     },
-    addOE() {
+    addOE () {
       this.addCode('oe')
     },
-    addRef() {
+    addRef () {
       this.addCode('ref')
     },
-    editCode(option) {
+    editCode (option) {
       this.$prompt('请输入修改oe号', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputValue: option.label
       }).then(({ value }) => {
-        const index = this.transfer.value.findIndex((v) => v === option.key)
+        const index = this.transfer.value.findIndex(v => v === option.key)
         if (index >= 0) {
           // 在右边
           this.transfer.value[index] = value
         }
         const left_index = this.transfer.data.findIndex(
-          (d) => d.key === option.key
+          d => d.key === option.key
         )
         this.transfer.data[left_index] = { label: value, key: value }
         this.transfer.data.push({ label: '', key: '' })
         this.transfer.data.splice(this.transfer.data.length - 1, 1)
       })
     },
-    deleteCode(option) {
-      const index = this.transfer.value.findIndex((v) => v === option.key)
+    deleteCode (option) {
+      const index = this.transfer.value.findIndex(v => v === option.key)
       if (index >= 0) {
         // 在右边
         this.transfer.value.splice(index, 1)
       }
-      const left_index = this.transfer.data.findIndex(
-        (d) => d.key === option.key
-      )
+      const left_index = this.transfer.data.findIndex(d => d.key === option.key)
       this.transfer.data.splice(left_index, 1)
     },
-    saveCode() {
+    saveCode () {
       let refNo = []
       if (this.transfer.value.length > 0) {
-        this.transfer.value.forEach((key) => {
-          const index = this.transfer.data.findIndex((data) => {
+        this.transfer.value.forEach(key => {
+          const index = this.transfer.data.findIndex(data => {
             return data.key == key
           })
           refNo.push(this.transfer.data[index].label)
@@ -589,12 +733,10 @@ export default {
       let code = []
       if (this.transfer.data.length > 0) {
         code = this.transfer.data
-          .filter((data) => {
-            return (
-              this.transfer.value.findIndex((key) => key === data.key) == -1
-            )
+          .filter(data => {
+            return this.transfer.value.findIndex(key => key === data.key) == -1
           })
-          .map((m) => m.label)
+          .map(m => m.label)
       }
       const { id } = this.editForm
       const product = {
@@ -604,52 +746,52 @@ export default {
       }
       this.editForm.code = code
       this.editForm.refNo = refNo
-      api_product_attributes(product).then((res) => {
+      api_product_attributes(product).then(res => {
         this.$message({ type: 'success', message: res.msg })
       })
     },
-    showHistory(row) {
+    showHistory (row) {
       this.history.productId = row.id
       this.history.show = true
       this.history.count++
     },
-    updateName(v, index) {
+    updateName (v, index) {
       this.list[index].name = v[0].value
       const product = {
         id: this.list[index].id,
         name: this.list[index].name
       }
-      product_update_api(product).then((res) => {
+      product_update_api(product).then(res => {
         this.$message({ type: 'success', message: res.msg })
       })
     },
-    addProduct() {
+    addProduct () {
       this.$router.push('/leo-product/add/' + 0)
     },
-    onTagsConfrim(isBatch, tagList, productId) {
+    onTagsConfrim (isBatch, tagList, productId) {
       if (isBatch) {
         const selection = this.$refs['productsTable'].selection
-        const productList = selection.map((product) => {
-          product.tagIds = tagList.map((t) => t.id)
+        const productList = selection.map(product => {
+          product.tagIds = tagList.map(t => t.id)
           return product
         })
         // console.log(productList)
-        product_update_batch_api({ products: productList }).then((res) => {
+        product_update_batch_api({ products: productList }).then(res => {
           this.$message({ type: 'success', message: res.msg })
         })
       } else {
         const product = {
           id: productId,
-          tagIds: tagList.map((tag) => tag.id)
+          tagIds: tagList.map(tag => tag.id)
         }
-        product_update_api(product).then((res) => {
+        product_update_api(product).then(res => {
           this.$message({ type: 'success', message: res.msg })
         })
       }
     },
-    getTags(tagIds) {
+    getTags (tagIds) {
       if (tagIds) {
-        const idList = tagIds.filter((id) => {
+        const idList = tagIds.filter(id => {
           return !this.tagDict[id]
         })
         if (idList && idList.length > 0) {
@@ -658,14 +800,14 @@ export default {
           }
           api_tag_page(params).then(({ data }) => {
             if (data && data.records) {
-              data.records.forEach((record) => {
+              data.records.forEach(record => {
                 this.tagDict[record.id] = record.name
               })
             }
-            return tagIds.map((id) => this.tagDict[id])
+            return tagIds.map(id => this.tagDict[id])
           })
         } else {
-          return tagIds.map((id) => this.tagDict[id])
+          return tagIds.map(id => this.tagDict[id])
         }
       } else {
         return null

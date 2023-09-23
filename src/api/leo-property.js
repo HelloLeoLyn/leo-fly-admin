@@ -37,7 +37,12 @@ export function api_property_get(id) {
     method: 'get'
   })
 }
-
+export function api_property_class_get(className) {
+  return request({
+    url: service + '/property/classz?className=' + className,
+    method: 'get',
+  })
+}
 export function api_property_page(data) {
   return request({
     url: service + '/property/page',

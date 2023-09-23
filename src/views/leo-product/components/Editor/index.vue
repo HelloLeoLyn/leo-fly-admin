@@ -1,19 +1,23 @@
 <template>
   <div class="leo-product-editor">
-    <el-button :type="type" :size="size" @click="handleClick"
-      :class="{'fix':isFix}">{{editorName}}</el-button>
+    <el-button
+      :type="type"
+      :size="size"
+      @click="handleClick"
+      :class="{ fix: isFix }"
+      >{{ editorName }}</el-button
+    >
     <el-dialog title="product助手" :visible.sync="visible" width="60%">
-      {{ productId }}
-      <el-button type="primary" size="default" @click="handleJsonClick">Json</el-button>
-      <el-row :gutter="20">
-        <el-col :span="4" :offset="0" v-for="(key, index) in keys" :key="index"
-          style="padding: 5px 0;">
-          <el-button class="leo-product-helper-button" type="primary" size="default"
-            @click="handleKeyClick(key)">{{ key }}</el-button>
-        </el-col>
-      </el-row>
-
-      <el-input v-model="content" type="textarea" placeholder="" size="normal" clearable></el-input>
+      <el-select v-model="params[0].key" class="filter-item">
+        <el-option v-for="key in keys" :key="key" :label="key" :value="key" />
+      </el-select>
+      <el-input
+        v-model="content"
+        type="textarea"
+        placeholder=""
+        size="normal"
+        clearable
+      ></el-input>
       <span slot="footer">
         <el-button @click="visible = false">Cancel</el-button>
         <el-button type="primary">OK</el-button>
@@ -22,27 +26,21 @@
   </div>
 </template>
 <script>
+import { api_property_class_get } from '@/api/leo-property.js'
+import productDict from '@/dict/product'
 export default {
   props: {
     editorName: {
       type: String,
       default: '产品编辑器'
     },
-    productId: {
-      type: [Number, String],
-      default: (e) => {
-        return e
-      }
-    },
     product: {
       type: Object,
-      default: (e) => {
-        return e
-      }
+      default: null
     },
     size: {
       type: String,
-      default: (e) => {
+      default: e => {
         return e
       }
     },
@@ -53,31 +51,44 @@ export default {
     isFix: {
       type: Boolean,
       default: false
+    },
+    isBatch: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
-    product(newval) {
+    product (newval) {
       this.keys = Object.keys(newval)
-    },
-    productId(newval) {
-      console.log(newval)
     }
   },
-  data() {
+  data () {
     return {
       content: null,
       visible: false,
-      keys: []
+      keys: [],
+      params: [{ key: null, value: null }]
     }
   },
+  created () {
+    this.getClassProperties()
+  },
   methods: {
-    handleClick() {
+    getClassProperties () {
+      api_property_class_get('com.leo.fly.db.product.entity.Product').then(
+        res => {
+          this.keys = res.data
+          console.log(this.keys);
+        }
+      )
+    },
+    handleClick () {
       this.visible = !this.visible
     },
-    handleKeyClick(key) {
+    handleKeyClick (key) {
       this.content = JSON.stringify(this.product[key])
     },
-    handleJsonClick() {
+    handleJsonClick () {
       this.content = JSON.stringify(this.product)
     }
   }
