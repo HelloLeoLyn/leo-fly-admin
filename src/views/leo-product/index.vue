@@ -2,37 +2,7 @@
   <div class="app-container leo-auto-part-index">
     <div class="filter-container">
       <QueryParams></QueryParams>
-      <el-input
-        v-model="listQuery.code"
-        placeholder="oe"
-        style="width: 200px"
-        class="filter-item"
-        @keyup.enter.native="doSearch"
-        @keyup="listQuery.code = listQuery.code.trim()"
-      />
-      <el-select v-model="listQuery.status" class="filter-item">
-        <el-option
-          v-for="item in product_status"
-          :key="item.status"
-          :label="item.label"
-          :value="item.status"
-        />
-      </el-select>
-      <el-input
-        v-model="listQuery.name"
-        style="width: 200px"
-        class="filter-item"
-        placeholder="name"
-        @keyup.enter.native="doSearch"
-      />
-      <el-input
-        v-model="listQuery.subject"
-        style="width: 200px"
-        class="filter-item"
-        placeholder="subject"
-        @keyup.enter.native="doSearch"
-      />
-      <Category1688 v-model="listQuery.categoryId"> </Category1688>
+      
       <el-button
         v-waves
         class="filter-item"

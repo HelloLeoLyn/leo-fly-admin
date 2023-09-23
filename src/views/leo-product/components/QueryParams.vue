@@ -42,6 +42,7 @@
           >
           </el-option>
         </el-select>
+        <Category1688 v-else-if="fields[item.key].uiType == 'categoryType'" v-model="item.value"> </Category1688>
       </template>
     </div>
   </div>
