@@ -32,7 +32,13 @@
         >查询</el-button
       >
 
-      <el-table :data="data" border stripe>
+      <el-table
+        :data="data"
+        border
+        stripe
+        default-expand-all
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      >
         <el-table-column
           v-for="col in columns"
           :prop="col.key"
@@ -93,13 +99,13 @@ export default {
   },
   watch: {
     products (newVal) {
-      this.data = newVal.map(product => {
+      this.data = newVal.map(({ id, subject, code, status, referStatus }) => {
         return {
-          productID: product.id,
-          subject: product.subject,
-          code: listToString(product.code, ' '),
-          status: product.status,
-          referStatus: product.referStatus
+          id,
+          subject,
+          code: listToString(code, ''),
+          status,
+          referStatus
         }
       })
     }
@@ -109,10 +115,13 @@ export default {
       content: null,
       visible: false,
       columns: [
-        { key: 'productID', label: 'productID' },
-        { key: 'subject', label: 'subject' },
+        { key: 'id', label: 'id' },
         { key: 'code', label: 'code' },
-        { key: 'status', label: 'status' }
+        { key: 'subject', label: 'subject' },
+        { key: 'status', label: 'status' },
+        { key: 'productID', label: 'productID' },
+        { key: 'productSubject', label: 'productSubject' },
+        { key: 'productImage', label: 'productImage' }
       ],
       queryParams: {
         subjectKey: null,
@@ -128,10 +137,16 @@ export default {
     handleGetList () {
       if (!this.isBatch) {
         api_product_alibaba_List(this.queryParams).then(({ data }) => {
-          this.data = data.resultList
+          if (data.resultList && data.resultList.length > 0) {
+            if (data.resultList.length == 1) {
+              console.log(data.esultList.length)
+            } else {
+              console.log(data.resultList.length)
+            }
+          }
           let product = {
             id: this.products[0].id,
-            referStatus: 1
+            referStatus: data.resultList.length
           }
           this.updateReferStatus(product)
           this.$emit('onFinished', null)
@@ -147,10 +162,15 @@ export default {
             }
             api_product_alibaba_List(queryParams)
               .then(({ data }) => {
-                if (data.resultList && data.resultList.length == 1) {
+                if (data.resultList && data.resultList.length > 0) {
+                  if (data.resultList.length == 1) {
+                    console.log(data.esultList.length)
+                  } else {
+                    console.log(data.resultList.length)
+                  }
                   let product = {
                     id,
-                    referStatus: 1
+                    referStatus: data.resultList.length
                   }
                   this.updateReferStatus(product)
                 }
