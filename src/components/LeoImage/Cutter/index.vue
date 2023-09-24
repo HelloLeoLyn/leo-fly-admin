@@ -1,41 +1,20 @@
 <template>
   <div v-loading="loading">
     <div style="display: flex">
-      <ImgCutter
-        :key="imageCutterKey"
-        ref="imgCutterModal"
-        label="选择本地图片"
-        fileType="jpeg"
-        WatermarkText="vue-img-cutter"
-        WatermarkTextFont="12px Sans-serif"
-        WatermarkTextColor="#00ff00"
-        :crossOrigin="options.crossOrigin"
-        :crossOriginHeader="options.crossOriginHeader"
-        :rate="options.rate"
-        :toolBgc="options.toolBgc"
-        :isModal="options.isModal"
-        :showChooseBtn="options.showChooseBtn"
-        :lockScroll="options.lockScroll"
-        :boxWidth="options.boxWidth"
-        :boxHeight="options.boxHeight"
-        :cutWidth="options.cutWidth"
-        :cutHeight="options.cutHeight"
-        :sizeChange="options.sizeChange"
-        :moveAble="options.moveAble"
-        :imgMove="options.imgMove"
-        :originalGraph="options.originalGraph"
-        :WatermarkTextX="options.WatermarkTextX"
-        :WatermarkTextY="options.WatermarkTextY"
-        :smallToUpload="options.smallToUpload"
-        :saveCutPosition="options.saveCutPosition"
-        :scaleAble="options.scaleAble"
-        :previewMode="options.previewMode"
-        :quality="options.quality"
-        :toolBoxOverflow="options.true"
-        :index="options.index"
-        @cutDown="cutDown"
-        @onPrintImg="onPrintImg"
-      >
+      <ImgCutter :key="imageCutterKey" ref="imgCutterModal" label="选择本地图片" fileType="jpeg"
+        WatermarkText="vue-img-cutter" WatermarkTextFont="12px Sans-serif"
+        WatermarkTextColor="#00ff00" :crossOrigin="options.crossOrigin"
+        :crossOriginHeader="options.crossOriginHeader" :rate="options.rate"
+        :toolBgc="options.toolBgc" :isModal="options.isModal" :showChooseBtn="options.showChooseBtn"
+        :lockScroll="options.lockScroll" :boxWidth="options.boxWidth" :boxHeight="options.boxHeight"
+        :cutWidth="options.cutWidth" :cutHeight="options.cutHeight" :sizeChange="options.sizeChange"
+        :moveAble="options.moveAble" :imgMove="options.imgMove"
+        :originalGraph="options.originalGraph" :WatermarkTextX="options.WatermarkTextX"
+        :WatermarkTextY="options.WatermarkTextY" :smallToUpload="options.smallToUpload"
+        :saveCutPosition="options.saveCutPosition" :scaleAble="options.scaleAble"
+        :previewMode="options.previewMode" :quality="options.quality"
+        :toolBoxOverflow="options.true" :index="options.index" @cutDown="cutDown"
+        @onPrintImg="onPrintImg">
         <template #open>
           <button>Choose image</button>
         </template>
@@ -49,21 +28,11 @@
       <el-form size="mini">
         <el-row v-if="settingKeys">
           <el-col :span="11" :offset="1" v-for="key in settingKeys" :key="key">
-            <el-form-item
-              :label="setting[key].label"
-              v-if="setting[key].options"
-            >
-              <el-select
-                v-model="setting[key].value"
-                v-if="setting[key].htmlType == 'select'"
-                @change="handleSelectChange(key)"
-              >
-                <el-option
-                  v-for="option in setting[key].options"
-                  :key="option.key"
-                  :label="option.label"
-                  :value="option.value"
-                ></el-option>
+            <el-form-item :label="setting[key].label" v-if="setting[key].options">
+              <el-select v-model="setting[key].value" v-if="setting[key].htmlType == 'select'"
+                @change="handleSelectChange(key)">
+                <el-option v-for="option in setting[key].options" :key="option.key"
+                  :label="option.label" :value="option.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="setting[key].label" v-else>
@@ -71,47 +40,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-switch
-              v-model="autoReset"
-              active-text="自动重置参数"
-              inactive-text="不自动重置参数"
-            ></el-switch>
+            <el-switch v-model="autoReset" active-text="自动重置参数" inactive-text="不自动重置参数"></el-switch>
           </el-col>
         </el-row>
         <el-button-group style="padding: 10px 0">
-          <el-button type="primary" :disabled="imagesIndex == 0" @click="prefix"
-            >上一个</el-button
-          >
-          <el-button
-            type="primary"
-            :disabled="imagesIndex == images.length - 1"
-            @click="next"
-            >下一个
+          <el-button type="primary" :disabled="imagesIndex == 0" @click="readFile">读取图片</el-button>
+          <el-button type="primary" :disabled="imagesIndex == 0" @click="prefix">上一个</el-button>
+          <el-button type="primary" :disabled="imagesIndex == images.length - 1" @click="next">下一个
           </el-button>
-          <a
-            class="el-button el-button--primary el-button--medium"
-            @click="imageDownload"
-            name="download"
-            id="download"
-            >确定</a
-          >
-          <a
-            class="el-button el-button--primary el-button--medium"
-            @click="formReset(imagesIndex)"
-            id="download"
-            >重置</a
-          >
+          <a class="el-button el-button--primary el-button--medium" @click="imageDownload"
+            name="download" id="download">确定</a>
+          <a class="el-button el-button--primary el-button--medium" @click="formReset(imagesIndex)"
+            id="download">重置</a>
           <el-button type="primary" @click="rembg">一键抠图(rembg)</el-button>
-          <el-button type="primary" @click="removeBg"
-            >一键抠图(removeBg)</el-button
-          >
+          <el-button type="primary" @click="removeBg">一键抠图(removeBg)</el-button>
         </el-button-group>
-        <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :http-request="() => {}"
-          :on-change="onChange"
-        >
+        <el-upload action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false"
+          :http-request="() => {}" :on-change="onChange">
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
       </el-form>
@@ -163,7 +108,7 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       newImage: '',
       loading: false,
@@ -428,11 +373,12 @@ export default {
       }
     }
   },
-  mounted () {
+  created() {},
+  mounted() {
     this.settingKeys = Object.keys(this.setting).sort((a, b) => {
       return this.setting[a].id - this.setting[b].id
     })
-    this.settingKeys.forEach(key => {
+    this.settingKeys.forEach((key) => {
       this.settingInit[key] = this.setting[key].value
     })
     this.imagesIndex = this.index
@@ -441,9 +387,18 @@ export default {
     this.setting['productId'].value = this.images[this.imagesIndex].productId
   },
   methods: {
-    rembg () {
+    readFile() {
+      this.openCutterImageByIndex(this.imagesIndex)
+      let image = this.images[this.imagesIndex]
+      this.$refs.imgCutterModal.handleOpen({
+        name: image.name,
+        src: image.src
+      })
+    },
+    rembg() {
       let name = new Date().getTime() + '.jpg'
-      let outPath = imgBase + this.images[this.imagesIndex].productId + '/' + name
+      let outPath =
+        imgBase + this.images[this.imagesIndex].productId + '/' + name
       this.loading = true
       api_python_image_rembg_post({
         inputPath: this.images[this.imagesIndex].url,
@@ -464,12 +419,12 @@ export default {
           this.images.push(tmp)
           this.goto(this.images.length - 1)
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false
           return console.error('Request failed:', error)
         })
     },
-    removeBg () {
+    removeBg() {
       let image = new Image()
       // 给img加上随机值一部分情况下能解决跨域
       // image.src = img + '?time=' + new Date().valueOf();
@@ -493,7 +448,7 @@ export default {
           },
           encoding: null
         })
-          .then(response => {
+          .then((response) => {
             if (response.status != 200)
               return console.error(
                 'Error:',
@@ -505,12 +460,12 @@ export default {
               'data:image/jpeg;base64,' +
               this.ArrayBufferToBase64(response.data)
           })
-          .catch(error => {
+          .catch((error) => {
             return console.error('Request failed:', error)
           })
       }
     },
-    onChange (file) {
+    onChange(file) {
       let imageUrl = URL.createObjectURL(file.raw)
       let tmp = deepClone(this.images[0])
       tmp.large = imageUrl
@@ -519,21 +474,21 @@ export default {
       this.images.push(tmp)
       this.goto(this.images.length - 1)
     },
-    openCutterImageByIndex (index) {
-      this.openCutterImage(this.images[index].url, this.images[index].id)
+    openCutterImageByIndex(index) {
+      this.openCutterImage(this.images[index].src, this.images[index].id)
     },
-    openCutterImage (src, name) {
+    openCutterImage(src, name) {
       this.$refs.imgCutterModal.handleOpen({
         name: name,
         src: src
       })
     },
-    goto (index) {
+    goto(index) {
       this.imagesIndex = index
       this.openCutterImageByIndex(index)
       this.formReset(index)
     },
-    prefix () {
+    prefix() {
       if (this.imagesIndex > 0) {
         this.imagesIndex--
         this.openCutterImageByIndex(this.imagesIndex)
@@ -541,16 +496,16 @@ export default {
       }
     },
 
-    next () {
+    next() {
       if (this.imagesIndex < this.images.length - 1) {
         this.imagesIndex++
         this.openCutterImageByIndex(this.imagesIndex)
         this.formReset(this.imagesIndex)
       }
     },
-    formReset (index) {
+    formReset(index) {
       if (this.autoReset) {
-        this.settingKeys.forEach(key => {
+        this.settingKeys.forEach((key) => {
           if (key != 'imageId' && key != 'productId') {
             this.setting[key].value = this.settingInit[key]
           }
@@ -559,27 +514,27 @@ export default {
       this.setting['imageId'].value = this.images[index].id
       this.setting['productId'].value = this.images[index].productId
     },
-    onPrintImg (e) {
+    onPrintImg(e) {
       this.cutImgHref = e.dataURL
     },
-    handleSelectChange (key) {
+    handleSelectChange(key) {
       if (key == 'generateType' && this.images[this.imagesIndex].id == -1) {
         this.setting[key].value = 'new'
       }
     },
-    cutDown (e) {
+    cutDown(e) {
       this.cutImgHref = e.dataURL
     },
-    updateModuleType () {
+    updateModuleType() {
       const entity = {
         id: this.setting.imageId.value,
         moduleType: this.setting.moduleType.value
       }
-      api_image_put(entity).then(res => {
+      api_image_put(entity).then((res) => {
         this.$notify.success(res.msg)
       })
     },
-    imageDownload () {
+    imageDownload() {
       if (this.setting.optionType.value == 'resize') {
         downloadIamge(
           service + '/product/image/' + this.setting['imageId'].value,
@@ -594,10 +549,10 @@ export default {
       this.otimer = setInterval(() => {
         clearInterval(this.otimer)
         const params = {}
-        Object.keys(this.setting).forEach(key => {
+        Object.keys(this.setting).forEach((key) => {
           params[key] = this.setting[key].value
         })
-        api_python_image_cut_post(params).then(res => {
+        api_python_image_cut_post(params).then((res) => {
           this.$notify.success(res.msg)
         })
       }, 1000)
