@@ -7,7 +7,7 @@
       <el-col v-for="image,key in images" :key="key" :span="3">
         <vue-hover-mask @click="handleClick(image)">
           <!-- 默认插槽 -->
-          <el-image :src="image.url" width="100%" style="height:150px" />
+          <el-image :src="image.src" width="100%" style="height:150px" />
           <label style="position: absolute" :ref="image.id" class=""><i
               class="el-icon-check leo-icon-check"></i></label>
         </vue-hover-mask>

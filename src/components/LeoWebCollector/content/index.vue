@@ -21,15 +21,16 @@
       </el-row>
       <el-row :gutter="20"><el-form-item label="url" style="max-width: 1400px;">
           <el-input v-model="autoPart.url" placeholder="url">
-            <el-button slot="append" icon="el-icon-search" @click="getProductInfo"></el-button></el-input>
+            <el-button slot="append" icon="el-icon-search"
+              @click="getProductInfo"></el-button></el-input>
         </el-form-item></el-row>
 
     </el-form>
     <div class="leo-web-collector-content-checked">
       <ClassifiedImage :key="1" :images="checkedList" />
       <el-button-group>
-        <el-button type="primary" size="default" @click="">上页</el-button>
-        <el-button type="primary" size="default" @click="">下页</el-button>
+        <el-button type="primary" size="default">上页</el-button>
+        <el-button type="primary" size="default">下页</el-button>
       </el-button-group>
       <el-button @click="onSubmit">提交</el-button>
     </div>
@@ -54,18 +55,18 @@
         </el-col>
       </el-row>
     </div> -->
-    <div  class="images">
-      <leo-hover-image class="image" v-for="image, key in images" :key="key" :image="image" style="padding:5px"
-        @click="e => handleLeoHoverImageClick(e, image, 0, key)" />
+    <div class="images">
+      <leo-hover-image class="image" v-for="image, key in images" :key="key" :image="image"
+        style="padding:5px" @click="e => handleLeoHoverImageClick(e, image, 0, key)" />
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-.images{
+.images {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
-  .image{
+  .image {
     margin: 5px;
     border: 1px solid #bbc4cc;
   }
@@ -282,8 +283,8 @@ export default {
         id: id,
         exph: 300,
         expw: 300,
-        width:100,
-        height:100,
+        width: 100,
+        height: 100,
         url: 'https:' + url,
         large: 'https:' + url.replace('300', '1000'),
         checked: false
@@ -342,7 +343,7 @@ export default {
             let b = element.style.substr(6)
             let c = b.indexOf(';')
             let d = b.substr(0, c)
-            console.log(b, c, d);
+            console.log(b, c, d)
             const height = 228
             const width = d
             return {
@@ -350,7 +351,7 @@ export default {
               exph,
               expw,
               style: element.style,
-              url: mediaurl,
+              src: mediaurl,
               large: mediaurl,
               height,
               width,
