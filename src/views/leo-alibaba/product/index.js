@@ -2151,13 +2151,15 @@ export const productAddParams = {
 import { listToString } from '@/utils'
 export function initCatProp(catProp, product) {
   const models = JSON.parse(product.model)
+  if (models) {
+    catProp['p-2553'] = models[0].model
+    catProp['p-3151'] = models[0].model
+    catProp['p-157878556'] = models[0].year
+  }
   catProp['p-9573'] = listToString(product.code, ',')
   catProp['p-1398'] = listToString(product.code, ',')
   catProp['p-151466146'] = product.brand
-  catProp['p-2553'] = models[0].model
-  catProp['p-3151'] = models[0].model
   catProp['p-346'] = '中国'
-  catProp['p-157878556'] = models[0].year
   return catProp
 }
 

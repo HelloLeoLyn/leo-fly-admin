@@ -9,7 +9,9 @@
         :customzedBtn="[
           { label: '设置封面图', opt: 'alibaba' },
           { label: '设置包装图', opt: 'package' },
-          { label: '1688详情封面', opt: '1688detail' }
+          { label: '1688详情封面', opt: '1688detail' },
+          { label: '编辑', opt: 'cutter' },
+          { label: '删除', opt: 'delete' }
         ]"
         @onPrepare="onUploadPrepare"
       />
@@ -133,13 +135,17 @@
     border-style: dotted;
     border-color: turquoise;
   }
+
   padding: 20px;
+
   .is-uploaded {
     border: 2px solid rgb(15, 212, 64);
   }
+
   .prepare-upload {
     border: 2px solid rgb(195, 201, 31);
   }
+
   .container {
     border: 1px solid rgb(31, 175, 201);
     margin: 0 auto;
@@ -208,6 +214,7 @@
 }
 </style>
 <script>
+import { api_image_delete } from '@/api/leo-image'
 import { api_alibaba_auth } from '@/api/leo-alibaba'
 import { api_photo_alibaba_uload_batch } from '@/api/leo-photo'
 import { MessageBox } from 'element-ui'
@@ -382,13 +389,13 @@ export default {
         })
       })
     },
-    onAlibabaCoverClk (img, opt) {
-      this.dialog.show = !this.dialog.show
+    onAlibabaCoverClk (img, opt, index) {
       this.dialog.coverPartUrl = img.src
       this.dialog.opt = opt
       this.dialog.id = img.id
       this.dialog.imageName = img.imageName
       if (opt == 'alibaba') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/alibaba-cover.png'
         this.dialog.coverPath = imgBase + '0/alibaba-cover.png'
         this.dialog.coverPart = img.path
@@ -404,6 +411,7 @@ export default {
           '-cover.png'
         this.dialog.isRmbg = false
       } else if (opt == 'package') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/package-box.png'
         this.dialog.coverPath = imgBase + '0/package-box.png'
         this.dialog.coverPart = imgTempPath + 'leo-image-package.jpg'
@@ -423,6 +431,7 @@ export default {
         })
         this.dialog.isRmbg = true
       } else if (opt == '1688detail') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/detail-cover.jpg'
         this.dialog.coverPath = imgBase + '0/detail-cover.jpg'
         this.dialog.coverPart = img.path
@@ -430,6 +439,19 @@ export default {
           imgBase + this.productId + '/' + this.productId + '-detail-cover.jpg'
         this.dialog.name = this.productId + '-detail-cover.jpg'
         this.dialog.isRmbg = false
+      } else if (opt == 'cutter') {
+        this.$router.push({
+          name: 'LeoImageCutter',
+          params: {
+            images: this.images,
+            index
+          }
+        })
+      } else if (opt == 'delete') {
+        api_image_delete(img.id).then(res => {
+          this.images.splice(index, 1)
+          this.$notify.success(res.msg)
+        })
       }
     },
     handleImageClick (index) {

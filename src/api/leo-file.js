@@ -28,3 +28,9 @@ export function generate(data) {
     data
   })
 }
+export function api_file_open(path) {
+  return request({
+    url: service + '/file/open?path=' + path,
+    method: 'get'
+  })
+}

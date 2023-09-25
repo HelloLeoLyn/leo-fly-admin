@@ -87,7 +87,6 @@ if __name__ == '__main__':
     isRmbg = sys.argv[7]
     rembgPath = sys.argv[8]
     # params =  ["F:/wrokspace/vue/leo-fly-admin/src/python/generateGoodsImages.py","G:/image/0/package-box.png","C:/Users/admin/Downloads/leo-image-package.jpg","LR160435","G:/image/4519/4519-package.png","package","4519","1","G:/image/4519/temp.png"]
-
     # coverPath = params[1]
     # coverPart = params[2]
     # coverCode = params[3]
