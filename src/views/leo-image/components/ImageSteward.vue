@@ -7,7 +7,9 @@
         :reloadable="true" :customzedBtn="[
           { label: '设置封面图', opt: 'alibaba' },
           { label: '设置包装图', opt: 'package' },
-          { label: '1688详情封面', opt: '1688detail' }
+          { label: '1688详情封面', opt: '1688detail' },
+          { label: '删除', opt: 'delete' },
+          { label: '编辑', opt: 'edit' }
         ]" />
       <el-row :gutter="5" v-else>
         <el-col v-for="(image) in images" :span="6" :key="image.id">
@@ -134,6 +136,7 @@ import LeoImageHoverList from '@/components/LeoImage/HoverList.vue'
 import { api_python_image_goods_post } from '@/api/leo-python'
 import ImgCutter from 'vue-img-cutter'
 import album1688 from '@/views/leo-alibaba/components/album1688'
+import { api_image_delete } from '@/api/leo-image'
 export default {
   components: {
     draggable,
@@ -213,8 +216,10 @@ export default {
   },
   created() {
     this.product.images.forEach((image) => {
+      let { id, path, status, name, url } = image
       let src = service + '/img/' + image.code + '/' + image.name
-      this.images.push({ checked: false, src, id: image.id })
+      // deepClone()
+      this.images.push({ checked: false, src, id, path, status, name, url })
     })
   },
   methods: {
@@ -311,13 +316,13 @@ export default {
         })
       })
     },
-    onAlibabaCoverClk(img, opt) {
-      this.dialog.show = !this.dialog.show
+    onAlibabaCoverClk(img, opt, index) {
       this.dialog.coverPartUrl = img.src
       this.dialog.opt = opt
       this.dialog.id = img.id
       this.dialog.imageName = img.imageName
       if (opt == 'alibaba') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/alibaba-cover.png'
         this.dialog.coverPath = imgBase + '0/alibaba-cover.png'
         this.dialog.coverPart = img.path
@@ -333,6 +338,7 @@ export default {
           '-cover.png'
         this.dialog.isRmbg = false
       } else if (opt == 'package') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/package-box.png'
         this.dialog.coverPath = imgBase + '0/package-box.png'
         this.dialog.coverPart = imgTempPath + 'leo-image-package.jpg'
@@ -352,6 +358,7 @@ export default {
         })
         this.dialog.isRmbg = true
       } else if (opt == '1688detail') {
+        this.dialog.show = !this.dialog.show
         this.dialog.coverUrl = 'http://localhost:8080/img/0/detail-cover.jpg'
         this.dialog.coverPath = imgBase + '0/detail-cover.jpg'
         this.dialog.coverPart = img.path
@@ -363,6 +370,19 @@ export default {
           '-detail-cover.jpg'
         this.dialog.name = this.product.id + '-detail-cover.jpg'
         this.dialog.isRmbg = false
+      } else if (opt == 'edit') {
+        this.$router.push({
+          name: 'LeoImageCutter',
+          params: {
+            images: this.product.images,
+            index
+          }
+        })
+      } else if (opt == 'delete') {
+        api_image_delete(img.id).then((res) => {
+          this.images.splice(index, 1)
+          this.$notify.success(res.msg)
+        })
       }
     },
     handleImageClick(index) {

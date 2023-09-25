@@ -52,6 +52,7 @@ export default {
       this.visible = !this.visible
     },
     onConfirmPrimaryPicture(images) {
+      console.log(images)
       this.value.imageList = images.map((img) => {
         return { url: img.url }
       })
