@@ -1,10 +1,22 @@
 <template>
   <div class="leo-goods-alibaba-description">
-    <ImageSteward
-      @onConfirm="onConfirmcheckedImages"
-      :count="5"
-      :product-id="productId"
-    ></ImageSteward>
+    <el-button type="primary" size="default" @click="visible = !visible"
+      >选择图片</el-button
+    >
+    <el-dialog title="" :visible.sync="visible" width="80%">
+      <steward
+        v-if="product"
+        key="description"
+        @onConfirm="onConfirmcheckedImages"
+        :count="5"
+        :product="newProduct"
+        :list="product.images"
+      ></steward>
+      <span slot="footer">
+        <el-button @click="visible = false">Cancel</el-button>
+        <el-button type="primary">OK</el-button>
+      </span>
+    </el-dialog>
     <div style="width: 790px" ref="html" id="html">
       <div ref="first">
         <img
@@ -47,17 +59,11 @@
   </div>
 </template>
 <script>
-import ImageSteward from '@/views/leo-image/components/ImageSteward'
+import steward from '@/views/leo-image/steward/index.vue'
 // import { api_goods_templates } from '@/api/leo-goods'
 export default {
-  components: { ImageSteward },
+  components: { steward },
   props: {
-    productId: {
-      type: [String, Number],
-      default: e => {
-        return e
-      }
-    },
     product: {
       type: Object,
       default: e => {
@@ -73,6 +79,8 @@ export default {
   },
   data () {
     return {
+      newProduct: null,
+      visible: false,
       elements: [
         {
           url: 'https://cbu01.alicdn.com/img/ibank/O1CN01YJx6ZQ1UhwooAiL5R_!!2210530712550-0-cib.jpg'
@@ -102,13 +110,6 @@ export default {
       }
     }
   },
-  watch: {
-    product: {
-      handler (val) {
-        this.models = JSON.parse(val.model)
-      }
-    }
-  },
   methods: {
     onConfirmcheckedImages (images) {
       this.list = this.elements.concat(
@@ -117,6 +118,7 @@ export default {
         })
       )
       this.getDescription()
+      this.visible = false
     },
     getDescription () {
       let html = '<div style="width: 790px" >'
@@ -141,7 +143,7 @@ export default {
       }
       html = html + '</tbody></table>'
       html = html + this.$refs.last.outerHtml
-      console.log(this.description);
+      console.log(this.description)
       this.description.detailList[0].content = html
       this.$emit('input', this.description)
     }

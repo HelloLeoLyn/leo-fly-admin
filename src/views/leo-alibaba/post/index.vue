@@ -79,17 +79,6 @@
                 v-if="schema.data[layoutName2].fields.promote"
                 v-html="schema.data[layoutName2].fields.promote.top"
               ></div>
-              <!-- <el-input
-                v-if="schema.data[layoutName2].id == 'title'"
-                v-model="formValues.title"
-                :maxlength="schema.data[layoutName2].fields.maxLength"
-                size="normal"
-                clearable
-                :placeholder="schema.data[layoutName2].fields.placeholder"
-                :show-word-limit="schema.data[layoutName2].fields.showCounter"
-                @input="changeValue('title')"
-                @keyup.enter="changeValue('title')"
-              ></el-input> -->
               <LeoInput
                 v-if="schema.data[layoutName2].id == 'title'"
                 v-model="formValues.title"
@@ -152,6 +141,7 @@
                 <primaryPicture
                   v-model="formValues.primaryPicture"
                   :product-id="$route.params.id"
+                  :product="product"
                 ></primaryPicture>
               </template>
               <template
@@ -423,7 +413,7 @@
               </template>
               <template v-if="schema.data[layoutName2].id == 'description'">
                 <Description1688
-                  :product-id="$route.params.id"
+                  ref="description"
                   :product="product"
                   style="height: 500px; overflow: scroll"
                   v-model="formValues.description"
@@ -670,7 +660,7 @@ export default {
               formValues: this.formValues
             })
           })
-          api_alibaba_product_add(params).then((code, data) => {
+          api_alibaba_product_add(params).then(({ data }) => {
             if (data.result.result.success == true) {
               this.$message.success('successfully!')
             }

@@ -75,12 +75,13 @@
       </div>
       <h2>图片</h2>
       <HoverList :images="product.images" :reloadable="true" :customzedBtn="[
-        { label: '设置封面图', opt: 'alibaba' },
-        { label: '设置包装图', opt: 'package' },
-        { label: '1688详情封面', opt: '1688detail' },
+        // { label: '设置封面图', opt: 'alibaba' },
+        // { label: '设置包装图', opt: 'package' },
+        // { label: '1688详情封面', opt: '1688detail' },
         { label: '编辑', opt: 'cutter' },
         { label: '删除', opt: 'delete' },
       ]" @onCustomzedClick="(image,opt,index)=>handleCustomzedClick(image,opt,index)" />
+      <ImageAddCover :images="images" :product-id="productId"> </ImageAddCover>
       <h2>{{ $t('autoPart.oe') }}</h2>
       <leo-array-string :reset="true" onReset="oemReset" v-if="product.code" :span="6"
         actionType="out" :list="product.code" ref="code" :key="leoArrayAtringCode" />
@@ -152,6 +153,7 @@ import LeoWebCollector from '@/components/LeoWebCollector'
 import LeoHistory from '@/views/leo-warehouse/components/LeoHistory.vue'
 import Category1688 from '@/views/leo-alibaba/components/Category1688.vue'
 import HoverList from '@/components/LeoImage/HoverList.vue'
+import ImageAddCover from '../leo-image/components/ImageAddCover.vue'
 import Helper from './components/Helper.vue'
 import {
   api_get_product_more,
@@ -177,7 +179,8 @@ export default {
     LeoHistory,
     Category1688,
     HoverList,
-    Helper
+    Helper,
+    ImageAddCover
   },
   directives: { waves },
   data() {

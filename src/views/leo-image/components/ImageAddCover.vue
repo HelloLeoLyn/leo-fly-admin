@@ -1,5 +1,35 @@
 <template>
   <div class="leo-add-cover">
+    <div class="selectArea">
+      <LeoImageHoverList
+        v-if="isEditModel"
+        :images="images"
+        @onCustomzedClick="onAlibabaCoverClk"
+        :reloadable="true"
+        :customzedBtn="[
+          { label: '设置封面图', opt: 'alibaba' },
+          { label: '设置包装图', opt: 'package' },
+          { label: '1688详情封面', opt: '1688detail' }
+        ]"
+        @onPrepare="onUploadPrepare"
+      />
+      <el-row :gutter="5" v-else>
+        <el-col :span="6" v-for="(image, index) in images" :key="image.id">
+          <div
+            style="width: 200px; height: 200px; padding: 10px; margin: 10px"
+            :class="{ 'is-uploaded': image.status == 2 }"
+          >
+            <el-image
+              :src="image.src"
+              width="100%"
+              @click="handleImageClick(index)"
+              :class="{ 'prepare-upload': image.checked }"
+            />
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+
     <div style="display: flex">
       <el-button
         type="primary"
@@ -21,34 +51,6 @@
         >确认</el-button
       >
     </div>
-    <LeoImageHoverList
-      v-if="isEditModel"
-      :images="images"
-      @onCustomzedClick="onAlibabaCoverClk"
-      :reloadable="true"
-      :customzedBtn="[
-        { label: '设置封面图', opt: 'alibaba' },
-        { label: '设置包装图', opt: 'package' },
-        { label: '1688详情封面', opt: '1688detail' }
-      ]"
-      @onPrepare="onUploadPrepare"
-    />
-    <el-row :gutter="5" v-else>
-      <el-col :span="6" v-for="(image, index) in images" :key="image.id">
-        <div
-          style="width: 200px; height: 200px; padding: 10px; margin: 10px"
-          :class="{ 'is-uploaded': image.status == 2 }"
-        >
-          <el-image
-            :src="image.src"
-            width="100%"
-            @click="handleImageClick(index)"
-            :class="{ 'prepare-upload': image.checked }"
-          />
-        </div>
-      </el-col>
-    </el-row>
-
     <el-dialog
       title=""
       :visible.sync="dialog.show"
@@ -126,6 +128,11 @@
 </template>
 <style lang="scss">
 .leo-add-cover {
+  .selectArea {
+    border-spacing: 1px;
+    border-style: dotted;
+    border-color: turquoise;
+  }
   padding: 20px;
   .is-uploaded {
     border: 2px solid rgb(15, 212, 64);
@@ -230,11 +237,20 @@ export default {
       default: () => {
         return false
       }
+    },
+    code: {
+      type: [String, Number],
+      default: e => {
+        return e
+      }
     }
   },
   watch: {
     defaultEditModel (newVal) {
       this.isEditModel = newVal
+    },
+    code (newVal) {
+      this.dialog.coverCode = newVal
     }
   },
   components: { LeoImageHoverList, ImgCutter, album1688 },
@@ -290,13 +306,12 @@ export default {
   },
   methods: {
     sendImagesToAlibaba (images, albumID) {
-      console.log(images, albumID)
       const params = {
         images,
         albumID
       }
-      api_photo_alibaba_uload_batch(params).then(({ data }) => {
-        if (data.code == '001994') {
+      api_photo_alibaba_uload_batch(params).then(res => {
+        if (res.code == '001994') {
           api_alibaba_auth().then(res => {
             MessageBox.confirm(
               '还未登录阿里巴巴平台，是否打开登录页面',
@@ -310,6 +325,13 @@ export default {
               window.open(res.data)
             })
           })
+        } else {
+          res.data.forEach(img => {
+            let index = this.images.findIndex(old => (old.id = img.id))
+            this.$set(this.images[index], 'status', 2)
+            this.$set(this.images[index], 'src', img.url)
+          })
+          this.$message.success('图片上传成功')
         }
       })
     },
@@ -322,6 +344,7 @@ export default {
       this.dialog.cutImgHref = e.dataURL
     },
     generateImages () {
+      console.log(this.dialog)
       if (this.dialog.opt == 'package') {
         let link = document.createElement('a')
         link.setAttribute('href', this.dialog.cutImgHref)
@@ -331,7 +354,6 @@ export default {
       const {
         coverPath,
         coverPart,
-        coverCode,
         coverSavePath,
         coverUrlPath,
         opt,
@@ -342,7 +364,7 @@ export default {
       const params = {
         coverPath,
         coverPart,
-        coverCode,
+        coverCode: this.code,
         coverSavePath,
         opt,
         productId: this.productId,

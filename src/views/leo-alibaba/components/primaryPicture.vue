@@ -16,12 +16,13 @@
         </a>
       </el-col>
     </el-row>
-
     <el-dialog title="" :visible.sync="visible" width="80%">
       <steward
+        key="primaryPicture"
+        v-if="product"
         @onConfirm="onConfirmPrimaryPicture"
         :count="5"
-        :product-id="productId"
+        :product="product"
       ></steward>
       <span slot="footer">
         <el-button @click="visible = false">Cancel</el-button>
@@ -52,9 +53,11 @@ export default {
         return e
       }
     },
-    productId: [Number, String],
-    default: e => {
-      return e
+    product: {
+      type: Object,
+      default: e => {
+        return e
+      }
     }
   },
   methods: {

@@ -63,5 +63,6 @@ export function parseImage(image) {
     image.code +
     '/' +
     image.name
+  image.checked = false
   return image
 }
