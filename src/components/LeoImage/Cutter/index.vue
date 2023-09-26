@@ -86,6 +86,7 @@ import { deepClone } from '@/utils/index'
 import { getBase64Image, dataURLtoFile } from '@/utils/image'
 import { imgBase } from '@/api/local-setting'
 import axios from 'axios'
+import { tempChongZuPath } from '@/api/local-setting'
 export default {
   components: {
     ImgCutter,
@@ -333,7 +334,7 @@ export default {
         },
         path: {
           key: 'path',
-          value: 'C:\\Users\\admin\\Downloads\\leo-image-chongzu.jpg',
+          value: tempChongZuPath,
           label: '路径',
           id: 13
         }
