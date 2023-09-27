@@ -9,9 +9,13 @@ export function api_video_alibaba_delete(data) {
   })
 }
 
-export function api_video_alibaba_upload() {
+export function api_video_alibaba_upload(data) {
   return request({
     url: service + '/video/alibaba/upload',
     method: 'post',
+    headers: {
+      'Content-Type': 'mutipart/form-data'
+    },
+    data
   })
 }
