@@ -9,7 +9,6 @@
         :customzedBtn="[
           { label: '设置封面图', opt: 'alibaba' },
           { label: '设置包装图', opt: 'package' },
-          { label: '1688详情封面', opt: '1688detail' },
           { label: '编辑', opt: 'cutter' },
           { label: '删除', opt: 'delete' }
         ]"
@@ -59,15 +58,11 @@
       width="80%"
       :modal-append-to-body="false"
     >
-      <div class="container" v-if="dialog.opt == 'alibaba'">
+      <div class="container" v-show="dialog.opt == 'alibaba'">
         <img class="bottom-image" :src="dialog.coverPartUrl" alt="底层图片" />
         <img class="top-image" :src="dialog.coverUrl" alt="顶层图片" />
       </div>
-      <div class="container-1688detail" v-if="dialog.opt == '1688detail'">
-        <img class="bottom-image" :src="dialog.coverUrl" alt="底层图片" />
-        <img class="top-image" :src="dialog.coverPartUrl" alt="顶层图片" />
-      </div>
-      <div v-if="dialog.opt == 'package'">
+      <div v-show="dialog.opt == 'package'">
         <ImgCutter
           ref="imgCutterModal"
           label="选择本地图片"
@@ -175,31 +170,6 @@
       height: 800px;
     }
   }
-
-  .container-1688detail {
-    border: 1px solid rgb(31, 175, 201);
-    margin: 0 auto;
-    position: relative;
-    width: 800px;
-    /* 容器宽度等于顶层图片的宽度 */
-    height: 800px;
-
-    /* 容器高度等于顶层图片的高度 */
-    .bottom-image {
-      position: absolute;
-      width: 800px;
-      height: 800px;
-    }
-
-    .top-image {
-      position: absolute;
-      top: 80px;
-      left: 100px;
-      width: 600px;
-      height: 600px;
-    }
-  }
-
   .package-bottom-image {
     position: absolute;
     top: 520px;
@@ -333,11 +303,11 @@ export default {
             })
           })
         } else {
-          // res.data.forEach(img => {
-          //   let index = this.images.findIndex(old => (old.id = img.id))
-          //   this.$set(this.images[index], 'status', 2)
-          //   this.$set(this.images[index], 'src', img.url)
-          // })
+          res.data.forEach(img => {
+            let index = this.images.findIndex(old => (old.id = img.id))
+            this.$set(this.images[index], 'status', 2)
+            this.$set(this.images[index], 'src', img.url)
+          })
           this.$message.success('图片上传成功')
         }
       })
@@ -350,6 +320,7 @@ export default {
     cutDown (e) {
       this.dialog.cutImgHref = e.dataURL
     },
+
     generateImages () {
       if (this.dialog.opt == 'package') {
         let link = document.createElement('a')
@@ -424,20 +395,12 @@ export default {
           this.productId +
           '-package.png'
         this.dialog.name = this.productId + '-package.png'
+        console.log(this.$refs.imgCutterModal)
         this.$refs.imgCutterModal.handleOpen({
           name: img.id,
           src: img.src
         })
         this.dialog.isRmbg = true
-      } else if (opt == '1688detail') {
-        this.dialog.show = !this.dialog.show
-        this.dialog.coverUrl = 'http://localhost:8080/img/0/detail-cover.jpg'
-        this.dialog.coverPath = imgBase + '0/detail-cover.jpg'
-        this.dialog.coverPart = img.path
-        this.dialog.coverSavePath =
-          imgBase + this.productId + '/' + this.productId + '-detail-cover.jpg'
-        this.dialog.name = this.productId + '-detail-cover.jpg'
-        this.dialog.isRmbg = false
       } else if (opt == 'cutter') {
         this.$router.push({
           name: 'LeoImageCutter',

@@ -215,6 +215,8 @@ export default {
     }
   },
   created() {
+    // console.log(this.images)
+    this.images = []
     this.product.images.forEach((image) => {
       let { id, path, status, name, url } = image
       let src = service + '/img/' + image.code + '/' + image.name
