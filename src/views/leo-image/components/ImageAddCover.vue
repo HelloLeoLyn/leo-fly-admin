@@ -333,11 +333,11 @@ export default {
             })
           })
         } else {
-          res.data.forEach(img => {
-            let index = this.images.findIndex(old => (old.id = img.id))
-            this.$set(this.images[index], 'status', 2)
-            this.$set(this.images[index], 'src', img.url)
-          })
+          // res.data.forEach(img => {
+          //   let index = this.images.findIndex(old => (old.id = img.id))
+          //   this.$set(this.images[index], 'status', 2)
+          //   this.$set(this.images[index], 'src', img.url)
+          // })
           this.$message.success('图片上传成功')
         }
       })
@@ -351,7 +351,6 @@ export default {
       this.dialog.cutImgHref = e.dataURL
     },
     generateImages () {
-      console.log(this.dialog)
       if (this.dialog.opt == 'package') {
         let link = document.createElement('a')
         link.setAttribute('href', this.dialog.cutImgHref)

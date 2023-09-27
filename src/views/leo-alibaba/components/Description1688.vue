@@ -1,9 +1,15 @@
 <template>
   <div class="leo-goods-alibaba-description">
-    <el-button type="primary" size="default" @click="visible = !visible">选择图片</el-button>
+    <el-button type="primary" size="default" @click="visible = !visible"
+      >选择图片</el-button
+    >
     <el-dialog title="" :visible.sync="visible" width="80%">
-      <ImageSteward v-if="product" @onConfirm="onConfirmcheckedImages" :count="5"
-        :product="product"></ImageSteward>
+      <ImageSteward
+        v-if="product"
+        @onConfirm="onConfirmcheckedImages"
+        :count="5"
+        :product="product"
+      ></ImageSteward>
       <span slot="footer">
         <el-button @click="visible = false">Cancel</el-button>
         <el-button type="primary">OK</el-button>
@@ -11,12 +17,19 @@
     </el-dialog>
     <div style="width: 790px" ref="html" id="html">
       <div ref="first">
-        <img v-for="(el, index) in list" :key="index"
-          style="display: block; width: 100%; height: auto" :src="el.url" alt=""
-          usemap="#_sdmap_7" />
-        <img style="display: block; width: 100%; height: auto"
+        <img
+          v-for="(el, index) in list"
+          :key="index"
+          style="display: block; width: 100%; height: auto"
+          :src="el.url"
+          alt=""
+          usemap="#_sdmap_7"
+        />
+        <img
+          style="display: block; width: 100%; height: auto"
           src="https://cbu01.alicdn.com/img/ibank/O1CN01XPX2Ov1Uhwp0mCrmi_!!2210530712550-0-cib.jpg"
-          usemap="#_sdmap_7" />
+          usemap="#_sdmap_7"
+        />
       </div>
       <table ref="models">
         <tbody>
@@ -27,12 +40,18 @@
         </tbody>
       </table>
       <div ref="last">
-        <img style="display: block; width: 100%; height: auto"
+        <img
+          style="display: block; width: 100%; height: auto"
           src="https://cbu01.alicdn.com/img/ibank/O1CN01txkFmc1UhwolQrtxf_!!2210530712550-0-cib.jpg?__r__=1687242151475"
-          alt="" usemap="#_sdmap_9" />
-        <img style="display: block; width: 100%; height: auto"
+          alt=""
+          usemap="#_sdmap_9"
+        />
+        <img
+          style="display: block; width: 100%; height: auto"
           src="https://cbu01.alicdn.com/img/ibank/O1CN01DuqqSt1UhwolQtF7l_!!2210530712550-0-cib.jpg?__r__=1687242151475"
-          alt="" usemap="#_sdmap_11" />
+          alt=""
+          usemap="#_sdmap_11"
+        />
       </div>
     </div>
   </div>
@@ -44,18 +63,18 @@ export default {
   props: {
     product: {
       type: Object,
-      default: (e) => {
+      default: e => {
         return e
       }
     },
     value: {
       type: Object,
-      default: (e) => {
+      default: e => {
         return e
       }
     }
   },
-  data() {
+  data () {
     return {
       newProduct: null,
       visible: false,
@@ -88,17 +107,24 @@ export default {
       }
     }
   },
+  watch: {
+    product: {
+      handler (val) {
+        this.models = JSON.parse(val.model)
+      }
+    }
+  },
   methods: {
-    onConfirmcheckedImages(images) {
+    onConfirmcheckedImages (images) {
       this.list = this.elements.concat(
-        images.map((img) => {
+        images.map(img => {
           return { url: img.url }
         })
       )
       this.getDescription()
       this.visible = false
     },
-    getDescription() {
+    getDescription () {
       let html = '<div style="width: 790px" >'
       for (let index = 0; index < this.list.length; index++) {
         const element = this.list[index]
@@ -121,7 +147,6 @@ export default {
       }
       html = html + '</tbody></table>'
       html = html + this.$refs.last.outerHtml
-      console.log(this.description)
       this.description.detailList[0].content = html
       this.$emit('input', this.description)
     }

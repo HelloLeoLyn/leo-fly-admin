@@ -661,12 +661,13 @@ export default {
             })
           })
           api_alibaba_product_add(params).then(({ data }) => {
-            if (data.result.result.success == true) {
+            if (data.success == true) {
               this.$message.success('successfully!')
+            } else {
+              this.$message.error(data.bizMsg)
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

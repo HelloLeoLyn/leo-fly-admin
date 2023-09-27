@@ -50,7 +50,7 @@
         >
         </Editor>
         <IsUpload
-          style="padding-left: 10px;"
+          style="padding-left: 10px"
           class="filter-item"
           :products="multipleSelection"
           :isBatch="true"
@@ -215,7 +215,9 @@
                 :products="[scope.row]"
                 type="text"
                 size="small"
-                @onSubmitUpdateReferStatus="onSubmitUpdateReferStatus"
+                @onSubmitUpdateReferStatus="
+                  product => onSubmitUpdateReferStatus(product, scope.$index)
+                "
                 @onFinished="onIsUploadFinish"
               >
               </IsUpload>
@@ -819,8 +821,10 @@ export default {
         return null
       }
     },
-    onSubmitUpdateReferStatus (product) {
-      product_update_api(product).then(() => {})
+    onSubmitUpdateReferStatus (product, index) {
+      product_update_api(product).then(() => {
+        this.$set(this.list, index, Object.assign(this.list[index], product))
+      })
     },
     onIsUploadFinish () {
       this.onClickSearch()
