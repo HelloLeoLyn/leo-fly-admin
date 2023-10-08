@@ -128,7 +128,10 @@ export default {
       this.$emit('input', this.model)
     },
     showNotice (item) {
-      console.log(item)
+      console.log(item, {
+        key: 'formValues.catProp.' + item.name,
+        label: item.label
+      })
     }
   }
 }

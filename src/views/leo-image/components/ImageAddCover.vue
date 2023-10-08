@@ -304,7 +304,7 @@ export default {
           })
         } else {
           res.data.forEach(img => {
-            let index = this.images.findIndex(old => (old.id = img.id))
+            let index = this.images.findIndex(old => (old.id == img.id))
             this.$set(this.images[index], 'status', 2)
             this.$set(this.images[index], 'src', img.url)
           })

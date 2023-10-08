@@ -372,7 +372,7 @@ export const schema = {
         size: 'small',
         promote: {
           right:
-            '运费模板将基于商品重量（含包装）统一计算运费，不同规格运费相同。如果是抛货，请用长*宽*高（cm³）/5000来换算重量。比如一个商品长宽高为50*70*80（cm³），则其重量=50*70*80/5000=56kg'
+            '运费模板将基于商品重量（含包装）统一计算运费，不同规格运费相同。如果是抛货，请用长宽高（cm³）/5000来换算重量。比如一个商品长宽高为507080（cm³），则其重量=507080/5000=56kg'
         },
         asyncCheck: false,
         precision: 4
@@ -578,7 +578,7 @@ export const schema = {
         required: true,
         size: 'medium',
         promote: {
-          top: '建议您上传 750*750 像素以上的实拍大图，包含商品整体款式和商品细节 <em>最后一张发白底图可增加商品曝光机会，图片文案避免字体侵权</em> <a target="_blank" href="/page/redirect.html?name=primaryPictureNorm">查看规范</a>'
+          top: '建议您上传 750750 像素以上的实拍大图，包含商品整体款式和商品细节 <em>最后一张发白底图可增加商品曝光机会，图片文案避免字体侵权</em> <a target="_blank" href="/page/redirect.html?name=primaryPictureNorm">查看规范</a>'
         },
         asyncCheck: false,
         showWlImage: false,
@@ -1807,347 +1807,6 @@ export const schema = {
   },
   reload: false
 }
-export const productAddParams = {
-  catId: 1031910,
-  scene: 'popular',
-  dataBody: {
-    formValues: {
-      batchSale: {
-        enable: true,
-        sellUnit: '手',
-        scale: '2'
-      },
-      beginAmount: 2,
-      upshelfTime: {
-        value: 1,
-        subText: '商品已经开售'
-      },
-      quotationType: {
-        value: 2
-      },
-      cbuSendAddress: {
-        value: 33847521
-      },
-      seven_day: [
-        {
-          value: 32450,
-          text: '支持7天无理由退货'
-        }
-      ],
-      invReduce: {
-        value: '1',
-        text: '下单时扣减'
-      },
-      weight: 0.5,
-      catNamer: {
-        chooseCategoryUrl:
-          'https: //offer.1688.com/offer/post/choose_category.htm',
-        pathList: [
-          {
-            categoryId: 10166,
-            name: '女装'
-          },
-          {
-            categoryId: 1031910,
-            name: '连衣裙'
-          }
-        ]
-      },
-      saleProp: {
-        'p-3216': [
-          {
-            value: -1,
-            text: '黑色',
-            imgUrl: 'img/ibank/O1CN01e4HFIU21NE3TMhvrK_!!2110816972-0-cib.jpg',
-            custom: true
-          }
-        ],
-        'p-450': [
-          {
-            value: 28314,
-            text: 'S'
-          },
-          {
-            value: -2,
-            text: '测试尺寸',
-            custom: true
-          }
-        ],
-        custom: []
-      },
-      primaryPicture: {
-        imageList: [
-          {
-            url: 'img/ibank/O1CN01wQA8R121NE3Z7CCrK_!!2110816972-0-cib.jpg'
-          },
-          {
-            url: 'img/ibank/O1CN01EQ8awI21NE3SM8ECx_!!2110816972-0-cib.jpg'
-          },
-          {
-            url: 'img/ibank/O1CN01yV8DlF21NE3TMcUrz_!!2110816972-0-cib.jpg'
-          },
-          {
-            url: 'img/ibank/O1CN012cJJtF21NE3T6PxQd_!!2110816972-0-cib.jpg'
-          },
-          {
-            url: 'img/ibank/O1CN01NMpAlw21NE3J9Mbbf_!!2110816972-0-cib.jpg'
-          }
-        ]
-      },
-      cbuUnit: {
-        unit: '件'
-      },
-      freight: {
-        freightType: 'T',
-        freightId: 13900148
-      },
-      description: {
-        detailList: [
-          {
-            id: '0',
-            title: '图文详情',
-            contentUrl: null,
-            content: '<p>1111122224444</p>',
-            isRequired: true
-          }
-        ]
-      },
-      title: '2110307-胸前挂白色珠子链连衣裙-注: 断码不退换23500',
-      catProp: {
-        'p-221796513': {
-          value: 21959,
-          text: '否'
-        },
-        'p-20666': {
-          value: 1957142166,
-          text: '2023年春季'
-        },
-        'p-100031521': {
-          value: 105255,
-          text: '棉'
-        },
-        'p-100031521-117130178': {
-          value: 105255,
-          text: '棉'
-        },
-        'p-100031521-117130178-149092418': {
-          value: 20954747149,
-          text: '90%（不含）-95%（含）'
-        },
-        'p-100031521-151844178': {
-          value: 105255,
-          text: '棉'
-        },
-        'p-100031521-151844178-153610427': {
-          value: 145656296,
-          text: '30%及以下'
-        },
-        'p-2489638': {
-          value: 91043051,
-          text: '气质通勤'
-        },
-        'p-2489638-401': {
-          value: 90364718,
-          text: '通勤风'
-        },
-        'p-20602': {
-          value: 29538,
-          text: '方领'
-        },
-        'p-2917380': {
-          value: 27924515,
-          text: '常规袖'
-        },
-        'p-7001': {
-          value: 29445,
-          text: '短袖'
-        },
-        'p-20680': {
-          value: 29962,
-          text: '中裙'
-        },
-        'p-34321': {
-          value: 130318,
-          text: 'A字裙'
-        },
-        'p-1811': {
-          value: 3289490,
-          text: '基本款'
-        },
-        'p-1085': {
-          value: 148617201,
-          text: '拼贴/拼接'
-        },
-        'p-8614': {
-          value: '5133509',
-          text: '勾花'
-        },
-        'p-2576403': {
-          value: 3386071,
-          text: '单件'
-        },
-        'p-20677': {
-          value: 29952,
-          text: '高腰'
-        },
-        'p-100000709': {
-          value: 112631,
-          text: '一粒扣'
-        },
-        'p-2900': {
-          value: '29455',
-          text: '手绘'
-        },
-        'p-2176': {
-          value: '265650483',
-          text: '尹沐'
-        },
-        'p-346': '深圳',
-        'p-1398': '2110307',
-        custom: [
-          {
-            text: 'aaa',
-            propName: '测试'
-          }
-        ]
-      },
-      userCategory: [
-        {
-          value: '119793375',
-          text: '女装'
-        },
-        {
-          value: '120273982',
-          text: '测试类目'
-        }
-      ],
-      mixBatch: [
-        {
-          value: 17026,
-          text: '17026'
-        }
-      ],
-      onlineTrade: {
-        value: 17410
-      },
-      skuTable: [
-        {
-          sku_props: [
-            {
-              id: 3216,
-              name: 'p-3216',
-              label: '颜色',
-              value: -1,
-              text: '黑色'
-            },
-            {
-              id: 450,
-              name: 'p-450',
-              label: '尺码',
-              value: 28314,
-              text: 'S'
-            }
-          ],
-          sku_amountOnSale: 100,
-          sku_cargoNumber: '2110307-18-M',
-          sku_status: 1
-        },
-        {
-          sku_props: [
-            {
-              id: 3216,
-              name: 'p-3216',
-              label: '颜色',
-              value: -1,
-              text: '黑色'
-            },
-            {
-              id: 450,
-              name: 'p-450',
-              label: '尺码',
-              value: -2,
-              text: '测试尺寸'
-            }
-          ],
-          sku_amountOnSale: 100,
-          sku_status: 1
-        }
-      ],
-      totalSales: 200,
-      buyerProtection: {
-        spsCode: ['qsexsfh']
-      },
-      lightCustom: {
-        text: '不支持',
-        value: -9999
-      },
-      priceRange: [
-        {
-          pricerange_beginAmount: 2,
-          pricerange_price: 22
-        },
-        {
-          pricerange_beginAmount: 5,
-          pricerange_price: 21
-        }
-      ],
-      suttleWeight: 0.5,
-      volume: {
-        height: 20,
-        width: 15,
-        length: 10
-      },
-      officialLogistics: {
-        skuInfo: [
-          {
-            length: 10,
-            width: 15,
-            height: 20,
-            weight: 200,
-            volume: 3000,
-            sku_props: [
-              {
-                id: 3216,
-                name: 'p-3216',
-                value: -1
-              },
-              {
-                id: 450,
-                name: 'p-450',
-                value: -2
-              }
-            ]
-          },
-          {
-            length: 10,
-            width: 15,
-            height: 20,
-            weight: 200,
-            volume: 3000,
-            sku_props: [
-              {
-                id: 3216,
-                name: 'p-3216',
-                value: -1
-              },
-              {
-                id: 450,
-                name: 'p-450',
-                value: 28314
-              }
-            ]
-          }
-        ]
-      },
-      global: {
-        systemParam: {
-          catId: 1031910,
-          contextPath: '/popular'
-        }
-      }
-    }
-  }
-}
 import { listToString } from '@/utils'
 export function initCatProp(catProp, product) {
   const models = JSON.parse(product.model)
@@ -2163,3 +1822,41 @@ export function initCatProp(catProp, product) {
   return catProp
 }
 
+export const alibabaOptions = {
+  '1032176': ['货号', '商品标题', '加工定制', '材质', '适用车型', '种类', '衬片硬度', '品牌', '型号', '产地', '配件编号', '适用汽车品牌', '适用车型年份', '适用车型变速箱类型', '主要下游平台', '主要销售地区', '有可授权的自有品牌', '是否跨境出口专供货源', '3C证书编号', '自定义属性1', '自定义属性值1', '自定义属性2', '自定义属性值2', '自定义属性3', '自定义属性值3', '产品图片1', '产品图片2', '产品图片3', '产品图片4', '产品图片5', '产品规格', '图片', '颜色', '图片', '网上订购', '计量单位', '报价方式', '单价', '可售数量', '建议零售价', '单品货号', '最小起订量', '一阶起批量', '一阶价（元）', '二阶起批量', '二阶价（元）', '三阶起批量', '三阶价（元）', '建议零售价', '可售数量', '单品货号', '发货服务', '包换服务', '到货服务', '退货服务', '无理由退货', '库存扣减设置', '发货时间', '混批设置', '图文详情', '单位重量', '跨境包裹重量', '跨境包裹宽度', '跨境包裹高度', '跨境包裹长度', '图片私密', '价格私密']
+  , data: {
+    '主要下游平台': { value: '', },
+    '主要销售地区': { value: '', },
+    '有可授权的自有品牌': { value: '', },
+    '3C证书编号': { value: '' },
+    '可售数量': { value: 999, key: 'totalSales' },
+    '一阶起批量': { value: 2, key: 'priceRange.0.pricerange_beginAmount' },
+    '一阶价（元）': { key: 'priceRange.0.pricerange_price' },
+    '混批设置': { key: 'mixBatch' },
+    '详情描述': { key: 'description' },
+    '单位重量': { key: 'weight' },
+    '跨境包裹长度': { key: 'volume.length' },
+    '跨境包裹宽度': { key: 'volume.width' },
+    '跨境包裹高度': { key: 'volume.height' }
+  }
+}
+export function getValueWithDeepKey(_this, deepKey) {
+  const keys = deepKey.split('.')
+  if (keys && keys.length > 0) {
+    let temp = _this
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
+      temp = temp[key]
+    }
+    return temp
+  } else {
+    return null
+  }
+}
+export function getObjectVal(obj) {
+  if (typeof obj === 'object') {
+    return obj.text
+  } else {
+    return obj
+  }
+}

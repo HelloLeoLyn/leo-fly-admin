@@ -1,18 +1,26 @@
 <template>
   <div>
-    <div style="padding-left:10px">
-      <el-button @click="dialogVisible = true" type="primary" class="el-icon-download">
-        {{label}}
-      </el-button>
-    </div>
+    <el-button
+      @click="handleDownloadClick"
+      type="primary"
+      class="el-icon-download"
+    >
+      {{ label }}
+    </el-button>
     <el-dialog title="Export" :visible.sync="dialogVisible">
       <FilenameOption v-model="filename" />
       <AutoWidthOption v-model="autoWidth" />
       <BookTypeOption v-model="bookType" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary"
-          icon="el-icon-document" @click="handleDownload">确 定</el-button>
+        <el-button
+          :loading="downloadLoading"
+          style="margin: 0 0 20px 20px"
+          type="primary"
+          icon="el-icon-document"
+          @click="onConfrimDownload"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -25,7 +33,7 @@ import BookTypeOption from './BookTypeOption'
 export default {
   name: 'LeoExport',
   components: { FilenameOption, AutoWidthOption, BookTypeOption },
-  data() {
+  data () {
     return {
       listLoading: true,
       downloadLoading: false,
@@ -53,20 +61,25 @@ export default {
       default: () => 'export'
     }
   },
-  mounted() {
+  mounted () {
     console.log(this.newFilename)
     if (this.newFilename) {
       this.filename = this.newFilename
     }
   },
   methods: {
-    handleDownload() {
+    handleDownloadClick () {
+      this.dialogVisible = true
+      this.$emit('onDown', true)
+    },
+    onConfrimDownload () {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then((excel) => {
-        const tHeader = this.columns.map((col) => col.label)
-        const filterVal = this.columns.map((col) => col.key)
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = this.columns.map(col => col.label)
+        const filterVal = this.columns.map(col => col.key)
         const list = this.list
         const data = this.formatJson(filterVal, list)
+        console.log(tHeader, data)
         excel.export_json_to_excel({
           header: tHeader,
           data,
@@ -77,9 +90,9 @@ export default {
         this.downloadLoading = false
       })
     },
-    formatJson(filterVal, jsonData) {
-      const data = jsonData.map((v) =>
-        filterVal.map((j) => {
+    formatJson (filterVal, jsonData) {
+      const data = jsonData.map(v =>
+        filterVal.map(j => {
           if (j === 'timestamp') {
             return parseTime(v[j])
           } else {

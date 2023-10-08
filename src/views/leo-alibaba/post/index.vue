@@ -497,6 +497,7 @@ import {
   api_alibaba_product_schema,
   api_alibaba_product_add
 } from '@/api/leo-alibaba'
+import { api_goods_post } from '@/api/leo-goods'
 import { api_get_product_more } from '@/api/leo-product'
 export default {
   name: 'LeoAlibabaPost',
@@ -513,6 +514,8 @@ export default {
   },
   data () {
     return {
+      list: [],
+      columns: [],
       init: {
         catProp: false
       },
@@ -521,16 +524,21 @@ export default {
       schema,
       catPropOptions: [],
       formValues: {
+        batchSale: {
+          enable: true,
+          sellUnit: '套',
+          scale: '2'
+        },
         saleProp: {},
         onlineTrade: { value: 17410 },
         cbuUnit: { unit: '套' },
         quotationType: { value: 2 },
-        bPrice: {},
-        priceRange: [{ pricerange_beginAmount: 2, pricerange_price: null }],
+        // bPrice: {},
+        priceRange: [{ pricerange_beginAmount: 2, pricerange_price: 158 }],
         skuTable: {},
         invReduce: { value: '2' },
         totalSales: 999,
-        beginAmount: 5,
+        beginAmount: 2,
         standardPrice: {},
         lightBeginAmount: {},
         processPriceTpl: {},
@@ -541,7 +549,7 @@ export default {
             text: '支持混批'
           }
         ],
-        upshelfTime: { value: 1 },
+        upshelfTime: { value: 1, subText: '商品已经开售' },
         tradeTemplate: {},
         privacy: {},
         buyerProtection: null,
@@ -573,9 +581,7 @@ export default {
           'p-3567': { value: 47673, text: '刹车片' },
           'p-182282223': { value: 21958, text: '是' },
           'p-2176': 'MDTZ',
-          'p-157878556': null,
-          name: 'a',
-          age: 7
+          'p-157878556': null
         },
         importProp: {},
         productDocument: {},
@@ -585,7 +591,15 @@ export default {
         globalMessage: {},
         navStruct: {},
         supplyType: {},
-        catNamer: {},
+        catNamer: {
+          chooseCategoryUrl:
+            'https: //offer.1688.com/offer/post/choose_category.htm',
+          pathList: [
+            { categoryId: 71, name: '汽摩及配件' },
+            { categoryId: 10106, name: '制动系统' },
+            { categoryId: 1032176, name: '刹车片' }
+          ]
+        },
         blockPrimary: {},
         blockProps: {},
         blockTradeInfo: {},
@@ -629,9 +643,6 @@ export default {
       )
       if (string && string !== 'undefined') {
         const json = JSON.parse(string)
-        // Object.keys(json).forEach(key => {
-        //   this.formValues[key] = json[key]
-        // })
         this.formValues.title = json.title
         this.formValues.primaryPicture = json.primaryPicture
         this.formValues.catProp = json.catProp
@@ -664,7 +675,20 @@ export default {
             if (data.success == true) {
               this.$message.success('successfully!')
             } else {
-              this.$message.error(data.bizMsg)
+              let goods = {
+                productId: this.product.id,
+                platform: '1688',
+                subject: this.formValues.title,
+                images: this.formValues.primaryPicture.imageList,
+                json: this.formValues
+              }
+              api_goods_post(goods).then(res => {
+                if (res.code != 200) {
+                  this.$message.error(res.msg)
+                } else {
+                  this.$message.error(data.bizMsg)
+                }
+              })
             }
           })
         } else {
