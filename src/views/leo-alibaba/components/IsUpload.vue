@@ -1,61 +1,26 @@
 <template>
   <div class="leo-product-editor">
-    <el-button
-      :type="type"
-      :size="size"
-      @click="visible = !visible"
-      :class="{ fix: isFix }"
-      >{{ btnName }}</el-button
-    >
-    <el-dialog
-      :title="title"
-      :visible.sync="visible"
-      width="60%"
-      :append-to-body="true"
-      :modal-append-to-body="false"
-    >
-      <el-input
-        v-model="queryParams.subjectKey"
-        placeholder="subjectKey"
-        size="normal"
-        clearable
-      ></el-input>
-      <el-select
-        v-model="queryParams.statusList"
-        placeholder="statusList"
-        clearable
-        multiple
-      >
+    <el-button :type="type" :size="size" @click="visible = !visible"
+      :class="{ fix: isFix }">{{ btnName }}</el-button>
+    <el-dialog :title="title" :visible.sync="visible" width="60%" :append-to-body="true"
+      :modal-append-to-body="false">
+      <el-input v-model="queryParams.subjectKey" placeholder="subjectKey" size="normal"
+        clearable></el-input>
+      <el-select v-model="queryParams.statusList" placeholder="statusList" clearable multiple>
         <el-option label="published" value="published"> </el-option>
       </el-select>
-      <el-button type="primary" size="default" @click="handleGetList"
-        >查询</el-button
-      >
-      <el-table
-        :data="data"
-        border
-        stripe
-        default-expand-all
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      >
-        <el-table-column
-          v-for="col in columns"
-          :prop="col.key"
-          :key="col.key"
-          :label="col.label"
-          :width="col.width"
-        >
+      <el-button type="primary" size="default" @click="handleGetList">查询</el-button>
+      <el-table :data="data" border stripe default-expand-all
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+        <el-table-column v-for="col in columns" :prop="col.key" :key="col.key" :label="col.label"
+          :width="col.width">
         </el-table-column>
-        <el-table-column
-          ><template slot-scope="{ row }">
+        <el-table-column><template slot-scope="{ row }">
             <el-image :src="row.productImage" width="150"></el-image>
           </template>
         </el-table-column>
-        <el-table-column
-          ><template slot-scope="{ row }">
-            <el-button type="primary" size="default" @click="upload(row)"
-              >上传</el-button
-            >
+        <el-table-column><template slot-scope="{ row }">
+            <el-button type="primary" size="default" @click="upload(row)">上传</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,6 +36,7 @@ import {
   api_product_alibaba_List,
   api_product_alibaba_save
 } from '@/api/leo-product-alibaba'
+import { product_update_api } from '@/api/leo-product'
 import { listToString } from '@/utils'
 export default {
   props: {
@@ -84,13 +50,13 @@ export default {
     },
     products: {
       type: Array,
-      default: e => {
+      default: (e) => {
         return e
       }
     },
     size: {
       type: String,
-      default: e => {
+      default: (e) => {
         return e
       }
     },
@@ -112,7 +78,7 @@ export default {
     }
   },
   watch: {
-    products (newVal) {
+    products(newVal) {
       if (!this.isBatch) {
         if (newVal[0].code[0].length > 0) {
           this.queryParams.subjectKey = newVal[0].code[0]
@@ -129,7 +95,7 @@ export default {
       })
     }
   },
-  data () {
+  data() {
     return {
       content: null,
       visible: false,
@@ -151,16 +117,16 @@ export default {
       data: []
     }
   },
-  created () {},
+  created() {},
   methods: {
-    afterSucess (index, alibaba) {
+    afterSucess(index, alibaba) {
       this.data[index].referStatus = 1
       this.data[index].productID = alibaba.productID
       this.data[index].productSubject = alibaba.subject
       this.data[index].productImage =
         'https://cbu01.alicdn.com/' + alibaba.image.images[0]
     },
-    handleGetList () {
+    handleGetList() {
       if (!this.isBatch) {
         api_product_alibaba_List(this.queryParams).then(({ data }) => {
           if (data.resultList && data.resultList.length > 0) {
@@ -174,14 +140,16 @@ export default {
               console.log(data.resultList.length)
             }
             this.$message.warning('已上传')
+            let product = {
+              id: this.products[0].id,
+              referStatus: 1
+            }
+            this.updateReferStatus(product)
+            this.$emit('onFinished', true)
           } else {
             this.$message.warning('未上传')
+            this.$emit('onFinished', false)
           }
-          let product = {
-            id: this.products[0].id,
-            referStatus: data.resultList.length
-          }
-          this.updateReferStatus(product)
         })
       } else {
         this.products.forEach(({ id, code, referStatus }, index) => {
@@ -216,15 +184,18 @@ export default {
         })
       }
     },
-    updateReferStatus (product) {
+    updateReferStatus(product) {
+      // this.$emit('onSubmitUpdateReferStatus', product)
+      product_update_api(product)
       this.$emit('onSubmitUpdateReferStatus', product)
     },
-    saveAlibabaProduct (product) {
-      api_product_alibaba_save(product).then(res => {
+
+    saveAlibabaProduct(product) {
+      api_product_alibaba_save(product).then((res) => {
         console.log(res)
       })
     },
-    upload (row) {
+    upload(row) {
       this.$router.push('/leo-alibaba/post/' + row.id)
     }
   }

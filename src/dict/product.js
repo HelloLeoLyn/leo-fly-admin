@@ -2,12 +2,20 @@ export const status = [
   { value: -1, label: '全部' },
   { value: 0, label: '初始' },
   { value: 100, label: '采集中' },
-  { value: 200, label: '预同步' },
-  { value: 300, label: '同步完成' },
-  { value: 400, label: '同步失败' },
-  { value: 500, label: '同步数据' },
-  { value: 666, label: '采集完成' }
+  { value: 200, label: '采集完成' },
+  { value: 300, label: '预上传1688' },
+  { value: 305, label: '预上传1688失败' }
 ]
+export const product_type = {
+  '0': '通用',
+  '1': 'A',
+  '2': 'AA',
+  '3': 'AAA',
+  'H': '禾田',
+  'Q': 'Q',
+  'J': 'J',
+  'L': 'L',
+}
 export const fields = {
   id: {
     key: 'id',

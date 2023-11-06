@@ -1,43 +1,20 @@
 <template>
   <div class="leo-product-helper">
-    <el-button type="primary" size="default" @click="handleClick" class="fix"
-      >product助手</el-button
-    >
+    <el-button type="primary" size="default" @click="handleClick" class="fix">product助手</el-button>
     <el-dialog title="product助手" :visible.sync="visible" width="60%">
-      <el-button type="primary" size="default" @click="handleJsonClick"
-        >Json</el-button
-      >
-      <el-button
-        type="primary"
-        size="default"
-        @click="handleOpenFolder(product.id)"
-        >打开图片文件夹</el-button
-      >
+      <el-button type="primary" size="default" @click="handleJsonClick">Json</el-button>
+      <el-button type="primary" size="default"
+        @click="handleOpenFolder(product.id)">打开图片文件夹</el-button>
       <el-row :gutter="20">
-        <el-col
-          :span="4"
-          :offset="0"
-          v-for="(key, index) in keys"
-          :key="index"
-          style="padding: 5px 0"
-        >
-          <el-button
-            class="leo-product-helper-button"
-            type="primary"
-            size="default"
-            @click="handleKeyClick(key)"
-            >{{ key }}</el-button
-          >
+        <el-col :span="4" :offset="0" v-for="(key, index) in keys" :key="index"
+          style="padding: 5px 0">
+          <el-button class="leo-product-helper-button" type="primary" size="default"
+            @click="handleKeyClick(key)">{{ key }}</el-button>
         </el-col>
       </el-row>
 
-      <el-input
-        v-model="content"
-        type="textarea"
-        placeholder=""
-        size="normal"
-        clearable
-      ></el-input>
+      <el-input v-model="content" type="textarea" placeholder="" size="normal" clearable
+        :rows="6"></el-input>
       <span slot="footer">
         <el-button @click="visible = false">Cancel</el-button>
         <el-button type="primary">OK</el-button>
@@ -52,26 +29,26 @@ export default {
   props: {
     productId: {
       type: [Number, String],
-      default: e => {
+      default: (e) => {
         return e
       }
     },
     product: {
       type: Object,
-      default: e => {
+      default: (e) => {
         return e
       }
     }
   },
   watch: {
-    product (newval) {
+    product(newval) {
       this.keys = Object.keys(newval)
     },
-    productId (newval) {
+    productId(newval) {
       console.log(newval)
     }
   },
-  data () {
+  data() {
     return {
       content: null,
       visible: false,
@@ -79,17 +56,17 @@ export default {
     }
   },
   methods: {
-    handleClick () {
+    handleClick() {
       this.visible = !this.visible
     },
-    handleKeyClick (key) {
+    handleKeyClick(key) {
       this.content = JSON.stringify(this.product[key])
     },
-    handleJsonClick () {
+    handleJsonClick() {
       let { subject, base } = this.product.jsonList[0].json
       this.content = JSON.stringify({ subject, base })
     },
-    handleOpenFolder (productId) {
+    handleOpenFolder(productId) {
       api_file_open(imgBase + productId)
     }
   }

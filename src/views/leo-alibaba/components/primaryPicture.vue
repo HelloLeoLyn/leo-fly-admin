@@ -47,6 +47,14 @@ export default {
       }
     }
   },
+  watch: {
+    value(newVal) {
+      console.log(newVal)
+    },
+    product(newVal) {
+      console.log(newVal)
+    }
+  },
   methods: {
     handleImageClick() {
       this.visible = !this.visible
